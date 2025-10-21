@@ -15,7 +15,7 @@ module.exports = class Beneficiary {
         this.photo = photo;
     }
 
-    static fetchAllBeneficiaries() {
+    static fetchAll() {
         return new Promise((resolve) => {
             const mockData = [
                 new Beneficiary(1, "María", "López", "García", "2000-05-10", "555-1234", "Ana López", "Madre", "Descripción 1", "2023-01-01", "foto1.jpg"),
