@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# Verify the list of user's already exist
+
+inputs=""
+
 # Orden:
-# Read data
-# Installs
-# Database
+source ./installs.sh
+source ./database.sh
 # Users
-# Proxy
+source ./proxy.sh
 # Security
 # Project
-
 
 # File generation of input needed to have the same settings on another server

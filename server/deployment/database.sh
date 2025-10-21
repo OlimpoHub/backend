@@ -1,12 +1,15 @@
 #!/bin/bash
 
-serverPort=""
+read -p "\nWhat port will sql have? " sqlPort
+read -p "\nWhat port will php my admin have? " pmaPort
+
+inputs="$sqlPort\n$pmaPort"
 
 # Create the files
 serverConfig="[server]
 [mysqld]
 user            = mysql
-port            = $serverPort
+port            = $sqlPort
 bind-address    = 0.0.0.0
 
 datadir     = /var/lib/mysql
@@ -55,7 +58,7 @@ sudo systemctl start mariadb
 echo -e "MariaDB started!\n"
 
 # Edit PMA's config
-sudo sed -i "s/\$cfg\['Servers'\]\[\$i\]\['port'\] = .*/\$cfg['Servers'][$i]['port'] = '15001';/" /etc/phpmyadmin/config.inc.php
+sudo sed -i "s/\$cfg\['Servers'\]\[\$i\]\['port'\] = .*/\$cfg['Servers'][$i]['port'] = '$sqlPort';/" /etc/phpmyadmin/config.inc.php
 
 # Activate PMA's service
 sudo systemctl reload php8.3-fpm

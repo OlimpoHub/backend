@@ -1,24 +1,17 @@
 #!/bin/bash
 
 # Enable Php My Admin
-
-phpVersion="" #php8.3
-
 pmaProxy="server {
-    listen 80;
+    listen $pmaPort;
 
-    location /pma/ {
+    location / {
         alias /usr/share/phpmyadmin/;
         index index.php;
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;
             fastcgi_param SCRIPT_FILENAME $request_filename;
-            fastcgi_pass unix:/run/php/$phpVersion-fpm.sock;
+            fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         }
-    }
-
-    location /pma {
-        return 301 /pma/;
     }
 }"
 echo "$pmaProxy" | sudo tee "/etc/nginx/sites-available/phpmyadmin" > /dev/null
