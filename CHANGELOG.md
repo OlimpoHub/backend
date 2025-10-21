@@ -2,6 +2,8 @@
 
 ### Added
 
+ - MC (Model-Controller) and routes (endpoints)
+ - Mock data to verify the correct implementation of the API
  - APIs initial structure with NodeJs and Express
 
 ## [0.0.0] - 14/10/2025
