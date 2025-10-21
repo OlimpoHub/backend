@@ -1,0 +1,9 @@
+# Mac
+.DS_Store
+Thumbs.db
+# Express
+node_modules
+package-lock.json
+
+
+.env
