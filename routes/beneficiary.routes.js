@@ -4,5 +4,6 @@ const router = express.Router();
 const beneficiary_controller = require('../controllers/beneficiary.controller');
 
 router.get('/', beneficiary_controller.get_beneficiaries);
+router.get('/:id', beneficiary_controller.get_beneficiary);
 
 module.exports = router;

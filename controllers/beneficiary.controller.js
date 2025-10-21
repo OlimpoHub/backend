@@ -10,3 +10,12 @@ exports.get_beneficiaries = async (req, res) => {
     }
 };
 
+exports.get_beneficiary = async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const data = await Beneficiary.fetchById(id);
+        res.status(200).json(data);
+    } catch {
+        res.status(500).json({ message: 'Failed to fetch beneficiary.' });
+    }
+};
