@@ -13,7 +13,7 @@ En éste archivo se pueden ver los estándares de codificación que **Olimpo** u
      - [Strings](#strings)
      - [Funciones de flecha](#funciones-de-flecha)
  - [SQL](#exclusivos-sql)
-     - [Formato](#formato-1)
+     - [Formato](#formato)
      - [Nombres e identificadores](#nombres-e-identificadores-1)
      - [Joins](#joins)
  - [Seguridad en consultas SQL](#seguridad-en-consultas-sql-nodejs--mariadb)
@@ -246,7 +246,7 @@ En éste archivo se pueden ver los estándares de codificación que **Olimpo** u
     // esto es mi comentario
     ```
 
- - Para comentarios de una sola línea poner una línea vacía antes del comentario a menos de que sea la primer línea del bloque, o que se estén encadenando funciones.
+ - Para comentarios de una sola línea poner una línea vacía antes del comentario a menos de que sea la primer línea del bloque, o que se estén encadenando funciones, en cuyo caso sí se puede comentar sobre la misma línea.
     ```js
     // mal
     if (isTrue) {
@@ -275,6 +275,11 @@ En éste archivo se pueden ver los estándares de codificación que **Olimpo** u
         // Le pongo un valor
         const one = 1
     }
+
+    // bien
+    funcionA // Comentario sobre la línea
+    .funcionB // Comentario sobre la línea
+    .funcionC // Comentario sobre la línea
     ```
 
 ### Nombres e identificadores:

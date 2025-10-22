@@ -14,7 +14,7 @@
 - [ ] `CHANGELOG.md` is updated.
 - [ ] Test design is build and the US pass the tests.
 - [ ] It has been test and it passes.
-- [ ] Code standards are met [](../CodingStandard.md).
+- [ ] Code standards are met [based on this](../CodingStandard.md).
 - [ ] Commit standards are met.
 - [ ] Technical documentation is complete.
 - [ ] User manual is complete.
