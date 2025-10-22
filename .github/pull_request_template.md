@@ -14,7 +14,7 @@
 - [ ] `CHANGELOG.md` is updated.
 - [ ] Backend is complete and functional.
 - [ ] It has been test and it passes.
-- [ ] Code standars are met.
+- [ ] Code standars are met [](../CodingStandard.md).
 - [ ] Commit standars are met.
 - [ ] Technical documentation is complete.
 - [ ] Code documentation is complete.
