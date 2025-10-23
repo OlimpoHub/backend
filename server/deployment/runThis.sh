@@ -2,12 +2,10 @@
 
 # Verify the list of user's already exist
 
-inputs=""
-
 # Orden:
-source ./installs.sh
+#source ./installs.sh
 source ./database.sh
-# Users
+#source ../users/createUsers.sh
 source ./proxy.sh
 # Security
 # Project

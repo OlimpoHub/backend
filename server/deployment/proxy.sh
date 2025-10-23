@@ -9,7 +9,7 @@ pmaProxy="server {
         index index.php;
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;
-            fastcgi_param SCRIPT_FILENAME $request_filename;
+            fastcgi_param SCRIPT_FILENAME \$request_filename;
             fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         }
     }

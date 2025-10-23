@@ -8,8 +8,11 @@ sudo apt upgrade -y
 
 echo -e "Installing dependencies...\n"
 
+# Utility installs
+sudo apt install -y nano vi vim tree
+
 # Security installs
-# TODO: Instalar herramientas como finger
+sudo apt install -y finger
 
 # Installs the needed packages to run the backend
 sudo apt install -y git npm nginx mariadb-server phpmyadmin php8.3-fpm php-mysql
