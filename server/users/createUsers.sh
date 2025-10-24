@@ -93,6 +93,7 @@ read -s -p "What default password will the users have? " defaultPwd
 echo -e "\n"
 read -p "How many users will there be? " userAmount
 
+# ! TODO: Revisar el ciclo y el pegado de datos
 for ((i = 1; i <= userAmount; i++)); do
     echo -e "\n"
     read -p "What name will the user have? " userName
@@ -116,7 +117,7 @@ for ((i = 1; i <= userAmount; i++)); do
     sudo passwd -e "$userName"
 
     # Create SQL Account
-    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; GRANT ALTER USER ON *.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
+    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; GRANT ALTER USER '$userName'@'%'; FLUSH PRIVILEGES;"
 
     sudo chsh -s /bin/bash "$userName"
 done
