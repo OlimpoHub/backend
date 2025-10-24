@@ -9,7 +9,7 @@ sudo apt upgrade -y
 echo -e "Installing dependencies...\n"
 
 # Utility installs
-sudo apt install -y nano vi vim tree
+sudo apt install -y nano tree
 
 # Security installs
 sudo apt install -y finger

@@ -1,28 +1,32 @@
 #!/bin/bash
 
-read -p "\nWhat port will sql have? " sqlPort
-read -p "\nWhat port will php my admin have? " pmaPort
+echo -e "\n"
+read -p "What port will sql have? " sqlPort
+echo -e "\n"
+read -p "What port will php my admin have? " pmaPort
 
 # Create the files
-serverConfig="[server]
+serverConfig="[client]
+port = $sqlPort
+socket = /run/mysqld/mysqld.sock
+
 [mysqld]
 user            = mysql
+pid-file        = /run/mysqld/mysqld.pid
+socket          = /run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
 port            = $sqlPort
 bind-address    = 0.0.0.0
 
-datadir     = /var/lib/mysql
-socket      = /run/mysqld/mysqld.sock
-pid-file    = /run/mysqld/mysqld.pid
-
-log_error = /var/log/mysql/error.log
-
-character-set-server = utf8mb4
-collation-server     = utf8mb4_general_ci
-
+log_error       = /var/log/mysql/error.log
+symbolic-links  = 0
 skip-name-resolve
-symbolic-links = 0
+default_storage_engine = InnoDB
+character-set-server = utf8mb4
+collation-server = utf8mb4_general_ci
 
-default_storage_engine = InnoDB"
+# Include all other configs
+!includedir /etc/mysql/mariadb.conf.d/"
 
 serverService="[Unit]
 Description=MariaDB Server Instance
@@ -52,11 +56,12 @@ sudo systemctl daemon-reload
 # Start and enable the servers
 echo "Starting MariaDB..."
 sudo systemctl enable mariadb
-sudo systemctl start mariadb
+sudo systemctl restart mariadb
 echo -e "MariaDB started!\n"
 
 # Edit PMA's config
-sudo sed -i "s/\$cfg\['Servers'\]\[\$i\]\['port'\] = .*/\$cfg['Servers'][\$i]['port'] = '$sqlPort';/" /etc/phpmyadmin/config.inc.php
+sudo sed -i "s/\$cfg\\['Servers'\\]\\[\$i\\]\\['port'\\] = .*/\$cfg['Servers'][\$i]['port'] = '$sqlPort';/" /etc/phpmyadmin/config.inc.php
 
 # Activate PMA's service
-sudo systemctl reload php8.3-fpm
+sudo systemctl enable php8.3-fpm
+sudo systemctl start php8.3-fpm

@@ -22,8 +22,8 @@ PROMPT_COMMAND=\"history -a; history -c; history -r; $PROMPT_COMMAND\"
 HISTIGNORE=\"ls:cd:exit:history:clear\"
 
 # --- PROMPTS ---
-GROUP=$(id -gn)
-PS1='╭─ \[\e[38;5;39m\]${GROUP}'\"'\"'s vassal: \[\e[0;2m\]\u\[\e[0m\] in the \[\e[90;1m\]/\\^\[\e[38;5;208m\] OLYMPUS \[\e[90m\]^/\\\[\e[0m\] × \[\e[38;5;198;3m\]\W\n\[\e[0m\]╰─ \[\e[38;5;35m\]\$ \[\e[0m\]'
+GROUP=\$(id -gn)
+PS1='╭─ \[\e[38;5;39m\]\${GROUP}'\"'\"'s vassal: \[\e[0;2m\]\u\[\e[0m\] in the \[\e[90;1m\]/\\^\[\e[38;5;208m\] OLYMPUS \[\e[90m\]^/\\ \[\e[0m\]× \[\e[38;5;198;3m\]\W\n\[\e[0m\]╰─ \[\e[38;5;35m\]\$ \[\e[0m\]'
 "
 
 echo -e "Create the users and the groups...\n"
@@ -43,6 +43,12 @@ echo "$adminName:$adminPwd" | sudo chpasswd
 
 # Add the user to sudoers
 sudo usermod -aG sudo "$adminName"
+
+# Config its bash
+sudo chsh -s /bin/bash "$adminName"
+sudo cp /etc/skel/.profile /home/"$adminName"/
+echo "$bashConfig" | sudo tee "/home/$adminName/.bashrc" > /dev/null
+sudo chown "$adminName": /home/"$adminName"/.bashrc /home/"$adminName"/.profile
 
 # Create SQL admin account
 sudo mariadb -u root -e "CREATE USER '$adminName'@'%' IDENTIFIED BY '$adminPwd'; GRANT ALL PRIVILEGES ON *.* TO '$adminName'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
@@ -71,8 +77,8 @@ for ((i = 1; i <= groupAmount; i++)); do
     sudo chmod 2770 "/home/$groupName"
 
     # Create bash files
-    sudo cp /etc/skel/.bashrc /home/"$groupName"/
     sudo cp /etc/skel/.profile /home/"$groupName"/
+    echo "$bashConfig" | sudo tee "/home/$groupName/.bashrc" > /dev/null
     sudo chown "$adminName":"$groupName" /home/"$groupName"/.bashrc /home/"$groupName"/.profile
 
     # Create the database
@@ -80,6 +86,7 @@ for ((i = 1; i <= groupAmount; i++)); do
 done
 
 # Get default password for users
+echo -e "\n"
 read -s -p "What default password will the users have? " defaultPwd
 
 # Create the users
@@ -91,10 +98,10 @@ for ((i = 1; i <= userAmount; i++)); do
     read -p "What name will the user have? " userName
 
     echo -e "\n"
-    read -p "\nWhat is the full name of the user? " userFullName
+    read -p "What is the full name of the user? " userFullName
 
     echo -e "\n"
-    read -p "\nWhat group will the user be part of? " userGroup
+    read -p "What group will the user be part of? " userGroup
 
     # Create the user
     sudo useradd "$userName" -d "/home/$userGroup" -c "$userFullName"
@@ -111,6 +118,7 @@ for ((i = 1; i <= userAmount; i++)); do
     # Create SQL Account
     sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; GRANT ALTER USER ON *.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
 
+    sudo chsh -s /bin/bash "$userName"
 done
 
 echo -e "The users have been created. But when logging to PhpMyAdmin, the password must be set manually.\n"

@@ -3,9 +3,9 @@
 # Verify the list of user's already exist
 
 # Orden:
-#source ./installs.sh
+source ./installs.sh
 source ./database.sh
-#source ../users/createUsers.sh
+source ../users/createUsers.sh
 source ./proxy.sh
 # Security
 # Project
