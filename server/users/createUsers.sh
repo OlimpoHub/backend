@@ -36,6 +36,7 @@ echo "root:$rootPwd" | sudo chpasswd
 echo -e "\n"
 read -p "What name will the admin have? " adminName
 sudo mkdir -p "/home/$adminName"
+sudo chmod 2770 "/home/$adminName"
 sudo useradd "$adminName" -d "/home/$adminName" -c "System Administrator"
 
 read -s -p "What password will the admin have in the server and sql? " adminPwd
@@ -90,19 +91,16 @@ echo -e "\n"
 read -s -p "What default password will the users have? " defaultPwd
 
 # Create the users
-echo -e "\n"
-read -p "How many users will there be? " userAmount
+echo -e "\nPlease paste the users, and then press Ctrl+D";
 
-# ! TODO: Revisar el ciclo y el pegado de datos
-for ((i = 1; i <= userAmount; i++)); do
-    echo -e "\n"
-    read -p "What name will the user have? " userName
+# Read all lines into an array
+mapfile -t lines
 
-    echo -e "\n"
-    read -p "What is the full name of the user? " userFullName
-
-    echo -e "\n"
-    read -p "What group will the user be part of? " userGroup
+# Loop over every 3 lines
+for ((i=0; i<${#lines[@]}; i+=3)); do
+    userName="${lines[i]}"
+    userFullName="${lines[i+1]}"
+    userGroup="${lines[i+2]}"
 
     # Create the user
     sudo useradd "$userName" -d "/home/$userGroup" -c "$userFullName"
@@ -117,9 +115,9 @@ for ((i = 1; i <= userAmount; i++)); do
     sudo passwd -e "$userName"
 
     # Create SQL Account
-    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; GRANT ALTER USER '$userName'@'%'; FLUSH PRIVILEGES;"
+    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
 
     sudo chsh -s /bin/bash "$userName"
 done
 
-echo -e "The users have been created. But when logging to PhpMyAdmin, the password must be set manually.\n"
+echo -e "\nThe users have been created. But when logging to PhpMyAdmin, the password must be set manually.\n"
