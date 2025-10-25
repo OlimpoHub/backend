@@ -7,7 +7,7 @@ source ./installs.sh
 source ./database.sh
 source ../users/createUsers.sh
 source ./proxy.sh
-# Security
+source ./security.sh
 # Project
 
 # File generation of input needed to have the same settings on another server

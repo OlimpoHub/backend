@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Disable default  
+# ! TODO: Disable default  
 
 # Enable Php My Admin
 pmaProxy="server {
@@ -20,4 +20,4 @@ echo "$pmaProxy" | sudo tee "/etc/nginx/sites-available/phpmyadmin" > /dev/null
 sudo ln -s /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/
 
 sudo systemctl enable nginx
-sudo systemctl restart nginx
+sudo systemctl start nginx

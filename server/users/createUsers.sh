@@ -13,20 +13,29 @@ elif [ -f /usr/share/bash-completion/bash_completion ]; then
 fi
 
 # --- HISTORY SETTINGS ---
-HISTSIZE=5000
-HISTFILESIZE=10000
+HISTSIZE=500
+HISTFILESIZE=1000
 HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
-HISTTIMEFORMAT='[%F %T] [\u @ \h:\w] '
-PROMPT_COMMAND=\"history -a; history -c; history -r; $PROMPT_COMMAND\"
-HISTIGNORE=\"ls:cd:exit:history:clear\"
 
 # --- PROMPTS ---
 GROUP=\$(id -gn)
 PS1='╭─ \[\e[38;5;39m\]\${GROUP}'\"'\"'s vassal: \[\e[0;2m\]\u\[\e[0m\] in the \[\e[90;1m\]/\\^\[\e[38;5;208m\] OLYMPUS \[\e[90m\]^/\\ \[\e[0m\]× \[\e[38;5;198;3m\]\W\n\[\e[0m\]╰─ \[\e[38;5;35m\]\$ \[\e[0m\]'
+
+# --- REDIRECT ---
+cd /home/\$GROUP
+"
+
+profileConfig="# --- LOAD BASHRC ---
+if [ -f /etc/bash.bashrc ]; then
+    . /etc/bash.bashrc
+fi
 "
 
 echo -e "Create the users and the groups...\n"
+
+# Create the base bash file
+echo "$bashConfig" | sudo tee "/etc/bash.bashrc" > /dev/null
 
 # Change root password
 read -s -p "What password will the root user have? " rootPwd
@@ -48,8 +57,9 @@ sudo usermod -aG sudo "$adminName"
 # Config its bash
 sudo chsh -s /bin/bash "$adminName"
 sudo cp /etc/skel/.profile /home/"$adminName"/
-echo "$bashConfig" | sudo tee "/home/$adminName/.bashrc" > /dev/null
-sudo chown "$adminName": /home/"$adminName"/.bashrc /home/"$adminName"/.profile
+echo "$profileConfig" | sudo tee "/home/$adminName/.profile" > /dev/null
+echo "" | sudo tee "/home/$adminName/.bashrc" > /dev/null
+sudo chown "$adminName": /home/"$adminName" /home/"$adminName"/.profile
 
 # Create SQL admin account
 sudo mariadb -u root -e "CREATE USER '$adminName'@'%' IDENTIFIED BY '$adminPwd'; GRANT ALL PRIVILEGES ON *.* TO '$adminName'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
@@ -77,11 +87,6 @@ for ((i = 1; i <= groupAmount; i++)); do
     sudo chown "$adminName":"$groupName" "/home/$groupName"
     sudo chmod 2770 "/home/$groupName"
 
-    # Create bash files
-    sudo cp /etc/skel/.profile /home/"$groupName"/
-    echo "$bashConfig" | sudo tee "/home/$groupName/.bashrc" > /dev/null
-    sudo chown "$adminName":"$groupName" /home/"$groupName"/.bashrc /home/"$groupName"/.profile
-
     # Create the database
     sudo mariadb -u root -e "CREATE DATABASE $groupName;";
 done
@@ -103,7 +108,7 @@ for ((i=0; i<${#lines[@]}; i+=3)); do
     userGroup="${lines[i+2]}"
 
     # Create the user
-    sudo useradd "$userName" -d "/home/$userGroup" -c "$userFullName"
+    sudo useradd "$userName" -m -d "/home/$userGroup/.$userName" -c "$userFullName"
 
     # Add user to their group
     sudo usermod -g "$userGroup" "$userName"
@@ -117,7 +122,13 @@ for ((i=0; i<${#lines[@]}; i+=3)); do
     # Create SQL Account
     sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
 
+    # Set bash as shell
     sudo chsh -s /bin/bash "$userName"
+    sudo cp /etc/skel/.profile "/home/$userGroup/.$userName/."
+    sudo touch "/home/$userGroup/.$userName/.bash_history"
+    echo "$profileConfig" | sudo tee "/home/$userGroup/.$userName/.profile" > /dev/null
+    sudo chown "$userName":"$userGroup" "/home/$userGroup/.$userName/" "/home/$userGroup/.$userName/.profile"
+    sudo chmod 100 "/home/$userGroup/.$userName"
 done
 
 echo -e "\nThe users have been created. But when logging to PhpMyAdmin, the password must be set manually.\n"

@@ -12,7 +12,7 @@ echo -e "Installing dependencies...\n"
 sudo apt install -y nano tree
 
 # Security installs
-sudo apt install -y finger
+sudo apt install -y finger openssh-server
 
 # Installs the needed packages to run the backend
 sudo apt install -y git npm nginx mariadb-server phpmyadmin php8.3-fpm php-mysql
