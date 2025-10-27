@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# ! TODO: Disable default  
-
 # Enable Php My Admin
 pmaProxy="server {
     listen $pmaPort;

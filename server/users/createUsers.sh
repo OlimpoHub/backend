@@ -120,7 +120,7 @@ for ((i=0; i<${#lines[@]}; i+=3)); do
     sudo passwd -e "$userName"
 
     # Create SQL Account
-    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
+    sudo mariadb -u root -e "CREATE USER '$userName'@'%' IDENTIFIED BY '$defaultPwd'; GRANT ALL PRIVILEGES ON $userGroup.* TO '$userName'@'%'; GRANT ALL PRIVILEGES ON Production.* TO '$userName'@'%'; FLUSH PRIVILEGES;"
 
     # Set bash as shell
     sudo chsh -s /bin/bash "$userName"

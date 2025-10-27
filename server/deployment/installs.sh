@@ -17,7 +17,4 @@ sudo apt install -y finger openssh-server
 # Installs the needed packages to run the backend
 sudo apt install -y git npm nginx mariadb-server phpmyadmin php8.3-fpm php-mysql
 
-# Installs navigation packages
-# TODO: Instalar fastfetch y oh my bash
-
 echo -e "Installation complete \n\n"
