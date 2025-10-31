@@ -1,5 +1,5 @@
 // const pool = require('../util/database');
-
+import pool from '../utils/db.js';
 module.exports = class Beneficiary {
     constructor(beneficiaryId, firstName, paternalLastName, maternalLastName, dateOfBirth, emergencyPhoneNumber, emergencyContactName, emergencyContactRelationship, description, admissionDate, photo) {
         this.beneficiaryId = beneficiaryId;
