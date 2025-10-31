@@ -1,4 +1,14 @@
-## [0.0.1] - 20/10/2025  -> develop
+## [0.0.0] - 31/10/2025  
+
+### Changed
+
+ - Updated dotenv configuration to correctly load environment variables from the .env file located in the parent directory.
+
+### Added
+ - Test code to verify database connection and query execution.
+ - Added "type": "module" to package.json to enable ES module support.
+
+## [0.0.0] - 20/10/2025  
 
 ### Added
 
