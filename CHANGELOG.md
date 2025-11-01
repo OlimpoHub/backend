@@ -1,3 +1,9 @@
+## [0.0.0] - 01/11/2025  
+
+### Changed
+ - Modified beneficiary model to correctly fetch data from the database using async/await.
+ - Updated beneficiary controller to handle errors when fetching beneficiary by ID.
+
 ## [0.0.0] - 31/10/2025  
 
 ### Changed

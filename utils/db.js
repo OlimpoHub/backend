@@ -1,9 +1,12 @@
-import mariadb from "mariadb";
-import dotenv from "dotenv";
+// db.js
+const mariadb = require('mariadb');
+const dotenv = require('dotenv');
 
-dotenv.config({ path: "../.env" });
+// Carga las variables de entorno
+dotenv.config({ path: './.env' });
 
-export const pool = mariadb.createPool({
+// Crear el pool de conexiones
+const pool = mariadb.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -12,18 +15,23 @@ export const pool = mariadb.createPool({
   connectionLimit: 10,
 });
 
+// Exportar el pool para usarlo en otros archivos
+module.exports = pool;
 
-// USE THIS TO TEST THE CONNECTION WITH THE DATABASE AND SEE THE ERRORS IF THERE ARE ANY
-try {
-  const conn = await pool.getConnection();
-  console.log("✅ Conexión exitosa a la base de datos");
-  // conn.release();
+// TEST DE CONEXIÓN (opcional)
+// (async () => {
+//   try {
+//     const conn = await pool.getConnection();
+//     console.log('✅ Conexión exitosa a la base de datos');
 
-  // QUERY TO TEST IF THE CONNECTION WORKS
-  const rows = await conn.query("SELECT * FROM Usuarios")
-  console.log(rows);
-} catch (err) {
-  console.error("❌ Error al conectar a la base de datos:", err);
-} finally {
-  process.exit();
-}
+//     // Prueba una consulta
+//     const rows = await conn.query('SELECT * FROM Usuarios');
+//     console.log(rows);
+
+//     conn.release();
+//   } catch (err) {
+//     console.error('❌ Error al conectar a la base de datos:', err);
+//   } finally {
+//     process.exit();
+//   }
+// })();

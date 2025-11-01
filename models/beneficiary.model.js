@@ -1,5 +1,4 @@
-// const pool = require('../util/database');
-import pool from '../utils/db.js';
+const database = require('../utils/db');
 module.exports = class Beneficiary {
     constructor(beneficiaryId, firstName, paternalLastName, maternalLastName, dateOfBirth, emergencyPhoneNumber, emergencyContactName, emergencyContactRelationship, description, admissionDate, photo) {
         this.beneficiaryId = beneficiaryId;
@@ -15,10 +14,20 @@ module.exports = class Beneficiary {
         this.photo = photo;
     }
 
-    // Mock data for PokedexApp Lab.
-    // In production we will use DB data.
+    static async fetchAll() {
+        try {
+            const rows = await database.query("SELECT * FROM Beneficiarios");
+            console.log("ROWS:", rows);
+            return rows;
+        } catch (err) {
+            console.error("Error al obtener beneficiarios:", err);
+            throw err; 
+        }
+    }
 
-    static fetchAll() {
+    // Mock data for PokedexApp Lab.
+    // In production we will use DB data
+    static fetchAllPokemons() {
         return new Promise((resolve) => {
             const data = {
                 count: 1328,
