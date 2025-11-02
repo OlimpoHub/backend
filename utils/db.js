@@ -3,7 +3,7 @@ const mariadb = require('mariadb');
 const dotenv = require('dotenv');
 
 // Carga las variables de entorno
-dotenv.config({ path: './.env' });
+dotenv.config({ path: '../.env' });
 
 // Crear el pool de conexiones
 const pool = mariadb.createPool({
