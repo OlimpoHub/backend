@@ -9,7 +9,7 @@ module.exports = class Supplies{
 
     static async fetchAll(){
         try{
-            const rows = await  database.query("SELECT nombre, imagenInsumo FROM insumo");
+            const rows = await  database.query("SELECT nombre, imagenInsumo FROM Insumo");
             console.log("ROWS:", rows);
             return rows;
         }catch(err){
