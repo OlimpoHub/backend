@@ -1,3 +1,9 @@
+## [0.0.0] - 2025-11-02
+
+### Added
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+
 ## [0.0.0] - 01/11/2025  
 
 ### Changed
