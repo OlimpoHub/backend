@@ -1,8 +1,10 @@
-## [0.0.0] - 01/11/2025  
+## [0.1.0] - 01/11/2025  
 
-### Changed
- - Modified beneficiary model to correctly fetch data from the database using async/await.
- - Updated beneficiary controller to handle errors when fetching beneficiary by ID.
+### Added
+ - Modified supplies model to correctly fetch data from the database (search, order, filter)
+ - Updated supplies controller to handle errors when fetching supplies by ID.
+ - Method to handle post request in index.js.
+ 
 
 ## [0.0.0] - 31/10/2025  
 
