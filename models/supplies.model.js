@@ -18,6 +18,7 @@ module.exports = class Supplies{
         }
     }
 
+    // Search supplies by name
     static async searchSupplies(value){
         try {
             const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo WHERE nombre LIKE ?", [`%${value}%`]);
@@ -29,6 +30,7 @@ module.exports = class Supplies{
         }
     }
 
+    // Filter supplies by category, measure, or workshop
     static async filter(type, value){
         try {
             if (type == "category"){
@@ -52,6 +54,7 @@ module.exports = class Supplies{
     }
 
 
+    // Order supplies by name (asc or desc)
     static async orderSupplies(value){
         try {
             if (value == "asc"){

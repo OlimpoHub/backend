@@ -10,6 +10,7 @@ exports.getSupplies = async (request, response) => {
     }
 };
 
+// Search supplies by name
 exports.searchSupplies = async (request, response) => {
     try {
         const {value} = request.body;
@@ -20,6 +21,7 @@ exports.searchSupplies = async (request, response) => {
     }
 }
 
+// Filter supplies by category, measure, or workshop
 exports.filterSupplies = async (request, response) => {
     try {
         const { type, value } = request.body;
@@ -30,6 +32,7 @@ exports.filterSupplies = async (request, response) => {
     }
 }
 
+// Order supplies by name (asc or desc)
 exports.orderSupplies = async (request, response) => {
     try {
         const {value} = request.body;
