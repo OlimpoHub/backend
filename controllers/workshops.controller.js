@@ -47,13 +47,14 @@ exports.addWorkshops = async (request, response) => {
 exports.modifyWorkshops = async (request, response) => {
   try {
     const { idTaller } = request.params;
-    const { nombreTaller, horaEntrada, horaSalida} = request.body;
+    const { nombreTaller, horaEntrada, horaSalida, estatus } = request.body;
 
     const result = await Workshops.update(
       idTaller,
       nombreTaller,
       horaEntrada,
-      horaSalida
+      horaSalida,
+      estatus
     );
 
     response.status(200).json({
@@ -62,7 +63,8 @@ exports.modifyWorkshops = async (request, response) => {
         modifiedFields: {
           ...(nombreTaller && { nombreTaller }),
           ...(horaEntrada && { horaEntrada }),
-          ...(horaSalida && { horaSalida })
+          ...(horaSalida && { horaSalida }),
+          ...(estatus !== undefined && { estatus })
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }

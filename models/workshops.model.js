@@ -56,17 +56,18 @@ module.exports = class Workshops {
         }
     }
 
-    static async update(idTaller, nombreTaller, horaEntrada, horaSalida) {
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus) {
         try {
             const query = `
             UPDATE Taller 
             SET nombreTaller = ?,
                 horaEntrada = ?,
-                horaSalida = ?
+                horaSalida = ?,
+                estatus = ?
             WHERE idTaller = ?
             `;
             
-            const params = [nombreTaller, horaEntrada, horaSalida, idTaller];
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, idTaller];
             const result = await db.execute(query, params);
             return result;
             
