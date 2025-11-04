@@ -15,36 +15,8 @@ const pool = mariadb.createPool({
   acquireTimeout: 10000
 });
 
-// // Función execute con logging (opcional - quitar si es necesario)
-// async function execute(query, params) {
-  
-//   let conn;
-//   try {
-//     conn = await pool.getConnection();
-//     const result = await conn.query(query, params);
-    
-//     return result;
-//   } catch (error) {
-//     console.error('Error en execute():', error.message);
-//     throw error;
-//   } finally {
-//     if (conn) {
-//       conn.release();
-//     }
-//   }
-// }
-
-// // Función para consultas simples (opcional - quitar si es necesario)
-// async function query(sql, params) {
-//   let conn;
-//   try {
-//     conn = await pool.getConnection();
-//     const result = await conn.query(sql, params);
-//     return result;
-//   } finally {
-//     if (conn) conn.release();
-//   }
-// }
+// Exportar el pool para usarlo en otros archivos
+module.exports = pool;
 
 // // TEST DE CONEXIÓN (opcional)
 // (async () => {
@@ -60,10 +32,3 @@ const pool = mariadb.createPool({
 //     console.error('❌ Error al conectar a la base de datos:', err);
 //   }
 // })();
-
-// // Exportar las funciones
-// module.exports = {
-//   pool,
-//   execute,
-//   query
-// };
