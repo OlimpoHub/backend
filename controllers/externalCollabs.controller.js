@@ -64,3 +64,14 @@ exports.getExternalCollabsByID = async (request, response) => {
     response.status(500).json({ message: "Failed to fetch external collab by ID." });
   }
 };
+
+exports.deleteExternalCollab = async (request, response) => {
+  try {
+    const idUsuario   = request.body.id;
+    const result = await externalCollabs.delete(idUsuario);
+    response.status(200).json(result);
+  } catch (error) {
+    console.error("Error deleting external collaborator:", error);
+    response.status(500).json({ message: "Failed to delete external collaborator." });
+  }
+}
