@@ -12,7 +12,6 @@ exports.deleteBeneficiary = async (req, res) => {
         const { id } = req.params;
 
         // 2. (Flujo 5.1) Verificar si el beneficiario esta activo ANTES de borrar
-        // Se asume que el modelo tendra una funcion 'findById'
         const existingBeneficiary = await Beneficiary.fetchById(id);
 
         if (!existingBeneficiary) {
