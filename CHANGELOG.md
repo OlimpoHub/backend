@@ -1,6 +1,8 @@
 ## [0.1.0] - 01/11/2025  
 
 ### Added
+ - Use case to fetch all supply batches with the MVC structure (supplyBatch)
+ - Use case to fetch one supply batch with the MVC structure (supplyBatch)
  - Modified supplies model to correctly fetch data from the database (search, order, filter)
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
