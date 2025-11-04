@@ -1,5 +1,11 @@
+const SupplyBatch = require("../models/supplyBatch.model")
 
-exports.getSupplyBatches = async (request, response) => {
-    console.log("hello, youre in supplybatch general route");
-    response.send(200);
+exports.getSupplyBatch = async (request, response) => {
+    try {
+        const supplyBatchList = await SupplyBatch.fetchAll();
+        response.status(200).json(supplyBatchList);
+    } catch(err) {
+        console.log("Error fetching supply batch ", err);
+        response.status(500).json({message: "Failed to fetch supply batch"});
+    }
 }
