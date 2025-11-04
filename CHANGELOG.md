@@ -4,6 +4,8 @@
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
+ - Added the modify controller in 'WorkshopsController' to change the values in the workshop.
+ - Added the 'update' methods to the 'WorkshopsModel' to interact with the data base.
 
 ## [0.1.0] - 03/11/2025
 
