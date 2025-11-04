@@ -35,4 +35,25 @@ module.exports = class Workshops {
       throw error;
     }
   }
+
+  static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus) {
+    try {
+        const query = `
+        UPDATE Taller 
+        SET nombreTaller = ?,
+            horaEntrada = ?,
+            horaSalida = ?,
+            estatus = ?
+        WHERE idTaller = ?
+        `;
+        
+        const params = [nombreTaller, horaEntrada, horaSalida, estatus, idTaller];
+        const result = await db.execute(query, params);
+        return result;
+        
+    } catch (error) {
+        console.error('Error update():', error);
+        throw error;
+    }
+  }
 };

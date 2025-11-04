@@ -15,6 +15,9 @@ const pool = mariadb.createPool({
   acquireTimeout: 10000
 });
 
+// Exportar el pool para usarlo en otros archivos
+module.exports = pool;
+
 // // Función execute con logging (opcional - quitar si es necesario)
 // async function execute(query, params) {
   
