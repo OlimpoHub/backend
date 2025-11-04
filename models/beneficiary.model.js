@@ -1,4 +1,4 @@
-const database = require('../utils/db');
+const database = require('../utils/db.js');
 module.exports = class Beneficiary {
     constructor(beneficiaryId, firstName, paternalLastName, maternalLastName, dateOfBirth, emergencyPhoneNumber, emergencyContactName, emergencyContactRelationship, description, admissionDate, photo) {
         this.beneficiaryId = beneficiaryId;
@@ -12,6 +12,8 @@ module.exports = class Beneficiary {
         this.description = description;
         this.admissionDate = admissionDate;
         this.photo = photo;
+        // NOTA: La tabla tambien tiene 'estatus', pero no esta en este constructor
+        // No hay problema para BEN-04 pero hay que tenerlo en cuenta para el 'create' o 'update'.
     }
 
     static async fetchAll() {
@@ -50,97 +52,24 @@ module.exports = class Beneficiary {
         });
     }
 
-    static fetchById(id) {
-        return new Promise((resolve, reject) => {
-            const mockPokemons = {
-                1: {
-                    id: 1,
-                    name: "bulbasaur",
-                    height: 7,
-                    weight: 69,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                2: {
-                    id: 2,
-                    name: "ivysaur",
-                    height: 10,
-                    weight: 130,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                3: {
-                    id: 3,
-                    name: "venusaur",
-                    height: 20,
-                    weight: 1000,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                4: {
-                    id: 4,
-                    name: "charmander",
-                    height: 6,
-                    weight: 85,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" },
-                    types: [{ type: { name: "fire" } }]
-                },
-                5: {
-                    id: 5,
-                    name: "charmeleon",
-                    height: 11,
-                    weight: 190,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png" },
-                    types: [{ type: { name: "fire" } }]
-                },
-                6: {
-                    id: 6,
-                    name: "charizard",
-                    height: 17,
-                    weight: 905,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" },
-                    types: [{ type: { name: "fire" } }, { type: { name: "flying" } }]
-                },
-                7: {
-                    id: 7,
-                    name: "squirtle",
-                    height: 5,
-                    weight: 90,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                8: {
-                    id: 8,
-                    name: "wartortle",
-                    height: 10,
-                    weight: 225,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                9: {
-                    id: 9,
-                    name: "blastoise",
-                    height: 16,
-                    weight: 855,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                10: {
-                    id: 10,
-                    name: "caterpie",
-                    height: 3,
-                    weight: 29,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png" },
-                    types: [{ type: { name: "bug" } }]
-                },
-            };
+    static async fetchById(id) {
+        try {
+            const rows = await database.query("SELECT * FROM Beneficiarios WHERE idBeneficiario = ?", [id]);
+            return rows[0];
+        } catch (err) {
+            console.error(`Error al obtener beneficiario con id ${id}:`, err);
+            throw err;
+        }
+    }
 
-            const pokemon = mockPokemons[id];
-            if (pokemon) {
-                resolve(pokemon);
-            } else {
-                reject(new Error("Pokémon no encontrado"));
-            }
-        });
+    // Nueva Funcion
+    static async remove(id) {
+        try {
+            const result = await database.query("DELETE FROM Beneficiarios WHERE idBeneficiario = ?", [id]);
+            return result;
+        } catch (err) {
+            console.error(`Error al eliminar beneficiario con id ${id}:`, err);
+            throw err;
+        }
     }
 }

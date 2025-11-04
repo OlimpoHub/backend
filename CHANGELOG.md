@@ -1,3 +1,10 @@
+## [0.1.0] - 03/11/2025
+
+### Added
+ - Implemented the endpoint 'DELETE /api/beneficiarios/:id' for the user story 'BEN-004'.
+ - Added the business logic in 'BeneficiaryController' to validate the status (can't erase active beneficiaries).
+ - Added the 'fetchById' and 'remove' methods to the 'BeneficiaryModel' to interact with the data base.
+
 ## [0.1.0] - 01/11/2025  
 
 ### Added
