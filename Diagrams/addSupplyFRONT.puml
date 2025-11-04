@@ -1,0 +1,38 @@
+@startuml
+actor user
+participant SupplyFormScreen as screen
+participant SupplyFormViewModel as vm
+participant SupplyAddUseCase as us
+participant SupplyRepositoryImpl as repo
+participant Api as api
+
+user ->> screen: view form screen
+
+activate screen
+screen ->> vm: Created
+
+activate vm
+vm ->> us: invoke()
+
+activate us
+us ->> repo: addSupply(supply: Supply)
+
+activate repo
+repo ->> api: addSupply(supply: Supply)
+
+activate api
+api -->> repo: SupplyDto
+deactivate api
+
+repo -->> us: Supply
+deactivate repo
+
+us -->> vm: Flow<Result<Supply>>
+deactivate us
+
+vm -->> screen: StateFlow<SupplyFormState>
+
+screen -->> user: updates the screen
+
+
+@enduml
