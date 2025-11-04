@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
 const database =  require('../utils/db');
-module.exports = class Colaborador {
+module.exports = class externalCollabs {
   constructor(
     externalCollab_roleId,
     externalCollab_name,
@@ -9,13 +9,11 @@ module.exports = class Colaborador {
     externalCollab_birthDate,
     externalCollab_degree,
     externalCollab_email,
-    externalCollab_password,
     externalCollab_phone,
     externalCollab_status,
     externalCollab_internalRegulation,
     externalCollab_idCopy,
     externalCollab_confidentialityNotice,
-    externalCollab_photo
   ) {
     this.roleId = externalCollab_roleId;
     this.name = externalCollab_name;
@@ -24,17 +22,15 @@ module.exports = class Colaborador {
     this.birthDate = externalCollab_birthDate;
     this.degree = externalCollab_degree;
     this.email = externalCollab_email;
-    this.password = externalCollab_password;
     this.phone = externalCollab_phone;
     this.status = externalCollab_status;
     this.internalRegulation = externalCollab_internalRegulation;
     this.idCopy = externalCollab_idCopy;
     this.confidentialityNotice = externalCollab_confidentialityNotice;
-    this.photo = externalCollab_photo;
   }
     
   //Insert into table `Users` using parameters (safe SQL).
-  save(hashedPassword) {
+  async save(hashedPassword,photo) {
     return database
       .execute(
         `INSERT INTO Usuarios (
@@ -68,7 +64,7 @@ module.exports = class Colaborador {
           this.internalRegulation, 
           this.idCopy,
           this.confidentialityNotice, 
-          this.photo 
+          photo 
         ]
       )
       .then(() => {
@@ -79,7 +75,6 @@ module.exports = class Colaborador {
       });
   }
 
-   
   static async fetchAll() {
     try {
       const rows = await database.execute("SELECT * FROM Usuarios WHERE idRol IN (3, 4)");
