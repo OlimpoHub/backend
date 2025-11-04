@@ -1,6 +1,7 @@
 ## [0.1.0] - 01/11/2025  
 
 ### Added
+ - Sequence diagram for User Story of deliting an external collaborator.
  - Sequence diagram for User Story of viewing external collaborator and all of them.
  - Logic to have the routes to view external collaborators (all and by ID).
  - Use case to fetch all supply batches with the MVC structure (supplyBatch)
