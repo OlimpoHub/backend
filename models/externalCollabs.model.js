@@ -34,7 +34,6 @@ module.exports = class Colaborador {
   static async fetchAll() {
     try {
       const rows = await database.execute("SELECT * FROM Usuarios WHERE idRol IN (3, 4)");
-      console.log("ROWS: ", rows);
       return rows;
     } catch (err) {
       console.error("Error in obtaining external collaborators: ", err);
@@ -43,12 +42,23 @@ module.exports = class Colaborador {
 
   static async fetchOneByID(id){
     try {
-      const [rows] = await database.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id]);
-      console.log("ROWS: ", rows);
+      const rows = await database.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id]);
       return rows;
     } catch (err) {
       console.error("Error in obtaining the external collaborator by ID: ", err);
     }
   }
 
+  static async delete(id) {
+    try {
+      const result = await database.execute("UPDATE Usuarios SET estatus = 0 WHERE idUsuario = ?", [id]);
+
+      if (result.affectedRows === 0) return { success: false, message: "No user found with that ID." };
+
+      return { success: true, message: "External collaborator deleted successfully." };
+    } catch (err) {
+      console.error("Error deleting external collaborator:", err);
+      throw err;
+    }
+  }
 }
