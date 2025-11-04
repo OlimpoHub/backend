@@ -66,7 +66,6 @@ module.exports = pool;
 
 // // Exportar las funciones
 // module.exports = {
-//   pool,
 //   execute,
 //   query
 // };

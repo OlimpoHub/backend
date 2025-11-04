@@ -56,4 +56,18 @@ module.exports = class Workshops {
         throw error;
     }
   }
+
+  static async delete(idTaller) {
+    try {
+        const query = `DELETE FROM Taller WHERE idTaller = ?`;
+        
+        const params = [idTaller];
+        const result = await db.execute(query, params);
+        return result;
+        
+    } catch (error) {
+        console.error('Error delete():', error);
+        throw error;
+    }
+   }
 };

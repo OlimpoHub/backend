@@ -63,6 +63,28 @@ exports.modifyWorkshops = async (request, response) => {
   }
 }
 
+exports.deleteWorkshops = async (request, response) => {
+  try {
+    const { idTaller } = request.params;
+    const result = await Workshops.delete(idTaller);
+
+    response.status(200).json({
+      data: {
+        idTaller,
+        affectedRows: result.affectedRows
+      }
+    });
+
+  } catch (error) {
+    response.status(500).json({
+      error: error.message
+    });
+  }
+}
+
+// Comments de test de talleres (eliminar a futuro)
+// const readline = require('readline');
+
 // // Función serializar resultados con BigInt
 // function serializeResult(result) {
 //   return JSON.parse(JSON.stringify(result, (key, value) =>
@@ -85,10 +107,10 @@ exports.modifyWorkshops = async (request, response) => {
 
 //     const result = await taller.save();
 //     const serializedResult = serializeResult(result);
+//     console.log('ID del taller:', taller.idTaller);
 //     return taller.idTaller;
     
 //   } catch (error) {
-//     console.error('Error creando taller:', error.message);
 //     throw error;
 //   }
 // }
@@ -96,6 +118,10 @@ exports.modifyWorkshops = async (request, response) => {
 // // Función de prueba para modificar taller
 // exports.testModify = async (idTaller) => {
 //   try {
+//     if (!idTaller) {
+//       throw new Error('Se requiere idTaller para modificar');
+//     }
+
 //     const result = await Workshops.update(
 //       idTaller,
 //       'Taller de Liderazgo Avanzado',
@@ -105,10 +131,26 @@ exports.modifyWorkshops = async (request, response) => {
 //     );
 
 //     const serializedResult = serializeResult(result);
+//     console.log('ID modificado:', idTaller);
 //     return serializedResult;
     
 //   } catch (error) {
-//     console.error('Error modificando taller:', error.message);
+//     throw error;
+//   }
+// }
+
+// // Función de prueba para eliminar taller
+// exports.testDelete = async (idTaller) => {
+//   try {
+//     if (!idTaller) {
+//       throw new Error('Se requiere idTaller para eliminar');
+//     }
+
+//     const result = await Workshops.delete(idTaller);
+//     const serializedResult = serializeResult(result);   
+//     return serializedResult;
+    
+//   } catch (error) {
 //     throw error;
 //   }
 // }
@@ -116,7 +158,7 @@ exports.modifyWorkshops = async (request, response) => {
 // // Función para obtener un ID existente
 // exports.getExistingWorkshopId = async () => {
 //   try {
-//     const query = 'SELECT idTaller FROM talleres ORDER BY idTaller DESC LIMIT 1';
+//     const query = 'SELECT idTaller FROM Taller ORDER BY idTaller DESC LIMIT 1';
 //     const db = require('../utils/db');
 //     const result = await db.execute(query);
 //     const serializedResult = serializeResult(result);
@@ -127,40 +169,132 @@ exports.modifyWorkshops = async (request, response) => {
     
 //     return serializedResult[0].idTaller;
 //   } catch (error) {
-//     console.error('Error obteniendo ID existente:', error.message);
 //     throw error;
 //   }
 // }
 
-// // Función de prueba completa
-// exports.runCompleteTest = async () => {
+// // Función para listar todos los talleres
+// exports.listAllWorkshops = async () => {
 //   try {
-//     let idTaller;
-    
-//     try {
-//       idTaller = await exports.getExistingWorkshopId();
-//     } catch (error) {
-//       idTaller = await exports.testCreate();
+//     const query = 'SELECT idTaller, nombreTaller, estatus FROM Taller ORDER BY idTaller DESC';
+//     const db = require('../utils/db');
+//     const result = await db.execute(query);
+//     const serializedResult = serializeResult(result);
+
+//     if (serializedResult.length === 0) {
+//       console.log('No hay talleres registrados');
+//     } else {
+//       serializedResult.forEach((taller, index) => {
+//         console.log(`${index + 1}. ID: ${taller.idTaller} | Nombre: ${taller.nombreTaller} | Estatus: ${taller.estatus}`);
+//       });
 //     }
     
-//     await new Promise(resolve => setTimeout(resolve, 1000));
-//     await exports.testModify(idTaller);
-//     return true;
-    
+//     return serializedResult;
 //   } catch (error) {
-//     console.error('Error en tests:', error.message);
 //     throw error;
 //   }
 // }
 
-// // Ejecución 
+// exports.showMenu = async () => {
+//   const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+//   });
+
+//   const menu = `
+// MENÚ DE PRUEBAS - TALLERES
+// ==============================
+// 1. Listar todos los talleres
+// 2. Crear nuevo taller
+// 3. Modificar último taller
+// 4. Eliminar último taller
+// 5. Ejecutar todas las operaciones
+// 6. Salir
+// Selecciona una opción (1-6): `;
+
+//   const question = (query) => new Promise((resolve) => rl.question(query, resolve));
+
+//   try {
+//     while (true) {
+//       const option = await question(menu);
+
+//       switch (option) {
+//         case '1':
+//           await exports.listAllWorkshops();
+//           break;
+
+//         case '2':
+//           const newId = await exports.testCreate();
+//           break;
+
+//         case '3':
+//           try {
+//             const idToModify = await exports.getExistingWorkshopId();
+//             await exports.testModify(idToModify);
+//           }
+//           break;
+
+//         case '4':
+//           try {
+//             const idToDelete = await exports.getExistingWorkshopId();
+//             await exports.testDelete(idToDelete);
+//           } 
+//           break;
+
+//         case '5':
+//           await exports.runCompleteTest();
+//           break;
+
+//         case '6':
+//           rl.close();
+//           return;
+
+//         default:
+//           console.log('Opción no válida');
+//       }
+
+//       await question('\nPresiona Enter para continuar...');
+//       console.clear();
+//     }
+//   } catch (error) {
+//     console.error('Error en el menú:', error);
+//     rl.close();
+//   }
+// }
+
+// // Función de prueba completa (todas las operaciones)
+// exports.runCompleteTest = async () => {
+//   try {
+//     // 1. Listar talleres existentes
+//     await exports.listAllWorkshops();
+    
+//     // 2. Crear nuevo taller
+//     const newId = await exports.testCreate();
+    
+//     // 3. Modificar el taller recién creado
+//     await new Promise(resolve => setTimeout(resolve, 1000));
+//     await exports.testModify(newId);
+    
+//     // 4. Listar después de modificar
+//     await exports.listAllWorkshops();
+    
+//     // 5. Eliminar el taller
+//     await exports.testDelete(newId);
+    
+//     // 6. Listar final
+//     await exports.listAllWorkshops();
+    
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// // Ejecución automática si es el archivo principal
 // if (require.main === module) {
-//     exports.runCompleteTest()
-//       .then(() => {
-//         setTimeout(() => process.exit(0), 1000);
-//       })
-//       .catch((error) => {
-//         console.error('Fallaron:', error);
-//         process.exit(1);
-//       });
+//   console.clear();
+//   exports.showMenu()
+//     .catch((error) => {
+//       console.error('Error en la aplicación:', error);
+//       process.exit(1);
+//     });
 // }
