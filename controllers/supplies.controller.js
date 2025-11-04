@@ -43,3 +43,13 @@ exports.orderSupplies = async (request, response) => {
     }
 }
 
+exports.addSupply = async (request, response) => {
+    try {
+        const {supplyId, quantity, expirationDate, acquisitionId} = request.body;
+        const newSupply = await Supplies.addSupply(supplyId, quantity, expirationDate, acquisitionId);
+        response.status(200).json({ message: "Supply added successfully" });
+    } catch (error) {
+        console.error("Error adding supply: ", error);
+    }
+};
+

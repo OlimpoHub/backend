@@ -71,4 +71,15 @@ module.exports = class Supplies{
             throw err;
         }
     }
+
+    static async addSupply(supplyId, quantity, expirationDate, acquisitionId) {
+        try {
+            const result = await database.query("INSERT INTO InventarioInsumos (idInsumo, CantidadActual, FechaCaducidad, idTipoAdquisicion) VALUES (?, ?, ?, ?)", [supplyId, quantity, expirationDate, acquisitionId]);
+            console.log("NEW SUPPLY ADDED: ", result);
+            return result;
+        } catch (err) {
+            console.error("Error al agregar insumo: ", err);
+            throw err;
+        }
+    }
 }
