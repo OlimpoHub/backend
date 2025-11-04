@@ -4,7 +4,7 @@ const router = express.Router();
 const externalCollabsController = require("../controllers/externalCollabs.controller");
 
 router.get("/", externalCollabsController.getExternalCollabs);
-router.post("/register", externalCollabsController.postExternalCollabs);
+router.get("/:id", externalCollabsController.getExternalCollabsByID);
 
 
 module.exports = router;

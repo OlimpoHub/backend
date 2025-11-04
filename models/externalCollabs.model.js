@@ -1,66 +1,54 @@
 const bodyParser = require('body-parser');
-const db = require('../util/database')
+const database =  require('../utils/db');
 module.exports = class Colaborador {
   constructor(
     externalCollab_name,
-    externalCollab_lastname1,
-    externalCollab_lastename2,
-    externalCollab_fechaNacimiento,
-    externalCollab_carrera,
-    externalCollab_correoElectronico,
-    externalCollab_contraseña,
-    externalCollab_telefono,
-    externalCollab_estatus,
-    externalCollab_reglamentoInterno,
-    externalCollab_copiaINE,
-    externalCollab_avisoConfidencialidad,
-    externalCollab_foto
+    externalCollab_lastName,
+    externalCollab_secondLastName,
+    externalCollab_birthDate,
+    externalCollab_degree,
+    externalCollab_email,
+    externalCollab_password,
+    externalCollab_phone,
+    externalCollab_status,
+    externalCollab_internalRegulation,
+    externalCollab_idCopy,
+    externalCollab_confidentialityNotice,
+    externalCollab_photo
   ) {
-    this.nombre = externalCollab_nombre;
-    this.apellidoPaterno = externalCollab_apellidoPaterno;
-    this.apellidoMaterno = externalCollab_apellidoMaterno;
-    this.fechaNacimiento = externalCollab_fechaNacimiento;
-    this.carrera = externalCollab_carrera;
-    this.correo = externalCollab_correoElectronico;
-    this.contraseña = externalCollab_contraseña;
-    this.telefono = externalCollab_telefono;
-    this.estatus = externalCollab_estatus;
-    this.modalidad = externalCollab_reglamentoInterno;
-    this.curp = externalCollab_copiaINE;
-    this.rfc = externalCollab_avisoConfidencialidad;
-    this.foto = externalCollab_foto;
+    this.name = externalCollab_name;
+    this.lastName = externalCollab_lastName;
+    this.secondLastName = externalCollab_secondLastName;
+    this.birthDate = externalCollab_birthDate;
+    this.degree = externalCollab_degree;
+    this.email = externalCollab_email;
+    this.password = externalCollab_password;
+    this.phone = externalCollab_phone;
+    this.status = externalCollab_status;
+    this.internalRegulation = externalCollab_internalRegulation;
+    this.idCopy = externalCollab_idCopy;
+    this.confidentialityNotice = externalCollab_confidentialityNotice;
+    this.photo = externalCollab_photo;
   }
    
-   
-   save(hashedPassword, foto) {
-    return db
-      .execute(
-        `INSERT INTO colaborador (id_colaborador, nombre, apellidos, fechaNacimiento,
-          telefono, puesto, email, contrasena, fechaIngreso, ubicacion, modalidad, foto, curp, rfc)
-          VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          this.nombre,
-          this.apellidos,
-          this.fechaNacimiento,
-          this.telefono,
-          this.puesto,
-          this.email,
-          hashedPassword,
-          this.fechaIngreso,
-          this.ubicacion,
-          this.modalidad,
-          foto,
-          this.curp,
-          this.rfc,
-        ]
-      )
-      .then(() => {
-        return db.execute(
-          "SELECT id_colaborador FROM colaborador WHERE email = ?",
-          [this.email]
-        );
-      });
+  static async fetchAll() {
+    try {
+      const rows = await database.execute("SELECT * FROM Usuarios WHERE idRol IN (3, 4)");
+      console.log("ROWS: ", rows);
+      return rows;
+    } catch (err) {
+      console.error("Error in obtaining external collaborators: ", err);
+    }
   }
 
+  static async fetchOneByID(id){
+    try {
+      const [rows] = await database.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id]);
+      console.log("ROWS: ", rows);
+      return rows;
+    } catch (err) {
+      console.error("Error in obtaining the external collaborator by ID: ", err);
+    }
+  }
 
 }
