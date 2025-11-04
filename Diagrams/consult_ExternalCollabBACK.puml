@@ -1,0 +1,43 @@
+@startuml
+participant Api
+boundary externalCollaborator.routes 
+control externalCollaborator.controller
+entity externalCollaborator.model
+database elArca
+
+activate Api
+Api --> externalCollaborator.routes : POST /externalCollaborator
+
+activate externalCollaborator.routes
+
+externalCollaborator.routes --> externalCollaborator.controller :  getExternalCollaborators(request, response)
+
+activate externalCollaborator.controller
+
+externalCollaborator.controller --> externalCollaborator.model : getExternalCollaborators()
+
+activate externalCollaborator.model
+
+externalCollaborator.model --> elArca : execute("SELECT * FROM Usuarios WHERE carrera != NULL")
+
+activate elArca
+
+elArca --> externalCollaborator.model : result
+
+deactivate elArca
+
+externalCollaborator.model --> externalCollaborator.controller : result
+
+deactivate externalCollaborator.model
+
+externalCollaborator.controller --> externalCollaborator.routes : responseJSON(result)
+
+deactivate externalCollaborator.controller
+
+externalCollaborator.routes --> Api : responseJSON(result)
+
+deactivate externalCollaborator.routes
+
+deactivate Api
+
+@enduml
