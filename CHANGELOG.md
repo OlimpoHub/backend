@@ -1,3 +1,8 @@
+## [0.1.0] - 04/11/2025
+
+### Changed
+ - Updated the function of delete for deleteBenefitiaries, so that it does a 'soft' delete.
+
 ## [0.1.0] - 03/11/2025
 
 ### Added

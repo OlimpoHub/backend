@@ -63,12 +63,12 @@ module.exports = class Beneficiary {
     }
 
     // Nueva Funcion
-    static async remove(id) {
+    static async deactivate(id) {
         try {
-            const result = await database.query("DELETE FROM Beneficiarios WHERE idBeneficiario = ?", [id]);
+            const result = await database.query("UPDATE Beneficiarios SET estatus = 0 WHERE idBeneficiario = ?", [id]);
             return result;
         } catch (err) {
-            console.error(`Error al eliminar beneficiario con id ${id}:`, err);
+            console.error(`Error al desactivar a beneficiario con id ${id}:`, err);
             throw err;
         }
     }
