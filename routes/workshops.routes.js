@@ -5,6 +5,6 @@ const WorkshopsController = require('../controllers/workshops.controller');
 
 router.post('/add', WorkshopsController.addWorkshops);
 
-router.post('/modify', WorkshopsController.modifyWorkshops);
+router.post('/modify/:idTaller', WorkshopsController.modifyWorkshops);
 
 module.exports = router;
