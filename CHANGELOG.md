@@ -1,6 +1,7 @@
 ## [0.1.0] - 01/11/2025  
 
 ### Added
+ - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
  - Sequence diagram for User Story of viewing external collaborator and all of them.
