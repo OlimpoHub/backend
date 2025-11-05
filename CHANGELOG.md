@@ -1,6 +1,8 @@
 ## [0.1.0] - 05/11/2025  
 
 ### Added
+ - Added logic for Delete Supplie
+ - Sequence diagram for Delete Supplie
  - Sequence diagram for Product Batch CRUD operations in the MVC structure.
  - Implemented Product Batch model with CRUD operations (fetchAll, fetchOne, add, update, remove).
  - Added Product Batch controller with error handling and response formatting.
