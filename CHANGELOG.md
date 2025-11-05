@@ -1,6 +1,7 @@
 ## [0.1.0] - 04/11/2025
 
 ### Added
+ - Fix the query standar in models
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.

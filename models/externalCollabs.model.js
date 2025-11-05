@@ -68,16 +68,25 @@ module.exports = class externalCollabs {
         ]
       )
       .then(() => {
-        return database.execute(
-          'SELECT idUsuario FROM Usuarios WHERE correoElectronico = ?',
-          [this.email]
+        return database.execute
+        (
+          `SELECT idUsuario 
+            FROM Usuarios 
+            WHERE correoElectronico = ?`,[this.email]
         );
       });
   }
 
   static async fetchAll() {
     try {
-      const rows = await database.execute("SELECT * FROM Usuarios WHERE idRol IN (3, 4)");
+      const rows = await database.execute
+      (
+        `SELECT * 
+        FROM Usuarios 
+        WHERE idRol 
+          IN (3, 4)`
+      );
+
       return rows;
     } catch (err) {
       console.error("Error in obtaining external collaborators: ", err);
@@ -86,7 +95,12 @@ module.exports = class externalCollabs {
 
   static async fetchOneByID(id){
     try {
-      const rows = await database.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id]);
+      const rows = await database.execute
+      (
+        `SELECT * 
+        FROM Usuarios 
+        WHERE idUsuario = ?`, [id]
+      );
       return rows;
     } catch (err) {
       console.error("Error in obtaining the external collaborator by ID: ", err);
@@ -95,7 +109,12 @@ module.exports = class externalCollabs {
 
   static async delete(id) {
     try {
-      const result = await database.execute("UPDATE Usuarios SET estatus = 0 WHERE idUsuario = ?", [id]);
+      const result = await database.execute
+      (
+        `UPDATE Usuarios 
+        SET estatus = 0 
+        WHERE idUsuario = ?`, [id]
+      );
 
       if (result.affectedRows === 0) return { success: false, message: "No user found with that ID." };
 

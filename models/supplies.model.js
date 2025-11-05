@@ -21,7 +21,11 @@ module.exports = class Supplies {
     // Static method to fetch all supplies from the database
     static async fetchAll() {
         try {
-            const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo");
+            const rows = await database.query
+            (`
+                SELECT idInsumo, nombre, imagenInsumo 
+                FROM Insumo`
+            );
             console.log("ROWS:", rows);
             return rows; // Return the result to the controller
         } catch (err) {
@@ -33,9 +37,12 @@ module.exports = class Supplies {
     // Search supplies by name
     static async searchSupplies(value) {
         try {
-            const rows = await database.query(
-                "SELECT idInsumo, nombre, imagenInsumo FROM Insumo WHERE nombre LIKE ?",
-                [`%${value}%`]
+            const rows = await database.query
+            (
+                `SELECT idInsumo, nombre, imagenInsumo 
+                FROM Insumo 
+                WHERE nombre 
+                    LIKE ?`,[`%${value}%`]
             );
             return rows;
         } catch (err){
@@ -48,21 +55,29 @@ module.exports = class Supplies {
     static async filter(type, value) {
         try {
             if (type == "category") {
-                const rows = await database.query(
-                    "SELECT i.idInsumo, i.nombre, i.imagenInsumo FROM Insumo i, Categoria c WHERE i.idCategoria = c.idCategoria AND c.descripcion = ?",
-                    [value]
+                const rows = await database.query
+                (
+                    `SELECT i.idInsumo, i.nombre, i.imagenInsumo 
+                    FROM Insumo i, Categoria c 
+                    WHERE i.idCategoria = c.idCategoria 
+                        AND c.descripcion = ?`,[value]
                 );
                 return rows;
             } else if (type == "measure") {
-                const rows = await database.query(
-                    "SELECT idInsumo, nombre, imagenInsumo FROM Insumo WHERE unidadMedida = ?",
-                    [value]
+                const rows = await database.query
+                (
+                    `SELECT idInsumo, nombre, imagenInsumo 
+                    FROM Insumo 
+                    WHERE unidadMedida = ?`,[value]
                 );
                 return rows;
             } else if (type == "workshop") {
-                const rows = await database.query(
-                    "SELECT i.idInsumo, i.nombre, i.imagenInsumo FROM Insumo i, Taller t WHERE i.idTaller = t.idTaller AND t.nombreTaller = ?",
-                    [value]
+                const rows = await database.query
+                (
+                    `SELECT i.idInsumo, i.nombre, i.imagenInsumo 
+                    FROM Insumo i, Taller t 
+                    WHERE i.idTaller = t.idTaller 
+                        AND t.nombreTaller = ?`,[value]
                 );
                 return rows;
             }
@@ -77,13 +92,21 @@ module.exports = class Supplies {
     static async orderSupplies(value) {
         try {
             if (value == "asc") {
-                const rows = await database.query(
-                    "SELECT idInsumo, nombre, imagenInsumo FROM Insumo ORDER BY nombre ASC"
+                const rows = await database.query
+                (
+                    `SELECT idInsumo, nombre, imagenInsumo 
+                    FROM Insumo 
+                    ORDER BY nombre 
+                        ASC`
                 );
                 return rows;
             } else if (value == "desc") {
-                const rows = await database.query(
-                    "SELECT idInsumo, nombre, imagenInsumo FROM Insumo ORDER BY nombre DESC"
+                const rows = await database.query
+                (
+                    `SELECT idInsumo, nombre, imagenInsumo 
+                    FROM Insumo 
+                    ORDER BY nombre 
+                        DESC`
                 );
                 return rows;
             }
