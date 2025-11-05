@@ -6,6 +6,10 @@
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
  - Added the modify controller in 'WorkshopsController' to change the values in the workshop.
  - Added the 'update' methods to the 'WorkshopsModel' to interact with the data base.
+ - Merge with realese 0-1-0
+ - Update supplies model
+### Changed
+ - Updated the function of delete for deleteBenefitiaries, so that it does a 'soft' delete.
 
 ## [0.1.0] - 03/11/2025
 
@@ -14,9 +18,17 @@
  - Added the business logic in 'BeneficiaryController' to validate the status (can't erase active beneficiaries).
  - Added the 'fetchById' and 'remove' methods to the 'BeneficiaryModel' to interact with the data base.
 
+## [0.0.0] - 02/11/2025 
+
+### Added
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+
 ## [0.1.0] - 01/11/2025  
 
 ### Added
+ - US to add a new supply, receiving params and post them into the db.
+ - Sequence diagrams for US fetchSupplyBatch and addSupply.
  - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
@@ -28,6 +40,21 @@
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
  
+ ## [0.0.0] - 04/11/2025 
+
+### Added
+- Merge with realese 0-1-0
+- Update supplies model
+
+## [0.0.0] - 02/11/2025 
+
+### Added
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+
+### Changed
+ - Supplies interface to match the params with the db.
+
 
 ## [0.0.0] - 31/10/2025  
 
