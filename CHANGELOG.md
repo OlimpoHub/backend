@@ -1,6 +1,8 @@
 ## [0.1.0] - 05/11/2025
 
 ### Added
+ - Added logic for Delete Supplie
+ - Sequence diagram for Delete Supplie
  - Added complete login and authentication flow divided in route, utils, controller and model.
  - Updated supplies model to follow database names
  - Implemented routes, controller, and model for the Get Supplies List use case.
