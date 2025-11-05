@@ -14,7 +14,14 @@ module.exports = class Workshops {
 
     async save() {
         try {
-            const query = `INSERT INTO Taller (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario) 
+            const query = `INSERT INTO taller 
+                            (idTaller, 
+                            idCapacitacion, 
+                            nombreTaller, 
+                            horaEntrada, 
+                            horaSalida, 
+                            estatus, 
+                            idUsuario) 
                           VALUES (?, ?, ?, ?, ?, ?, ?)`;
             
             const values = [
@@ -37,12 +44,19 @@ module.exports = class Workshops {
 
     static async add(tallerData) {
         try {
-            const camposValidos = ['idTaller', 'idCapacitacion', 'nombreTaller', 'horaEntrada', 'horaSalida', 'estatus', 'idUsuario'];
+            const camposValidos = [
+                'idTaller', 
+                'idCapacitacion', 
+                'nombreTaller', 
+                'horaEntrada', 
+                'horaSalida', 
+                'estatus', 
+                'idUsuario'];
             const campos = Object.keys(tallerData).filter(key => camposValidos.includes(key));
             const placeholders = campos.map(() => '?').join(', ');
             const valores = campos.map(campo => tallerData[campo]);
             
-            const query = `INSERT INTO Taller (${campos.join(', ')}) VALUES (${placeholders})`;
+            const query = `INSERT INTO taller (${campos.join(', ')}) VALUES (${placeholders})`;
             const result = await db.query(query, valores);
             return result;
             
