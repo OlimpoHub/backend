@@ -1,3 +1,9 @@
+## [0.0.0] - 04/11/2025 
+
+### Added
+- Merge with realese 0-1-0
+- Update supplies model
+
 ## [0.0.0] - 02/11/2025 
 
 ### Added

@@ -11,7 +11,7 @@ module.exports = class Supplies {
     // Static method to fetch all supplies from the database
     static async fetchAll() {
         try {
-            const rows = await database.query("SELECT nombre, imagenInsumo FROM Insumo");
+            const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo");
             console.log("ROWS:", rows);
             return rows; // Return the result to the controller
         } catch (err) {
