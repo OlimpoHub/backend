@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const jwt = require("jsonwebtoken");
+const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
 
@@ -162,14 +163,23 @@ exports.verifyToken = async (req, res) => {
 exports.registerPassword = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const success = await User.registerPassword(email, password);
+        const encryptedPassword = await argon2.hash(password);
+        const success = await User.registerPassword(email, encryptedPassword);
         if (!success) {
             return res.status(400).json({
                 status: false,
                 message: 'Password registration failed'
             });
         }
+        return res.status(200).json({
+            status: true,
+            message: 'Password registered successfully'
+        });
     } catch (error) {
         console.error('Password registeration failed:', error.message);
+        return res.status(400).json({
+            status: false,
+            message: 'Password registration failed - error'
+        });
     }
 }

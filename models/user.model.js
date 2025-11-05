@@ -37,15 +37,12 @@ module.exports = class User {
     };
 
     static async registerPassword(email, password) {
-        const [result] = await database.query(`
+        const result = await database.query(`
             UPDATE Usuarios
             SET contrasena = ?
             WHERE correoElectronico = ?`
         , [password, email]);
 
-        if (result.affectedRows > 0) {
-            return true;
-        }
-        return false;
-    }
+        return result.affectedRows > 0;
+    };
 }
