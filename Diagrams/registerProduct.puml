@@ -1,0 +1,47 @@
+@startuml INV-001 registerProduct
+participant Api
+boundary product.routes 
+control product.controller
+entity product.model
+
+
+autonumber
+activate Api
+Api --> product.routes : POST /product/registerProduct
+
+activate product.routes
+product.routes --> product.controller :  registerProduct(request, response)
+
+activate product.controller
+product.controller --> product.model : registerProduct(nombre, precioUnitarios, idCategoria,\n descripcion, imagen, disponible)
+
+create entity product
+
+activate product.model
+product.model --> product : new TienePruebas
+
+activate product
+product.model --> product : save()
+
+create database elArca
+
+product --> elArca : execute(INSERT INTO Producto (nombre, precioUnitarios, idCategoria,\n descripcion, imagen, disponible) VALUES (?, ?, ?, ?, ?, ?)",\n  [ this.nombre, this.precioUnitarios, this.idCategoria, this.descripcion,\n this.imagen, this.disponible]))
+
+activate elArca
+elArca --> product : OK
+
+deactivate elArca
+product --> product.model : result
+deactivate product
+
+product.model --> product.controller : result
+deactivate product.model
+
+product.controller --> product.routes : responseJSON(result)
+deactivate product.controller
+
+product.routes --> Api : responseJSON(result)
+deactivate product.routes
+deactivate Api
+
+@enduml
