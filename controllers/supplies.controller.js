@@ -43,9 +43,20 @@ exports.orderSupplies = async (request, response) => {
     }
 };
 
-exports.addSupply = async (req, res) => {
+exports.addOneSupply = async (req, res) => {
     try {
-        console.log("Hello, youre in supplies add route");
+        console.log(req.body);
+        const supply = new Supplies(
+            req.body.idTaller,
+            req.body.nombre,
+            req.body.unidadMedida,
+            req.body.idCategoria,
+            req.body.imagenInsumo,
+            req.body.status
+        );
+
+        const result = await supply.save();
+        res.status(201).json({ message: "Supply added successfully" });
     } catch (err) {
         res.status(500).json({ message: "Failed to add a supply", err });
     }

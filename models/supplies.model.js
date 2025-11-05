@@ -1,4 +1,5 @@
 const database = require("../utils/db");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = class Supplies {
     constructor(
@@ -87,6 +88,38 @@ module.exports = class Supplies {
             }
         } catch (err) {
             console.error("Error al ordenar insumos: ", err);
+            throw err;
+        }
+    }
+
+    async save() {
+        try {
+            const idInsumo = uuidv4();
+            const result = await database.query(
+                `INSERT INTO Insumo
+                    (
+                        idInsumo, 
+                        idTaller, 
+                        nombre, 
+                        unidadMedida, 
+                        idCategoria, 
+                        imagenInsumo, 
+                        status
+                    ) 
+                VALUES (?,?,?,?,?,?,?)`,
+                [
+                    idInsumo,
+                    this.idTaller,
+                    this.nombre,
+                    this.unidadMedida,
+                    this.idCategoria,
+                    this.imagenInsumo,
+                    this.status,
+                ]
+            );
+            return result;
+        } catch (err) {
+            console.log("Error adding a new supply", err);
             throw err;
         }
     }

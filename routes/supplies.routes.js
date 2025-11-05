@@ -7,6 +7,6 @@ router.get("/", suppliesController.getSupplies);
 router.post("/search", suppliesController.searchSupplies);
 router.post("/filter", suppliesController.filterSupplies);
 router.post("/order", suppliesController.orderSupplies);
-router.post("/add", suppliesController.addSupply);
+router.post("/add", suppliesController.addOneSupply);
 
 module.exports = router;
