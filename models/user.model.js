@@ -1,11 +1,21 @@
 const database = require('../utils/db');
 module.exports = class User {
-    constructor(_idUsuario, _idRol, _nombre, 
-        _apellidoPaterno, _apellidoMaterno, 
-        _fechaNacimiento, _carrera, 
-        _correoElectronico, _contrasena, 
-        _telefono, _estatus, _reglamentoInterno, 
-        _copiaINE, _avisoConfidencialidad, _foto
+    constructor(
+        _idUsuario, 
+        _idRol, 
+        _nombre, 
+        _apellidoPaterno, 
+        _apellidoMaterno, 
+        _fechaNacimiento, 
+        _carrera, 
+        _correoElectronico, 
+        _contrasena, 
+        _telefono, 
+        _estatus, 
+        _reglamentoInterno, 
+        _copiaINE, 
+        _avisoConfidencialidad, 
+        _foto
     ) {
        this.idUsuario = _idUsuario;
        this.idRol = _idRol;
@@ -36,7 +46,7 @@ module.exports = class User {
         return result[0].count > 0;
     };
 
-    static async registerPassword(email, password) {
+    static async updatePassword(email, password) {
         const result = await database.query(`
             UPDATE Usuarios
             SET contrasena = ?

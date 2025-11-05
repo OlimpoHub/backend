@@ -11,6 +11,7 @@
  - Modified supplies model to correctly fetch data from the database (search, order, filter)
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
+ - Logic to send email to recover password, check if the JWT is valid and update password with argon2 encryption.
  
 
 ## [0.0.0] - 31/10/2025  

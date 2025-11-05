@@ -160,11 +160,11 @@ exports.verifyToken = async (req, res) => {
     }
 }
 
-exports.registerPassword = async (req, res) => {
+exports.updatePassword = async (req, res) => {
     try {
         const { email, password } = req.body;
         const encryptedPassword = await argon2.hash(password);
-        const success = await User.registerPassword(email, encryptedPassword);
+        const success = await User.updatePassword(email, encryptedPassword);
         if (!success) {
             return res.status(400).json({
                 status: false,
