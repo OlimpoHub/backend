@@ -1,19 +1,22 @@
-const database =  require('../utils/db');
+const database = require('../utils/db');
 
-module.exports = class Supplies{
-    constructor(idInsumo, nombre, imagenInsumo){
+// Define the Supplies model class to represent supply entities
+module.exports = class Supplies {
+    constructor(idInsumo, nombre, imagenInsumo) {
         this.idInsumo = idInsumo;
         this.nombre = nombre;
         this.imagenInsumo = imagenInsumo;
     }
 
-    static async fetchAll(){
-        try{
-            const rows = await  database.query("SELECT nombre, imagenInsumo FROM Insumo");
-            return rows;
-        }catch(err){
-            console.error("Error al obtener catalogo de insumos:", err);
-            throw err; 
+    // Static method to fetch all supplies from the database
+    static async fetchAll() {
+        try {
+            const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo");
+            console.log("ROWS:", rows);
+            return rows; // Return the result to the controller
+        } catch (err) {
+            console.error("Error fetching supply catalog:", err);
+            throw err;
         }
     }
 
@@ -23,7 +26,7 @@ module.exports = class Supplies{
             const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo WHERE nombre LIKE ?", [`%${value}%`]);
             return rows;
         } catch (err){
-            console.error("Error al buscar insumos: ", err);
+            console.error("Error searching supplies: ", err);
             throw err;
         }
     }
@@ -43,7 +46,7 @@ module.exports = class Supplies{
             }
             
         } catch (err){
-            console.error("Error al buscar insumos: ", err);
+            console.error("Error searching supplies: ", err);
             throw err;
         }
     }
@@ -60,7 +63,7 @@ module.exports = class Supplies{
                 return rows;
             }
         } catch (err){
-            console.error("Error al ordenar insumos: ", err);
+            console.error("Error ordering supplies: ", err);
             throw err;
         }
     }
