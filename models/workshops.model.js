@@ -14,7 +14,7 @@ module.exports = class Workshops {
 
     async save() {
         try {
-            const query = `INSERT INTO taller 
+            const query = `INSERT INTO Taller 
                             (idTaller, 
                             idCapacitacion, 
                             nombreTaller, 
@@ -58,7 +58,7 @@ module.exports = class Workshops {
             const placeholders = campos.map(() => '?').join(', ');
             const valores = campos.map(campo => tallerData[campo]);
             
-            const query = `INSERT INTO taller (${campos.join(', ')}) VALUES (${placeholders})`;
+            const query = `INSERT INTO Taller (${campos.join(', ')}) VALUES (${placeholders})`;
             const result = await db.query(query, valores);
             return result;
             
@@ -71,7 +71,7 @@ module.exports = class Workshops {
     static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus) {
         try {
             const query = `
-            UPDATE taller 
+            UPDATE Taller 
             SET nombreTaller = ?,
                 horaEntrada = ?,
                 horaSalida = ?,
