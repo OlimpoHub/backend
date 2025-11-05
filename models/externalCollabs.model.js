@@ -30,7 +30,7 @@ module.exports = class externalCollabs {
   }
     
   //Insert into table `Users` using parameters (safe SQL).
-  async save(hashedPassword,photo) {
+  static async save(hashedPassword,photo) {
     return database
       .execute(
         `INSERT INTO Usuarios (
@@ -73,6 +73,49 @@ module.exports = class externalCollabs {
           `SELECT idUsuario 
             FROM Usuarios 
             WHERE correoElectronico = ?`,[this.email]
+        );
+      });
+  }
+
+  async updateById(idUsuario) {
+    return database
+      .execute(
+        `UPDATE Usuarios 
+        SET
+          idRol = ?,
+          nombre = ?,
+          apellidoPaterno = ?,
+          apellidoMaterno = ?,
+          fechaNacimiento = ?,
+          carrera = ?,
+          correoElectronico = ?,
+          telefono = ?,
+          estatus = ?,
+          reglamentoInterno = ?,
+          copiaINE = ?,
+          avisoConfidencialidad = ?
+        WHERE idUsuario = ?`,
+        [
+          this.roleId,                
+          this.name,                   
+          this.lastName,             
+          this.secondLastName,        
+          this.birthDate,             
+          this.degree,                 
+          this.email,                
+          this.phone,                  
+          this.status,               
+          this.internalRegulation, 
+          this.idCopy,          
+          this.confidentialityNotice,
+          idUsuario
+        ]
+      )
+      .then(() => {
+        return database.execute(
+          `SELECT * 
+           FROM Usuarios 
+           WHERE idUsuario = ?`, [idUsuario]
         );
       });
   }

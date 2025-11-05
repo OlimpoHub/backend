@@ -1,7 +1,11 @@
 ## [0.1.0] - 04/11/2025
 
-### Added
+### Fixed
  - Fix the query standar in models
+
+### Added
+ - Logic to Update external Collab
+ - Logic to Register an external collaborator.
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
@@ -28,7 +32,6 @@
 ### Added
  - US to add a new supply, receiving params and post them into the db.
  - Sequence diagrams for US fetchSupplyBatch and addSupply.
- - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
  - Sequence diagram for User Story of viewing external collaborator and all of them.
