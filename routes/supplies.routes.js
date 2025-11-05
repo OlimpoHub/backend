@@ -8,7 +8,6 @@ router.get("/", suppliesController.getSupplies);
 router.post("/search", suppliesController.searchSupplies);
 router.post("/filter", suppliesController.filterSupplies);
 router.post("/order", suppliesController.orderSupplies);
-router.post("/add", suppliesController.addSupply);
 
 // Export the router to be used in the main routes file
 module.exports = router;
