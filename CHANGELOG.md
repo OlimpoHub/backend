@@ -1,11 +1,5 @@
  ## [0.0.0] - 04/11/2025 
 
-### Added
-- Merge with realese 0-1-0
-- Routes, controller and model to register supply Batch
-
-## [0.1.0] - 04/11/2025
-
 ### Fixed
  - Fix the query standar in models
 
@@ -19,6 +13,7 @@
  - Added the 'update' methods to the 'WorkshopsModel' to interact with the data base.
  - Merge with realese 0-1-0
  - Update supplies model
+ - Routes, controller and model to register supply Batch
 ### Changed
  - Updated the function of delete for deleteBenefitiaries, so that it does a 'soft' delete.
 
