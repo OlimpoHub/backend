@@ -114,8 +114,8 @@ module.exports = class externalCollabs {
       .then(() => {
         return database.execute(
           `SELECT * 
-           FROM Usuarios 
-           WHERE idUsuario = ?`, [idUsuario]
+          FROM Usuarios 
+          WHERE idUsuario = ?`, [idUsuario]
         );
       });
   }
