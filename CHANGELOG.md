@@ -13,6 +13,8 @@
 ## [0.1.0] - 01/11/2025  
 
 ### Added
+ - US to add a new supply, receiving params and post them into the db.
+ - Sequence diagrams for US fetchSupplyBatch and addSupply.
  - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
@@ -35,6 +37,10 @@
 ### Added
 - Updated supplies model to follow database names
 - Implemented routes, controller, and model for the Get Supplies List use case.
+
+### Changed
+ - Supplies interface to match the params with the db.
+
 
 ## [0.0.0] - 31/10/2025  
 
