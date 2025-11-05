@@ -18,14 +18,14 @@ module.exports = class Supplies {
         this.status = status;
     }
 
+    // Static method to fetch all supplies from the database
     static async fetchAll() {
         try {
-            const rows = await database.query(
-                "SELECT nombre, imagenInsumo FROM Insumo"
-            );
-            return rows;
+            const rows = await database.query("SELECT idInsumo, nombre, imagenInsumo FROM Insumo");
+            console.log("ROWS:", rows);
+            return rows; // Return the result to the controller
         } catch (err) {
-            console.error("Error al obtener catalogo de insumos:", err);
+            console.error("Error fetching supply catalog:", err);
             throw err;
         }
     }
@@ -38,8 +38,8 @@ module.exports = class Supplies {
                 [`%${value}%`]
             );
             return rows;
-        } catch (err) {
-            console.error("Error al buscar insumos: ", err);
+        } catch (err){
+            console.error("Error searching supplies: ", err);
             throw err;
         }
     }
@@ -66,8 +66,9 @@ module.exports = class Supplies {
                 );
                 return rows;
             }
-        } catch (err) {
-            console.error("Error al buscar insumos: ", err);
+            
+        } catch (err){
+            console.error("Error searching supplies: ", err);
             throw err;
         }
     }
@@ -86,8 +87,8 @@ module.exports = class Supplies {
                 );
                 return rows;
             }
-        } catch (err) {
-            console.error("Error al ordenar insumos: ", err);
+        } catch (err){
+            console.error("Error ordering supplies: ", err);
             throw err;
         }
     }
