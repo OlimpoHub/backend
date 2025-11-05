@@ -1,5 +1,10 @@
  ## [0.0.0] - 04/11/2025 
 
+### Added 
+- Implemented routes, controllers, and model for the View Workshops use case. 
+
+## [0.0.0] - 04/11/2025 
+
 ### Added
 - Merge with realese 0-1-0
 - Routes, controller and model to register supply Batch
