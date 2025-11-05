@@ -54,6 +54,41 @@ exports.registerExternalCollabs = (request, response) => {
   });
 };
 
+//Modify externalCollab
+
+exports.updateExternalCollabs = async (request, response) => {
+  try {
+    const idUsuario = request.body.id;
+    const edit_externalCollabs = new externalCollabs(
+    request.body.externalCollab_roleId,
+    request.body.externalCollab_name,
+    request.body.externalCollab_lastName,
+    request.body.externalCollab_secondLastName,
+    request.body.externalCollab_birthDate,
+    request.body.externalCollab_degree,
+    request.body.externalCollab_email,
+    request.body.externalCollab_phone,
+    request.body.externalCollab_status,
+    request.body.externalCollab_internalRegulation,
+    request.body.externalCollab_idCopy,
+    request.body.externalCollab_confidentialityNotice,
+  );
+
+    await edit_externalCollabs.updateById(idUsuario);
+
+    response.status(200).json({ 
+        status: true ,
+        message: "Succes to update external collab."});
+
+  } catch (error) {
+    console.error("Error updating external collaborator:", error);
+    response.status(500).json({ 
+      status: false,
+      message: "Failed to update external collaborator." });
+  }
+};
+
+
 
 exports.getExternalCollabsByID = async (request, response) => {
   try {
