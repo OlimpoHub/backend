@@ -1,6 +1,17 @@
-## [0.1.0] - 04/11/2025
+ ## [0.0.0] - 04/11/2025 
 
 ### Added
+- Merge with realese 0-1-0
+- Routes, controller and model to register supply Batch
+
+## [0.1.0] - 04/11/2025
+
+### Fixed
+ - Fix the query standar in models
+
+### Added
+ - Logic to Update external Collab
+ - Logic to Register an external collaborator.
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
@@ -29,7 +40,6 @@
 ### Added
  - US to add a new supply, receiving params and post them into the db.
  - Sequence diagrams for US fetchSupplyBatch and addSupply.
- - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
  - Sequence diagram for User Story of viewing external collaborator and all of them.
@@ -39,8 +49,10 @@
  - Modified supplies model to correctly fetch data from the database (search, order, filter)
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
+ - Logic to send email to recover password, check if the JWT is valid and update password with argon2 encryption.
  
- ## [0.0.0] - 04/11/2025 
+
+## [0.0.0] - 04/11/2025 
 
 ### Added
 - Merge with realese 0-1-0

@@ -22,7 +22,7 @@ module.exports = class Workshops {
                             horaSalida, 
                             estatus, 
                             idUsuario) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                            VALUES (?, ?, ?, ?, ?, ?, ?)`;
             
             const values = [
             this.idTaller,
