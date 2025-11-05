@@ -1,4 +1,4 @@
- ## [0.0.0] - 04/11/2025 
+## [0.1.0] - 05/11/2025
 
 ### Added 
 - Implemented routes, controllers, and model for the View Workshops use case. 
@@ -6,10 +6,16 @@
 ## [0.0.0] - 04/11/2025 
 
 ### Added
-- Merge with realese 0-1-0
-- Routes, controller and model to register supply Batch
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+ - Sequence diagram for Product Batch CRUD operations in the MVC structure.
+ - Implemented Product Batch model with CRUD operations (fetchAll, fetchOne, add, update, remove).
+ - Added Product Batch controller with error handling and response formatting.
+ - Created routes for Product Batch operations with JSDoc documentation.
+ - UUID generation for inventory IDs.
+ 
 
-## [0.1.0] - 04/11/2025
+## [0.0.0] - 04/11/2025
 
 ### Fixed
  - Fix the query standar in models
@@ -20,10 +26,29 @@
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
  - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
+ - Added the modify controller in 'WorkshopsController' to change the values in the workshop.
+ - Added the 'update' methods to the 'WorkshopsModel' to interact with the data base.
  - Merge with realese 0-1-0
  - Update supplies model
+ - Routes, controller and model to register supply Batch
 ### Changed
  - Updated the function of delete for deleteBenefitiaries, so that it does a 'soft' delete.
+
+## [0.0.0] - 04/11/2025 
+
+### Added
+- Merge with realese 0-1-0
+- Update supplies model
+
+## [0.0.0] - 02/11/2025 
+
+### Added
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+
+### Changed
+ - Supplies interface to match the params with the db.
+
 
 ## [0.1.0] - 03/11/2025
 
@@ -53,50 +78,13 @@
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
  - Logic to send email to recover password, check if the JWT is valid and update password with argon2 encryption.
- 
-
-## [0.0.0] - 04/11/2025 
-
-### Added
-- Merge with realese 0-1-0
-- Update supplies model
-
-## [0.0.0] - 02/11/2025 
-
-### Added
-- Updated supplies model to follow database names
-- Implemented routes, controller, and model for the Get Supplies List use case.
-
-### Changed
- - Supplies interface to match the params with the db.
-
 
 ## [0.0.0] - 31/10/2025  
 
 ### Changed
-
- - Updated dotenv configuration to correctly load environment variables from the .env file located in the parent directory.
-
-### Added
- - Test code to verify database connection and query execution.
- - Added "type": "module" to package.json to enable ES module support.
-
-## [0.0.0] - 20/10/2025  
-
-### Added
-
- - MC (Model-Controller) and routes (endpoints)
- - Mock data to verify the correct implementation of the API
- - APIs initial structure with NodeJs and Express
-
-## [0.0.0] - 14/10/2025
-
-### Added
-
- - Coding Standard (14/10/2025)
- - Project's initial commit (14/10/2025)
- - Changelog file (14/10/2025)
+@@ -94,4 +48,4 @@
  - Pull request template file (14/10/2025)
 
 ### Changed
+ - Pull request template file now has a direct link to the coding standard (21/10/2025)
  - Pull request template file now has a direct link to the coding standard (21/10/2025)

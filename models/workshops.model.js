@@ -14,7 +14,7 @@ module.exports = class Workshops {
 
     async save() {
         try {
-            const query = `INSERT INTO taller 
+            const query = `INSERT INTO Taller 
                             (idTaller, 
                             idCapacitacion, 
                             nombreTaller, 
@@ -25,22 +25,24 @@ module.exports = class Workshops {
                             VALUES (?, ?, ?, ?, ?, ?, ?)`;
             
             const values = [
-                this.idTaller,
-                this.idCapacitacion,
-                this.nombreTaller,
-                this.horaEntrada,
-                this.horaSalida,
-                this.estatus,
-                this.idUsuario
+            this.idTaller,
+            this.idCapacitacion,
+            this.nombreTaller,
+            this.horaEntrada,
+            this.horaSalida,
+            this.estatus,
+            this.idUsuario
             ];
-            const result = await db.query(query, values);
+
+            const result = await db.execute(query, values);
             return result;
-            
+
         } catch (error) {
             console.error('Error en save():', error);
             throw error;
         }
     }
+
 
     static async add(tallerData) {
         try {
@@ -56,12 +58,33 @@ module.exports = class Workshops {
             const placeholders = campos.map(() => '?').join(', ');
             const valores = campos.map(campo => tallerData[campo]);
             
-            const query = `INSERT INTO taller (${campos.join(', ')}) VALUES (${placeholders})`;
+            const query = `INSERT INTO Taller (${campos.join(', ')}) VALUES (${placeholders})`;
             const result = await db.query(query, valores);
             return result;
             
         } catch (error) {
             console.error('Error en add():', error);
+            throw error;
+        }
+    }
+
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus) {
+        try {
+            const query = `
+            UPDATE Taller 
+            SET nombreTaller = ?,
+                horaEntrada = ?,
+                horaSalida = ?,
+                estatus = ?
+            WHERE idTaller = ?
+            `;
+            
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, idTaller];
+            const result = await db.execute(query, params);
+            return result;
+            
+        } catch (error) {
+            console.error('Error update():', error);
             throw error;
         }
     }

@@ -1,0 +1,84 @@
+@startuml ProductBatch Operations
+actor Client
+participant "Express\nRouter" as Router
+participant "ProductBatch\nController" as Controller
+participant "ProductBatch\nModel" as Model
+database "MariaDB" as DB
+
+' GET all product batches
+group Get All Product Batches
+    Client -> Router: GET /productBatch
+    Router -> Controller: getAllPb()
+    Controller -> Model: fetchAll()
+    Model -> DB: SELECT JOIN Producto & InventarioProductos
+    DB --> Model: rows[]
+    Model --> Controller: product batches
+    Controller --> Router: JSON response
+    Router --> Client: 200 OK + batches
+end
+
+' GET one product batch
+group Get Product Batch by ID
+    Client -> Router: GET /productBatch/:id
+    Router -> Controller: getPbById(id)
+    Controller -> Model: fetchOne(id)
+    Model -> DB: SELECT with JOIN where id
+    DB --> Model: rows[]
+    Model --> Controller: batch details
+    Controller --> Router: JSON response
+    alt Batch Found
+        Router --> Client: 200 OK + batch
+    else Batch Not Found
+        Router --> Client: 404 Not Found
+    end
+end
+
+' POST new batch
+group Create Product Batch
+    Client -> Router: POST /productBatch\n{batch data}
+    Router -> Controller: addPb(data)
+    Controller -> Model: add(content)
+    note right of Model: Generate UUID
+    Model -> DB: INSERT INTO InventarioProductos
+    DB --> Model: result
+    Model --> Controller: {idInventario, ...content}
+    Controller --> Router: JSON response
+    Router --> Client: 201 Created + new batch
+end
+
+' PUT update batch
+group Update Product Batch
+    Client -> Router: PUT /productBatch/:id\n{updates}
+    Router -> Controller: updatePb(id, data)
+    Controller -> Model: update(id, content)
+    note right of Model: Validate fields
+    Model -> DB: UPDATE InventarioProductos
+    DB --> Model: result
+    Model --> Controller: updated batch
+    alt Update Successful
+        Controller --> Router: JSON response
+        Router --> Client: 200 OK + updated
+    else Batch Not Found
+        Controller --> Router: null
+        Router --> Client: 404 Not Found
+    end
+end
+
+' DELETE batch
+group Delete Product Batch
+    Client -> Router: DELETE /productBatch/:id
+    Router -> Controller: removePb(id)
+    Controller -> Model: remove(id)
+    Model -> DB: DELETE FROM InventarioProductos
+    DB --> Model: result
+    Model --> Controller: success/failure
+    alt Delete Successful
+        Controller --> Router: success
+        Router --> Client: 204 No Content
+    else Batch Not Found
+        Controller --> Router: failure
+        Router --> Client: 404 Not Found
+    end
+end
+
+@enduml
