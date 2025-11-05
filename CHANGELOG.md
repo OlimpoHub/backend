@@ -1,8 +1,10 @@
 ## [0.0.0] - 04/11/2025 
 
 ### Added
+- Logic to Update external Collab
 - Merge with realese 0-1-0
 - Update supplies model
+- Logic to Register an external collaborator.
 
 ## [0.0.0] - 02/11/2025 
 
@@ -15,7 +17,6 @@
 ### Added
  - US to add a new supply, receiving params and post them into the db.
  - Sequence diagrams for US fetchSupplyBatch and addSupply.
- - Logic to Register an external collaborator.
  - Logic to delete an external collaborator.
  - Sequence diagram for User Story of deliting an external collaborator.
  - Sequence diagram for User Story of viewing external collaborator and all of them.
