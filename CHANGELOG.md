@@ -1,3 +1,9 @@
+ ## [0.0.0] - 04/11/2025 
+
+### Added
+- Merge with realese 0-1-0
+- Routes, controller and model to register supply Batch
+
 ## [0.1.0] - 04/11/2025
 
 ### Added
@@ -41,7 +47,8 @@
  - Updated supplies controller to handle errors when fetching supplies by ID.
  - Method to handle post request in index.js.
  
- ## [0.0.0] - 04/11/2025 
+
+## [0.0.0] - 04/11/2025 
 
 ### Added
 - Merge with realese 0-1-0
