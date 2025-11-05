@@ -7,37 +7,84 @@ const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
 
-exports.post_login = (req, res) => {
-    const { username, password } = req.body;
+exports.post_login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
 
-    const user = users.find((u) => u.username === username && u.password === password);
+        if (!username || !password) {
+            return res.status(400).json({ message: 'Email and password required' });
+        }
 
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+        const user = await User.findByEmail(username); 
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
 
-    const { password: _, ...userResponse } = user;
-    const accessToken = tokenUtils.generateAccessToken(user);
-    const refreshToken = tokenUtils.generateRefreshToken(user);
+        const isValidPassword = await argon2.verify(user.contrasena, password);
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
 
-    res.json({
-        user: userResponse,
-        accessToken,
-        refreshToken,
-    });
+        const safeUser = {
+            id: user.idUsuario,
+            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`,
+            role: user.roleName
+        };
+
+        const accessToken = tokenUtils.generateAccessToken({
+            id: user.idUsuario,
+            role: user.idRol,
+        });
+
+        const refreshToken = tokenUtils.generateRefreshToken({
+            id: user.idUsuario,
+        });
+
+        return res.json({
+            user: safeUser,
+            accessToken,
+            refreshToken,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
-exports.post_refresh = (req, res) => {
-    const { token } = req.body;
-    if (!token) return res.status(401).json({ message: "Refresh token required" });
+exports.post_refresh = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+        console.log(refreshToken);
+        if (!refreshToken) {
+            console.log("xd Fui yo");
+            return res.status(401).json({ message: 'Refresh token required' });
+        }
 
-    jwt.verify(token, tokenUtils.REFRESH_SECRET, (err, decoded) => {
-        if (err) return res.status(401).json({ message: "Invalid refresh token" });
+        jwt.verify(refreshToken, tokenUtils.REFRESH_SECRET, async (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid refresh token' });
+            }
+            
+            const user = await User.findById(decoded.id);
+            console.log(decoded.id);
+            console.log(user);
+            if (!user) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
 
-        const user = users.find((u) => u.id === decoded.id);
-        if (!user) return res.status(401).json({ message: "User not found" });
+            const newAccessToken = tokenUtils.generateAccessToken({ 
+                id: user.idUsuario, 
+                role: user.idRol,
+            });
 
-        const newAccessToken = generateAccessToken(user);
-        res.json({ accessToken: newAccessToken });
-    });
+            return res.json({ accessToken: newAccessToken });
+        });
+        
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
 
