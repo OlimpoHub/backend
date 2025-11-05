@@ -28,3 +28,13 @@ exports.getOneSupplyBatch = async (req, res) => {
         res.status(500).json({message: "Failed to fetch one supply batch"});
     }
 }
+
+exports.addSupply = async (request, response) => {
+    try {
+        const {supplyId, quantity, expirationDate, acquisitionId} = request.body;
+        const newSupply = await SupplyBatch.addSupply(supplyId, quantity, expirationDate, acquisitionId);
+        response.status(200).json({ message: "Supply added successfully" });
+    } catch (error) {
+        console.error("Error adding supply: ", error);
+    }
+};

@@ -5,5 +5,6 @@ const supplyBatchController = require("../controllers/supplyBatch.controller");
 
 router.get("/", supplyBatchController.getSupplyBatch);
 router.get("/:idInsumo", supplyBatchController.getOneSupplyBatch);
+router.post("/addBatch", supplyBatchController.addSupply);
 
 module.exports = router;

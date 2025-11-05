@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 8080;
+const bodyParser = require('body-parser');
 
 const auth_routes = require("./routes/auth.routes");
 const general_routes = require("./routes/general.routes");
