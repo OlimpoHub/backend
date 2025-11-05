@@ -1,0 +1,43 @@
+@startuml
+
+actor api
+boundary externalColabs.routes as routes
+control externalColabs.controller as controller
+entity externalColabs.model as model
+database db
+
+activate api
+api -> routes: GET /externalColabs/filter
+
+activate routes
+routes -> controller: getExternalColabsFiltered(req, res)
+deactivate routes
+
+activate controller
+controller ->> model: getExternalColabsFiltered\n\t(\n\t\ttype: String, \n\t\tvalue: String\n\t)
+
+activate model
+
+group filter by role
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE r.nombreRol = ?`, [value]\n\t)
+    activate db
+end
+
+group filter by status
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tWHERE u.estatus = ?`, [value]\n\t)
+end
+
+db -->> model: rows
+deactivate db
+
+model -->> controller: externalColabsFiltered
+deactivate model
+
+controller -->> routes: externalColabsFilteredJson
+deactivate controller
+
+activate routes
+routes -->> api: res\n\t.status(200)\n\t.json(externalColabsFiltered)
+deactivate routes
+deactivate api
+@enduml
