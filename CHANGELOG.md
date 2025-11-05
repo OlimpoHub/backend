@@ -1,3 +1,13 @@
+## [0.1.0] - 05/11/2025  
+
+### Added
+ - Sequence diagram for Product Batch CRUD operations in the MVC structure.
+ - Implemented Product Batch model with CRUD operations (fetchAll, fetchOne, add, update, remove).
+ - Added Product Batch controller with error handling and response formatting.
+ - Created routes for Product Batch operations with JSDoc documentation.
+ - UUID generation for inventory IDs.
+
+ 
 ## [0.1.0] - 01/11/2025  
 
 ### Added
