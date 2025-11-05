@@ -1,5 +1,48 @@
 const Beneficiary = require('../models/beneficiary.model');
 
+// Nueva función para BEN-04
+exports.deleteBeneficiary = async (req, res) => {
+    // 1. (Pendiente) Autenticación
+    // Aqui va logica para verificar que el usuario es "Coordinador"
+    // if (req.user.role !== 'Coordinador') {
+    //  return res.status(403).send({ message: "No permission to do this action." });
+    // }
+
+    try {
+        const { id } = req.params;
+
+        // 2. (Flujo 5.1) Verificar si el beneficiario esta activo ANTES de borrar
+        const existingBeneficiary = await Beneficiary.fetchById(id);
+
+        if (!existingBeneficiary) {
+            return res.status(404).send({ message: "Beneficiary not found." });
+        }
+
+        // Asumimos que 1 = Active y 0 = Inactive.
+        // Aqui se aplica el dicho SOFT DELETE.
+        if (existingBeneficiary.estatus === 0) {
+            // (Flujo Alterno 5.1)
+            return res.status(409).send({
+                message: "The beneficiary is already inactive."
+            });
+        }
+
+        // 3. (Flujo Principal) El beneficiario existe y está activo. Procedemos a eliminar (inactivarlo).
+        await Beneficiary.deactivate(id);
+
+        // 4. (Paso 7) Éxito. 204 significa "Sin Contenido" (la eliminacion fue exitosa)
+        res.status(204).send();
+
+    } catch (error) {
+        //Manejo de errores de base de datos o servidor
+        res.status(500).send({
+            message: "Error in the server when trying to delete the beneficiary.",
+            error: error.message
+        });
+    }
+};
+// FIN DE FUNCION PARA BEN-04
+
 exports.get_beneficiaries = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.fetchAll();

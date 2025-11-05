@@ -1,0 +1,38 @@
+@startuml
+
+actor user
+participant SuppliesBatchListScreen as screen
+participant SuppliesBatchListViewModel as vm
+participant SuppliesBatchListUseCase as us
+participant SuppliesBatchRepositoryImpl as repo
+participant Api as api
+
+user -> screen: views the screen
+
+activate screen
+screen ->> vm: created
+
+activate vm
+vm ->> us: invoke()
+
+activate us
+us ->> repo: getSupplyBatchList()
+
+activate repo
+repo ->> api: getSupplyBatchList()
+
+activate api
+api -->> repo: SupplyBatchListDto
+deactivate api
+
+repo -->> us: List<SupplyBatch>
+deactivate repo
+
+us -->> vm: Flow<Result<List<SupplyBatch>>>
+deactivate us
+
+vm -->> screen: StateFlow<SupplyBatchUiState>
+
+screen ->> user:Display supply batch list
+
+@enduml
