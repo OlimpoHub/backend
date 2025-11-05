@@ -3,8 +3,9 @@
 ### Added
  - Added logic for Delete Supplie
  - Sequence diagram for Delete Supplie
-- Updated supplies model to follow database names
-- Implemented routes, controller, and model for the Get Supplies List use case.
+ - Added complete login and authentication flow divided in route, utils, controller and model.
+ - Updated supplies model to follow database names
+ - Implemented routes, controller, and model for the Get Supplies List use case.
  - Sequence diagram for Product Batch CRUD operations in the MVC structure.
  - Implemented Product Batch model with CRUD operations (fetchAll, fetchOne, add, update, remove).
  - Added Product Batch controller with error handling and response formatting.

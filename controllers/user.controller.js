@@ -1,10 +1,94 @@
 const User = require("../models/user.model");
+const tokenUtils = require("../utils/token.utils");
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const jwt = require("jsonwebtoken");
 const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
+
+// Login user: validate credentials and return access + refresh tokens
+exports.post_login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ message: 'Email and password required' });
+        }
+
+        const user = await User.findByEmail(username); 
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        const isValidPassword = await argon2.verify(user.contrasena, password);
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        const safeUser = {
+            id: user.idUsuario,
+            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`,
+            role: user.roleName
+        };
+
+        const accessToken = tokenUtils.generateAccessToken({
+            id: user.idUsuario,
+            role: user.idRol,
+        });
+
+        const refreshToken = tokenUtils.generateRefreshToken({
+            id: user.idUsuario,
+        });
+
+        return res.json({
+            user: safeUser,
+            accessToken,
+            refreshToken,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+// Generate a new access token using a valid refresh token
+exports.post_refresh = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+        console.log(refreshToken);
+        if (!refreshToken) {
+            console.log("xd Fui yo");
+            return res.status(401).json({ message: 'Refresh token required' });
+        }
+
+        jwt.verify(refreshToken, tokenUtils.REFRESH_SECRET, async (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid refresh token' });
+            }
+            
+            const user = await User.findById(decoded.id);
+            console.log(decoded.id);
+            console.log(user);
+            if (!user) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            const newAccessToken = tokenUtils.generateAccessToken({ 
+                id: user.idUsuario, 
+                role: user.idRol,
+            });
+
+            return res.json({ accessToken: newAccessToken });
+        });
+        
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 exports.recoverPassword = async (req, res) => {
   try {
