@@ -7,6 +7,7 @@ const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
 
+// Login user: validate credentials and return access + refresh tokens
 exports.post_login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -52,6 +53,7 @@ exports.post_login = async (req, res) => {
     }
 };
 
+// Generate a new access token using a valid refresh token
 exports.post_refresh = async (req, res) => {
     try {
         const { refreshToken } = req.body;

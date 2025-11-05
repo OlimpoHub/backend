@@ -3,6 +3,7 @@ dotenv.config({ path: './.env' });
 
 const jwt = require("jsonwebtoken");
 
+// Middleware to authenticate the access token sent in the request headers
 exports.authenticateToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
