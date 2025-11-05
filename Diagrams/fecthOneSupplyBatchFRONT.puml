@@ -1,0 +1,38 @@
+@startuml
+
+actor user
+participant SuppliesBatchDetailScreen as screen
+participant SuppliesBatchDetailViewModel as vm
+participant SuppliesBatchUseCase as us
+participant SuppliesBatchRepositoryImpl as repo
+participant Api as api
+
+user -> screen: click in a supply batch
+
+activate screen
+screen ->> vm: getSupplyBatch(idSupply: String)
+
+activate vm
+vm ->> us: invoke()
+
+activate us
+us ->> repo: getSupplyBatch(idSupply)
+
+activate repo
+repo ->> api: getSupplyBatch(idSupply)
+
+activate api
+api -->> repo: SupplyBatchDto
+deactivate api
+
+repo -->> us: SupplyBatch
+deactivate repo
+
+us -->> vm: Flow<Result<SupplyBatch>>
+deactivate us
+
+vm -->> screen: StateFlow<SupplyBatchDetailUiState>
+
+screen ->> user:Display an specific supply batch
+
+@enduml

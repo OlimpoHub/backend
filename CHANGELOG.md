@@ -1,4 +1,47 @@
-## [0.0.0] - 04/11/2025 
+## [0.1.0] - 04/11/2025
+
+### Added
+ - Logic to Update external Collab
+ - Merge with realese 0-1-0
+ - Update supplies model
+ - Logic to Register an external collaborator.
+ - Added the business logic in 'WorkshopsController' to generate a new workshop.
+ - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
+ - Added the routes in 'WorkshopsRoutes' and 'GeneralRoutes' to access to the model and controller.
+ - Merge with realese 0-1-0
+ - Update supplies model
+### Changed
+ - Updated the function of delete for deleteBenefitiaries, so that it does a 'soft' delete.
+
+## [0.1.0] - 03/11/2025
+
+### Added
+ - Implemented the endpoint 'DELETE /api/beneficiarios/:id' for the user story 'BEN-004'.
+ - Added the business logic in 'BeneficiaryController' to validate the status (can't erase active beneficiaries).
+ - Added the 'fetchById' and 'remove' methods to the 'BeneficiaryModel' to interact with the data base.
+
+## [0.0.0] - 02/11/2025 
+
+### Added
+- Updated supplies model to follow database names
+- Implemented routes, controller, and model for the Get Supplies List use case.
+
+## [0.1.0] - 01/11/2025  
+
+### Added
+ - US to add a new supply, receiving params and post them into the db.
+ - Sequence diagrams for US fetchSupplyBatch and addSupply.
+ - Logic to delete an external collaborator.
+ - Sequence diagram for User Story of deliting an external collaborator.
+ - Sequence diagram for User Story of viewing external collaborator and all of them.
+ - Logic to have the routes to view external collaborators (all and by ID).
+ - Use case to fetch all supply batches with the MVC structure (supplyBatch)
+ - Use case to fetch one supply batch with the MVC structure (supplyBatch)
+ - Modified supplies model to correctly fetch data from the database (search, order, filter)
+ - Updated supplies controller to handle errors when fetching supplies by ID.
+ - Method to handle post request in index.js.
+ 
+ ## [0.0.0] - 04/11/2025 
 
 ### Added
 - Merge with realese 0-1-0
@@ -16,20 +59,9 @@
 - Updated supplies model to follow database names
 - Implemented routes, controller, and model for the Get Supplies List use case.
 
-## [0.1.0] - 01/11/2025  
+### Changed
+ - Supplies interface to match the params with the db.
 
-### Added
- - Logic to Register an external collaborator.
- - Logic to delete an external collaborator.
- - Sequence diagram for User Story of deliting an external collaborator.
- - Sequence diagram for User Story of viewing external collaborator and all of them.
- - Logic to have the routes to view external collaborators (all and by ID).
- - Use case to fetch all supply batches with the MVC structure (supplyBatch)
- - Use case to fetch one supply batch with the MVC structure (supplyBatch)
- - Modified supplies model to correctly fetch data from the database (search, order, filter)
- - Updated supplies controller to handle errors when fetching supplies by ID.
- - Method to handle post request in index.js.
- 
 
 ## [0.0.0] - 31/10/2025  
 

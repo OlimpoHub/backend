@@ -8,6 +8,7 @@ router.post("/deleteExternalCollab", externalCollabsController.deleteExternalCol
 router.get("/:id", externalCollabsController.getExternalCollabsByID);
 
 router.post("/register", externalCollabsController.registerExternalCollabs);
+router.post("/update", externalCollabsController.updateExternalCollabs);
 
 
 module.exports = router;
