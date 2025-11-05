@@ -61,9 +61,19 @@ module.exports = class SupplyBatch {
             const result = await database.query
             (   
                 `INSERT INTO InventarioInsumos 
-                    (idInsumo, CantidadActual, FechaCaducidad, idTipoAdquisicion) 
+                    (
+                        idInsumo, 
+                        CantidadActual, 
+                        FechaCaducidad, 
+                        idTipoAdquisicion
                 VALUES (?, ?, ?, ?)`,
-                 [supplyId, quantity, expirationDate, acquisitionId]);
+                 [
+                    supplyId,
+                    quantity, 
+                    expirationDate, 
+                    acquisitionId
+                ]
+            );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
         } catch (err) {
