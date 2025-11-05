@@ -67,7 +67,7 @@ module.exports = class SupplyBatch {
                         FechaCaducidad, 
                         idTipoAdquisicion
                 VALUES (?, ?, ?, ?)`,
-                 [
+                [
                     supplyId,
                     quantity, 
                     expirationDate, 

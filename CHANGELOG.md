@@ -6,10 +6,11 @@
 
 ## [0.1.0] - 04/11/2025
 
+### Fixed
+ - Fix the query standar in models
+
 ### Added
  - Logic to Update external Collab
- - Merge with realese 0-1-0
- - Update supplies model
  - Logic to Register an external collaborator.
  - Added the business logic in 'WorkshopsController' to generate a new workshop.
  - Added the 'save' and 'add' methods to the 'WorkshopsModel' to interact with the data base.
