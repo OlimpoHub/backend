@@ -7,7 +7,7 @@ entity externalColabs.model as model
 database db
 
 activate api
-api -> routes: GET /externalColabs/filter
+api -> routes: POST /externalColabs/filter
 
 activate routes
 routes -> controller: getExternalColabsFiltered(req, res)
@@ -19,7 +19,7 @@ controller ->> model: getExternalColabsFiltered\n\t(\n\t\ttype: String, \n\t\tva
 activate model
 
 group filter by role
-    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE r.nombreRol = ?`, [value]\n\t)
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE r.nombreRol = ? ORDER BY r.nombreRol ASC`, [value]\n\t)
     activate db
 end
 
