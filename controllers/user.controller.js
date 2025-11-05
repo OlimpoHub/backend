@@ -148,13 +148,28 @@ exports.verifyToken = async (req, res) => {
         res.status(200).json({
             valid: true,
             email: decoded.email,
-            message: 'Token válido',
+            message: 'Email verified with an valid token',
         });
     } catch (error) {
         console.error('Token verification failed:', error.message);
         res.status(400).json({
             valid: false,
-            message: 'Token inválido o expirado',
+            message: 'Invalid or expired token',
         })
+    }
+}
+
+exports.registerPassword = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const success = await User.registerPassword(email, password);
+        if (!success) {
+            return res.status(400).json({
+                status: false,
+                message: 'Password registration failed'
+            });
+        }
+    } catch (error) {
+        console.error('Password registeration failed:', error.message);
     }
 }
