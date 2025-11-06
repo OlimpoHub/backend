@@ -2,72 +2,114 @@ const db = require('../utils/db.js');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Workshops {
-  constructor(idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario) {
-    this.idTaller = idTaller || uuidv4();
-    this.idCapacitacion = idCapacitacion;
-    this.nombreTaller = nombreTaller;
-    this.horaEntrada = horaEntrada;
-    this.horaSalida = horaSalida;
-    this.estatus = estatus;
-    this.idUsuario = idUsuario;
-  }
-
-  async save() {
-    try {
-      const query = `INSERT INTO Taller (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?)`;
-      
-      const params = [
-        this.idTaller,
-        this.idCapacitacion,
-        this.nombreTaller,
-        this.horaEntrada,
-        this.horaSalida,
-        this.estatus,
-        this.idUsuario
-      ];
-      
-      const result = await db.execute(query, params);
-      return result;
-      
-    } catch (error) {
-      console.error('Error save():', error);
-      throw error;
+    constructor(idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, horarioTaller, fecha, url) {
+        this.idTaller = idTaller || uuidv4();
+        this.idCapacitacion = idCapacitacion;
+        this.nombreTaller = nombreTaller;
+        this.horaEntrada = horaEntrada;
+        this.horaSalida = horaSalida;
+        this.estatus = estatus;
+        this.idUsuario = idUsuario;
+        this.horarioTaller = horarioTaller;
+        this.fecha = fecha;
+        this.url = url;
     }
-  }
 
-  static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus) {
-    try {
-        const query = `
-        UPDATE Taller 
-        SET nombreTaller = ?,
-            horaEntrada = ?,
-            horaSalida = ?,
-            estatus = ?
-        WHERE idTaller = ?
-        `;
-        
-        const params = [nombreTaller, horaEntrada, horaSalida, estatus, idTaller];
-        const result = await db.execute(query, params);
-        return result;
-        
-    } catch (error) {
-        console.error('Error update():', error);
-        throw error;
-    }
-  }
+    async save() {
+        try {
+            const query = `
+                INSERT INTO Taller 
+                (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, HorarioTaller, Fecha, URL) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+            
+            const values = [
+                this.idTaller,
+                this.idCapacitacion,
+                this.nombreTaller,
+                this.horaEntrada,
+                this.horaSalida,
+                this.estatus,
+                this.idUsuario,
+                this.horarioTaller,
+                this.fecha,
+                this.url
+            ];
 
-  static async delete(idTaller) {
-    try {
-        const query = `DELETE FROM Taller WHERE idTaller = ?`;
-        
-        const params = [idTaller];
-        const result = await db.execute(query, params);
-        return result;
-        
-    } catch (error) {
-        console.error('Error delete():', error);
-        throw error;
+            const result = await db.execute(query, values);
+            return result;
+
+        } catch (error) {
+            console.error('Error en save():', error);
+            throw error;
+        }
     }
-   }
-};
+
+    static async add(tallerData) {
+        try {
+            const camposValidos = [
+                'idTaller',
+                'idCapacitacion',
+                'nombreTaller',
+                'horaEntrada',
+                'horaSalida',
+                'estatus',
+                'idUsuario',
+                'HorarioTaller',
+                'Fecha',
+                'URL'
+            ];
+
+            const campos = Object.keys(tallerData).filter(key => camposValidos.includes(key));
+            const placeholders = campos.map(() => '?').join(', ');
+            const valores = campos.map(campo => tallerData[campo]);
+            
+            const query = `INSERT INTO Taller (${campos.join(', ')}) VALUES (${placeholders})`;
+            const result = await db.query(query, valores);
+            return result;
+            
+        } catch (error) {
+            console.error('Error en add():', error);
+            throw error;
+        }
+    }
+
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, horarioTaller, fecha, url) {
+        try {
+            const query = `
+                UPDATE Taller 
+                SET nombreTaller = ?,
+                    horaEntrada = ?,
+                    horaSalida = ?,
+                    estatus = ?,
+                    HorarioTaller = ?,
+                    Fecha = ?,
+                    URL = ?
+                WHERE idTaller = ?
+            `;
+            
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, horarioTaller, fecha, url, idTaller];
+            const result = await db.execute(query, params);
+            return result;
+            
+        } catch (error) {
+            console.error('Error update():', error);
+            throw error;
+        }
+    }
+
+    static async changestatus(idTaller) {
+        try {
+            const query = `
+            UPDATE Taller
+            SET estatus = 0
+            WHERE idTaller = ?;
+            `;
+            const result = await db.execute(query, [idTaller]);
+            return result;
+        } catch (error) {
+            console.error("Error changestatus():", error);
+            throw error;
+        }
+    }
+}

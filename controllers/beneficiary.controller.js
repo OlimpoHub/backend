@@ -12,7 +12,6 @@ exports.deleteBeneficiary = async (req, res) => {
         const { id } = req.params;
 
         // 2. (Flujo 5.1) Verificar si el beneficiario esta activo ANTES de borrar
-        // Se asume que el modelo tendra una funcion 'findById'
         const existingBeneficiary = await Beneficiary.fetchById(id);
 
         if (!existingBeneficiary) {
@@ -20,15 +19,16 @@ exports.deleteBeneficiary = async (req, res) => {
         }
 
         // Asumimos que 1 = Active y 0 = Inactive.
-        if (existingBeneficiary.estatus === 1) {
+        // Aqui se aplica el dicho SOFT DELETE.
+        if (existingBeneficiary.estatus === 0) {
             // (Flujo Alterno 5.1)
             return res.status(409).send({
-                message: "The beneficiary is active and can't be deleted."
+                message: "The beneficiary is already inactive."
             });
         }
 
-        // 3. (Flujo Principal) El beneficiario existe y NO está activo. Procedemos a eliminar.
-        await Beneficiary.remove(id);
+        // 3. (Flujo Principal) El beneficiario existe y está activo. Procedemos a eliminar (inactivarlo).
+        await Beneficiary.deactivate(id);
 
         // 4. (Paso 7) Éxito. 204 significa "Sin Contenido" (la eliminacion fue exitosa)
         res.status(204).send();

@@ -1,0 +1,37 @@
+@startuml
+
+actor api
+boundary supplies.routes as routes
+control supplies.controller as controller
+
+activate api
+api -> routes: POST /supplies/add
+
+activate routes
+routes -> controller: addSupply(req, res)
+deactivate routes
+
+activate controller
+create entity supply as s
+controller -> s: new Supply\n(\n\treq.body.idTaller, \n\treq.body.nombre, \n\treq.body.unidadMedida, \n\treq.body.idCategoria, \n\treq.body.imagenInsumo, \n\treq.body.status\n)
+controller ->> s: save()
+
+database db
+
+activate s
+s ->> db: db.execute(`INSERT INTO Insumo(?,?,?,?,?,?,?)`,\n\t[idInsumo, \n\tthis.idTaller, \n\tthis.nombre, \n\tthis.unidadMedida, \n\tthis.idCategoria, \n\tthis.imagenInsumo, \n\tthis.status]);
+
+activate db
+db -->> s: query Ok
+
+s -->> controller: Promesa
+deactivate s
+
+controller -->> routes: res.status(201)
+deactivate controller
+
+activate routes
+routes -> api: response.status(201)
+deactivate routes
+deactivate api
+@enduml
