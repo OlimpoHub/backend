@@ -12,6 +12,7 @@
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
  - Added new fields for workshops model and controller.
+ - Added logic for Delete Workshop
  
 ## [0.0.0] - 04/11/2025
 
