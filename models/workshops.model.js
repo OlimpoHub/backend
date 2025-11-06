@@ -112,4 +112,75 @@ module.exports = class Workshops {
             throw error;
         }
     }
-}
+    
+    static async getWorkshops(){
+        try{
+            const rows = await db.query
+            (`
+                SELECT t.idTaller, 
+                t.nombreTaller, 
+                t.horaEntrada, 
+                t.horaSalida,
+                t.HorarioTaller,
+                t.Fecha,
+                t.URL
+                FROM Taller t 
+                WHERE t.estatus = ?`, [1]
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching workshop catalog:", err);
+            throw err;
+        }
+    }
+
+    static async getOneWorkshop(id){ 
+        try{
+            const rows = await db.query(
+                `SELECT 
+	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion,
+	                u.nombre, u.apellidoPaterno
+                FROM Taller t
+                JOIN  UsuarioCapacitacion i
+	                ON t.idCapacitacion = i.idCapacitacion
+                JOIN Capacitaciones c
+	                ON i.idCapacitacion = c.idCapacitacion
+                JOIN Usuarios u
+	                ON u.idUsuario = i.idUsuario
+                WHERE t.estatus = ? AND c.estatus = ? AND t.idTaller = ?
+                `, [1, 1, id]
+            );
+            const beneficiariesRows = await db.query(
+                `SELECT  
+	                b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
+                FROM Beneficiarios b
+                JOIN BeneficiarioTaller e
+	                ON e.idBeneficiario = b.idBeneficiario
+                JOIN Taller t	
+	                ON e.idTaller = t.idTaller
+                WHERE t.estatus = ? AND b.estatus = ? AND t.idTaller = ?
+                `, [1, 1, id]
+            );
+            return {
+                workshop : rows,
+                beneficiaries : beneficiariesRows
+            };
+        }
+        catch(err) {
+            console.log("Error fetching one workshop", err);
+            throw err;
+        }
+        
+    }
+    static async getOneWorkshopBeneficiaries(id){ 
+        try{
+            
+            return rows;
+        }
+        catch(err) {
+            console.log("Error fetching workshop beneficiaries", err);
+            throw err;
+        }
+        
+    }
+};

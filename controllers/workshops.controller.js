@@ -121,3 +121,24 @@ exports.deleteWorkshops = async (request, response) => {
   }
 };
 
+exports.viewWorkshops = async (request, response) => {
+    try{
+        const workshopList = await Workshops.getWorkshops();
+        response.status(200).json(workshopList);
+    } catch(error) {
+        console.error("Error fetching workshop list: ", error);
+        response.status(500).json({message: "Failed to fetch workshop list"});
+    }
+}
+
+
+exports.viewOneWorkshop = async (request, response) => {
+    try{
+        const id = request.params.idWorkshop;
+        const workshop = await Workshops.getOneWorkshop(id);
+        response.status(200).json(workshop);
+    } catch(error) {
+        console.error("Error fetching workshop: ", error);
+        response.status(500).json({message: "Failed to fetch workshop"});
+    }
+}
