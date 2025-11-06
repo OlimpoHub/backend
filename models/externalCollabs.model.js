@@ -181,7 +181,7 @@ module.exports = class externalCollabs {
       if (type === "asc") {
         const rows = await database.query(
           `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
-            u.apellidoMaterno
+            u.apellidoMaterno, r.nombreRol
           FROM Usuarios u
           JOIN Roles r
             ON r.idRol = u.idRol
@@ -192,13 +192,55 @@ module.exports = class externalCollabs {
       } else if(type === "desc") {
         const rows = await database.query(
           `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
-            u.apellidoMaterno
+            u.apellidoMaterno, r.nombreRol
           FROM Usuarios u
           JOIN Roles r
             ON r.idRol = u.idRol
           ORDER BY r.nombreRol ASC, u.nombre DESC`
         );
         console.log(rows);
+        return rows;
+      }
+    } catch(err) {
+      throw err;
+    }
+  }
+  /* ------------------------------------------------------------------------- *
+  * filter --> receives a param type and value, which is the filter type desired
+  * and the value of that filter, it is possible to filter either by role or 
+  * status, that way, one can see only an specific role or all active or 
+  * inactive collaborators
+  * 
+  * @param type: String -> order type (ASC || DESC)
+  * @param value: String || Int -> value of the filter
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async filter(type, value) {
+    try {
+      if (type === "role") {
+        const rows = database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          WHERE r.nombreRol = ? 
+            AND u.estatus = ?
+          ORDER BY r.nombreRol ASC`,
+          [value, 1]
+        );
+        return rows;
+      } else if(type === "status") {
+        const rows = database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          WHERE u.estatus = ?
+          ORDER BY r.nombreRol ASC`,
+          [value]
+        );
         return rows;
       }
     } catch(err) {

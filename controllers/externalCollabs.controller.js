@@ -121,6 +121,18 @@ exports.getExternalCollabsOrdered = async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Failed to order external collaborators" });
     }
-    
+}
 
+exports.getExternalCollabsFiltered = async (req, res) => {
+    try {
+        const typeUnprocessed = req.body.type;
+        const value = req.body.value;
+        const type = typeUnprocessed.toLowerCase();
+
+        const externalCollabsFiltered = await externalCollabs.filter(type, value);
+        res.status(200).json(externalCollabsFiltered);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to filter external collaborators "});
+    }
 }
