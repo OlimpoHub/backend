@@ -1,5 +1,4 @@
 ## [0.1.0] - 05/11/2025
-<<<<<<< HEAD
 
 ### Added
  - Added the search for external collabs, allowing to search by name or lastname.
@@ -7,8 +6,6 @@
  - Added the possibility to order external collabs by name ASC or DESC.
 
  ## [0.0.0] - 04/11/2025 
-=======
->>>>>>> 7fe45e8ba7ddffa1698fe3a854fcfcddb1399094
 
 ### Added
  - Added logic for Delete Supplie
