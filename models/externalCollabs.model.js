@@ -167,4 +167,41 @@ module.exports = class externalCollabs {
       throw err;
     }
   }
+
+  /* ------------------------------------------------------------------------- *
+  * Order --> receives a param type, which is the order type desired, it could 
+  * be either ASC(A-Z) or DESC(Z-A), and returns the external colaborators 
+  * ordered depending on the type
+  * 
+  * @param type: String -> order type (ASC || DESC)
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async order(type) {
+    try {
+      if (type === "asc") {
+        const [rows] = await database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          ORDER BY r.nombreRol ASC, u.nombre ASC`
+        );
+        return rows;
+      } else if(value === "desc") {
+        const [rows] = await database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          ORDER BY r.nombreRol ASC, u.nombre DESC`
+        );
+        return rows;
+      }
+    } catch(err) {
+      throw err;
+    }
+  }
 };
+

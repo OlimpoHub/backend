@@ -19,12 +19,12 @@ controller ->> model: getExternalColabsOrdered(type: String)
 activate model
 
 group Order ASC
-    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE r.nombreRol = ? ORDER BY r.nombreRol ASC, u.nombre ASC`, [value]\n\t)
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tORDER BY r.nombreRol ASC, u.nombre ASC`\n\t)
     activate db
 end
 
 group Order DESC
-    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE r.nombreRol = ? ORDER BY r.nombreRol ASC, u.nombre DESC`, [value]\n\t)
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tORDER BY r.nombreRol ASC, u.nombre DESC`\n\t)
 end
 
 db -->> model: rows

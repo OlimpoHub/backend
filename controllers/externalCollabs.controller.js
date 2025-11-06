@@ -110,3 +110,17 @@ exports.deleteExternalCollab = async (request, response) => {
     response.status(500).json({ message: "Failed to delete external collaborator." });
   }
 }
+
+exports.getExternalCollabsOrdered = async (req, res) => {
+    try {
+        const unprocessType = req.body.type;
+        const orderType = unprocessType.toLowerCase();
+        const externalCollabsOrdered = await externalCollabs.order(orderType);
+        res.status(200).json(externalCollabsOrdered);
+    } catch(err) {
+        console.log(err);
+        throw err;
+    }
+    
+
+}

@@ -10,5 +10,7 @@ router.get("/:id", externalCollabsController.getExternalCollabsByID);
 router.post("/register", externalCollabsController.registerExternalCollabs);
 router.post("/update", externalCollabsController.updateExternalCollabs);
 
+router.post("/order", externalCollabsController.getExternalCollabsOrdered)
+
 
 module.exports = router;
