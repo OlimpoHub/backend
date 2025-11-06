@@ -1,0 +1,46 @@
+@startuml
+participant Api
+boundary externalCollabs.routes 
+control externalCollabs.controller
+entity externalCollabs.model
+database elArca
+
+activate Api
+Api -> externalCollabs.routes : POST /externalCollabs/update
+deactivate Api
+
+activate externalCollabs.routes
+
+externalCollabs.routes -> externalCollabs.controller :updateExternalCollabs(request, response)
+deactivate externalCollabs.routes
+activate externalCollabs.controller
+
+externalCollabs.controller ->> externalCollabs.model : updateById(idUsuario);
+
+activate externalCollabs.model
+
+externalCollabs.model ->> elArca :  .execute( \n `UPDATE Usuarios  \n SET \n  idRol = ?, \n  nombre = ?, \n  apellidoPaterno = ?, \n  apellidoMaterno = ?, \n  fechaNacimiento = ?, \n  carrera = ?, \n  correoElectronico = ?, \n  telefono = ?, \n  estatus = ?, \n  reglamentoInterno = ?, \n  copiaINE = ?, \n  avisoConfidencialidad = ? \n WHERE idUsuario = ?`,
+
+activate elArca
+
+elArca -->> externalCollabs.model : promise
+
+deactivate elArca
+
+externalCollabs.model -->> externalCollabs.controller : promise
+
+deactivate externalCollabs.model
+
+externalCollabs.controller -->> externalCollabs.routes : responseJSON(result)
+deactivate externalCollabs.controller
+
+activate externalCollabs.routes
+
+externalCollabs.routes -->> Api : responseJSON(result)
+
+deactivate externalCollabs.routes
+activate Api
+
+deactivate Api
+
+@enduml
