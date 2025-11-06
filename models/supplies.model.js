@@ -147,4 +147,31 @@ module.exports = class Supplies {
             throw err;
         }
     }
+
+    // performs a soft delete by updating status = 0
+    static async delete(id) {
+        try {
+
+        // run SQL query to set the supply status to 0 
+        const result = await database.execute
+        (
+            `UPDATE Insumo 
+            SET status = 0 
+            WHERE idInsumo = ?`, 
+            [id]
+        );
+
+        // check if any row was affected (supply found)
+        if (result.affectedRows === 0) return { success: false, message: "No supplie found with that ID." };
+
+        
+        return { success: true, message: "Supplie deleted successfully." };
+        } catch (error) {
+        console.error("Error deleting supplie:", error);
+        
+        // rethrow the error to be handled by the controller
+        throw error;
+        }
+    }
+
 };

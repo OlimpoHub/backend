@@ -34,6 +34,28 @@ module.exports = class User {
        this.foto = _foto;
     }
 
+    static async findByEmail(email) {
+        const rows = await database.query(
+            `SELECT u.*, r.nombreRol AS roleName
+            FROM Usuarios u
+            INNER JOIN Roles r ON u.idRol = r.idRol
+            WHERE u.correoElectronico = ?
+            LIMIT 1`
+            , [email]);
+       return rows.length > 0 ? rows[0] : null;
+    }
+
+    static async findById(id) {
+        const rows = await database.query(
+            `SELECT u.*, r.nombreRol AS roleName
+            FROM Usuarios u
+            INNER JOIN Roles r ON u.idRol = r.idRol
+            WHERE u.idUsuario = ?
+            LIMIT 1`
+            , [id]);
+       return rows.length > 0 ? rows[0] : null;
+    }
+
     static async existsByEmail(email) {
         const result = await database.query(`
             SELECT COUNT(*) AS count

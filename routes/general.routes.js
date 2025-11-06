@@ -9,7 +9,6 @@ const externalCollabsRoutes = require("./externalCollabs.routes");
 const supplyBatchRouter = require("./supplyBatch.routes")
 const productBatchRouter = require("./productBatch.routes")
 
-router.use("/user", user_routes);
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
 router.use("/supplies", suppliesRoutes);

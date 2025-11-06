@@ -1,20 +1,23 @@
 ## [0.1.0] - 05/11/2025
 
 ### Added 
-- Implemented routes, controllers, and model for the View Workshops use case. 
+- Implemented routes, controllers, and model for the View Workshops use case.
+- Added new fields for workshops model and controller.
 
 ## [0.0.0] - 04/11/2025 
 
 ### Added
-- Updated supplies model to follow database names
-- Implemented routes, controller, and model for the Get Supplies List use case.
+ - Added logic for Delete Supplie
+ - Sequence diagram for Delete Supplie
+ - Added complete login and authentication flow divided in route, utils, controller and model.
+ - Updated supplies model to follow database names
+ - Implemented routes, controller, and model for the Get Supplies List use case.
  - Sequence diagram for Product Batch CRUD operations in the MVC structure.
  - Implemented Product Batch model with CRUD operations (fetchAll, fetchOne, add, update, remove).
  - Added Product Batch controller with error handling and response formatting.
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
  
-
 ## [0.0.0] - 04/11/2025
 
 ### Fixed
