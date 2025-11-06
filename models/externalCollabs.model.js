@@ -248,7 +248,9 @@ module.exports = class externalCollabs {
     }
   }
   /* ------------------------------------------------------------------------- *
-  * Search --> 
+  * Search --> recieves a key, which can vary from a name or a full name and 
+  * returns the info of the external collaborator that matches the most with the
+  * key.
   * 
   * @param key: String -> key to search an external collab
   * @returns rows: array || object of externalCollabs
