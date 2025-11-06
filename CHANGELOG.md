@@ -1,5 +1,11 @@
 ## [0.1.0] - 05/11/2025
 
+### Added 
+- Implemented routes, controllers, and model for the View Workshops use case.
+- Added new fields for workshops model and controller.
+
+## [0.0.0] - 04/11/2025 
+
 ### Added
  - Added logic for Delete Supplie
  - Sequence diagram for Delete Supplie
@@ -11,7 +17,6 @@
  - Added Product Batch controller with error handling and response formatting.
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
- - Added new fields for workshops model and controller.
  
 ## [0.0.0] - 04/11/2025
 
