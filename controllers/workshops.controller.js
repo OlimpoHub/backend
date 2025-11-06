@@ -9,7 +9,10 @@ exports.addWorkshops = async (request, response) => {
       horaEntrada, 
       horaSalida, 
       estatus, 
-      idUsuario 
+      idUsuario,
+      horarioTaller,
+      fecha,
+      url
     } = request.body;
 
     const taller = new Workshops(
@@ -19,12 +22,16 @@ exports.addWorkshops = async (request, response) => {
       horaEntrada || null,
       horaSalida || null,
       estatus || 1,
-      idUsuario || null
+      idUsuario || null,
+      horarioTaller || null,
+      fecha || null,
+      url || null
     );
 
     const result = await taller.save();
 
     response.status(201).json({
+      message: "Taller agregado correctamente",
       data: {
         idTaller: taller.idTaller,
         idCapacitacion,
@@ -32,48 +39,66 @@ exports.addWorkshops = async (request, response) => {
         horaEntrada,
         horaSalida,
         estatus,
-        idUsuario
+        idUsuario,
+        horarioTaller,
+        fecha,
+        url
       }
     });
 
   } catch (error) {
+    console.error("Error en addWorkshops():", error);
     response.status(500).json({
       error: error.message
     });
   }
 };
 
-
 exports.modifyWorkshops = async (request, response) => {
   try {
     const { idTaller } = request.params;
-    const { nombreTaller, horaEntrada, horaSalida, estatus } = request.body;
+    const { 
+      nombreTaller, 
+      horaEntrada, 
+      horaSalida, 
+      estatus, 
+      horarioTaller, 
+      fecha, 
+      url 
+    } = request.body;
 
     const result = await Workshops.update(
       idTaller,
       nombreTaller,
       horaEntrada,
       horaSalida,
-      estatus
+      estatus,
+      horarioTaller,
+      fecha,
+      url
     );
 
     response.status(200).json({
+      message: "Taller modificado correctamente",
       data: {
         idTaller,
         modifiedFields: {
           ...(nombreTaller && { nombreTaller }),
           ...(horaEntrada && { horaEntrada }),
           ...(horaSalida && { horaSalida }),
-          ...(estatus !== undefined && { estatus })
+          ...(estatus !== undefined && { estatus }),
+          ...(horarioTaller && { horarioTaller }),
+          ...(fecha && { fecha }),
+          ...(url && { url })
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }
     });
 
   } catch (error) {
+    console.error("Error en modifyWorkshops():", error);
     response.status(500).json({
       error: error.message
     });
   }
 };
-
