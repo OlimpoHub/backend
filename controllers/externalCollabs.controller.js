@@ -119,7 +119,7 @@ exports.getExternalCollabsOrdered = async (req, res) => {
         res.status(200).json(externalCollabsOrdered);
     } catch(err) {
         console.log(err);
-        throw err;
+        res.status(500).json({ message: "Failed to order external collaborators" });
     }
     
 

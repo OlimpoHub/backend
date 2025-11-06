@@ -179,7 +179,7 @@ module.exports = class externalCollabs {
   static async order(type) {
     try {
       if (type === "asc") {
-        const [rows] = await database.query(
+        const rows = await database.query(
           `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
             u.apellidoMaterno
           FROM Usuarios u
@@ -187,9 +187,10 @@ module.exports = class externalCollabs {
             ON r.idRol = u.idRol
           ORDER BY r.nombreRol ASC, u.nombre ASC`
         );
+        console.log(rows);
         return rows;
-      } else if(value === "desc") {
-        const [rows] = await database.query(
+      } else if(type === "desc") {
+        const rows = await database.query(
           `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
             u.apellidoMaterno
           FROM Usuarios u
@@ -197,6 +198,7 @@ module.exports = class externalCollabs {
             ON r.idRol = u.idRol
           ORDER BY r.nombreRol ASC, u.nombre DESC`
         );
+        console.log(rows);
         return rows;
       }
     } catch(err) {
