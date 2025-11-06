@@ -247,5 +247,31 @@ module.exports = class externalCollabs {
       throw err;
     }
   }
+  /* ------------------------------------------------------------------------- *
+  * Search --> 
+  * 
+  * @param key: String -> key to search an external collab
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async search(key) {
+    try {
+      const rows = await database.query(
+        `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno,
+          u.apellidoMaterno, r.nombreRol
+        FROM Usuarios u
+        JOIN Roles r
+          ON r.idRol = u.idRol
+        WHERE CONCAT_WS(' ', u.nombre, u.apellidoPaterno, u.apellidoMaterno) 
+          LIKE CONCAT('%', ?, '%')
+          OR u.nombre LIKE CONCAT('%', ?, '%')
+          OR u.apellidoPaterno LIKE CONCAT('%', ?, '%')
+          OR u.apellidoMaterno LIKE CONCAT('%', ?, '%')
+        ORDER BY r.nombreRol ASC`, [key, key, key, key]
+      );
+      return rows;
+    } catch(err) {
+      throw err;
+    }
+  } 
 };
 

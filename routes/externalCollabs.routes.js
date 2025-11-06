@@ -12,5 +12,6 @@ router.post("/update", externalCollabsController.updateExternalCollabs);
 
 router.post("/order", externalCollabsController.getExternalCollabsOrdered);
 router.post("/filter", externalCollabsController.getExternalCollabsFiltered);
+router.post("/search", externalCollabsController.searchExternalCollabs);
 
 module.exports = router;
