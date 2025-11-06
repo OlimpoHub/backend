@@ -66,3 +66,26 @@ exports.addOneSupply = async (req, res) => {
         res.status(500).json({ message: "Failed to add a supply", err });
     }
 };
+
+// softdelete a supply (US: delete supply)
+exports.deleteOneSupply = async (request, response) => {
+    try {
+        // get the supply id from request body
+        const idInsumo = request.body.id
+
+        // call the model method to delete the supply
+        const result = await Supplies.delete(idInsumo);
+
+        // send 200 if deleted, 404 if not found
+        response.status(result.success ? 200:404).json(result)
+    } catch (error) {
+        console.error()
+
+        // return 500 internal server error response
+        response.status(500).json({
+            succes: false,
+            message: "Failed to delete a supply", 
+            error,
+        });
+    }
+};
