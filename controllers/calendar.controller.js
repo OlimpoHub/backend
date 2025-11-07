@@ -1,6 +1,6 @@
 const Calendar = require('../models/calendar.model');
 
-exports.get_calendar = async (req, res) => {
+exports.getCalendar = async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const data = await Calendar.fetchById(id);

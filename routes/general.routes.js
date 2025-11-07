@@ -9,6 +9,7 @@ const externalCollabsRoutes = require("./externalCollabs.routes");
 const supplyBatchRouter = require("./supplyBatch.routes")
 const productBatchRouter = require("./productBatch.routes")
 const calendar_routes = require('./calendar.routes');
+const calendarRoutes = require('./calendar.routes');
 
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
@@ -17,8 +18,6 @@ router.use("/externalCollabs", externalCollabsRoutes);
 router.use("/supplyBatch", supplyBatchRouter);
 router.use("/workshop", workshopsRoutes);
 router.use("/productBatch", productBatchRouter);
-
-router.use("/calendar", calendar_routes);
-
+router.use("/calendar", calendarRoutes);
 
 module.exports = router;
