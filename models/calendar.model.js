@@ -3,14 +3,14 @@ const database = require('../utils/db');
 module.exports = class Calendar {
     constructor(
         idTaller,
-        IdCapacitacion,
+        idCapacitacion,
         idUsuario,
         nombreTaller,
         fecha,
         horarioTaller
     ) {
         this.idTaller = idTaller;
-        this.IdCapacitacion = IdCapacitacion;
+        this.IdCapacitacion = idCapacitacion;
         this.idUsuario = idUsuario;
         this.nombreTaller = nombreTaller;
         this.fecha = fecha;
@@ -23,7 +23,7 @@ module.exports = class Calendar {
             (`
             SELECT 
                 Taller.idTaller, 
-                Taller.IdCapacitacion, 
+                Taller.idCapacitacion, 
                 Taller.idUsuario, 
                 Taller.nombreTaller,
                 Taller.fecha, 
