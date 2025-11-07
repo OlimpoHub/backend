@@ -13,7 +13,7 @@ activate product.routes
 product.routes --> product.controller :  registerProduct(request, response)
 
 activate product.controller
-product.controller --> product.model : registerProduct(nombre, precioUnitarios, idCategoria,\n descripcion, imagen, disponible)
+product.controller --> product.model : registerProduct(idTaller, nombre, precioUnitarios, idCategoria,\n descripcion, imagen, disponible)
 
 create entity product
 
