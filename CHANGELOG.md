@@ -2,6 +2,10 @@
 
 ### Added 
 - Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+## [0.1.0] - 06/11/2025
+
+### Added 
+- Sequence diagrams for supplies list
 
 ## [0.1.0] - 05/11/2025
 

@@ -1,0 +1,40 @@
+@startuml View Supplies
+header View Supplies
+
+participant SuppliesApi
+boundary supplies.routes
+control supplies.controller
+entity supplies.model 
+database elArca.sql
+
+' Flujo que sigue el usuario
+activate SuppliesApi
+SuppliesApi -> supplies.routes: GET /supplies
+
+activate supplies.routes
+supplies.routes -> supplies.controller: getSupplies(request, response)
+deactivate supplies.routes
+
+activate supplies.controller
+supplies.controller -> supplies.model: fetchAll()
+
+activate supplies.model
+supplies.model ->> elArca.sql: execute("SELECT nombre, imagenInsumo FROM insumo")
+
+activate elArca.sql
+elArca.sql --> supplies.model: supplies
+deactivate elArca.sql
+
+supplies.model --> supplies.controller: supplies
+deactivate supplies.model
+
+supplies.controller -> supplies.routes: suppliesJSON
+deactivate supplies.controller
+
+activate supplies.routes
+supplies.routes --> SuppliesApi: HTTP 200 OK + suppliesJSON
+deactivate supplies.routes
+
+deactivate SuppliesApi
+
+@enduml
