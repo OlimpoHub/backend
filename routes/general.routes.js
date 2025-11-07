@@ -8,7 +8,6 @@ const workshopsRoutes = require("./workshops.routes");
 const externalCollabsRoutes = require("./externalCollabs.routes");
 const supplyBatchRouter = require("./supplyBatch.routes")
 const productBatchRouter = require("./productBatch.routes")
-const calendar_routes = require('./calendar.routes');
 const calendarRoutes = require('./calendar.routes');
 
 router.use("/beneficiary", beneficiary_routes);
