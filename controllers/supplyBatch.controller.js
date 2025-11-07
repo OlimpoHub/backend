@@ -10,10 +10,14 @@ exports.getSupplyBatch = async (req, res) => {
     }
 }
 
+/* --------------------------------------------------------------------------- *
+* Receives the id within the route, then queries for the supply batch then
+* obtain the atributes of the supply, to convert it to a json of that supply
+* that has also the quantity and expiration date of each supply batch
+* --------------------------------------------------------------------------- */
 exports.getOneSupplyBatch = async (req, res) => {
     try {
         const id = req.params.idInsumo;
-        // console.log(id);
         const supplyBatch = await SupplyBatch.fetchOne(id);
         const { idInsumo: idInsumo, nombre, unidadMedida } = supplyBatch[0];
         const supplyBatchJson = supplyBatch.map(r => ({

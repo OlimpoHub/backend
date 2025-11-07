@@ -110,3 +110,50 @@ exports.deleteExternalCollab = async (request, response) => {
     response.status(500).json({ message: "Failed to delete external collaborator." });
   }
 }
+/* --------------------------------------------------------------------------- *
+* Controller function to order the external collaborators and return it to the 
+* app
+* --------------------------------------------------------------------------- */
+exports.getExternalCollabsOrdered = async (req, res) => {
+    try {
+        const unprocessType = req.body.type;
+        const orderType = unprocessType.toLowerCase();
+        const externalCollabsOrdered = await externalCollabs.order(orderType);
+        res.status(200).json(externalCollabsOrdered);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to order external collaborators" });
+    }
+}
+/* --------------------------------------------------------------------------- *
+* Controller function to filter the external collaborators and return it to the 
+* app
+* --------------------------------------------------------------------------- */
+exports.getExternalCollabsFiltered = async (req, res) => {
+    try {
+        const typeUnprocessed = req.body.type;
+        const value = req.body.value;
+        const type = typeUnprocessed.toLowerCase();
+
+        const externalCollabsFiltered = await externalCollabs.filter(type, value);
+        res.status(200).json(externalCollabsFiltered);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to filter external collaborators " });
+    }
+}
+/* --------------------------------------------------------------------------- *
+* Controller function to search the external collaborators and return it to the 
+* app
+* --------------------------------------------------------------------------- */
+exports.searchExternalCollabs = async (req, res) => {
+    try {
+        const keyUnprocessed = req.body.value;
+        const key = keyUnprocessed.trim();
+        const externalCollabList = await externalCollabs.search(key);
+        res.status(200).json(externalCollabList);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to search an external Collaborator" });
+    }
+}
