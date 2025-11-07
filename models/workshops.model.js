@@ -98,6 +98,21 @@ module.exports = class Workshops {
         }
     }
 
+    static async changestatus(idTaller) {
+        try {
+            const query = `
+            UPDATE Taller
+            SET estatus = 0
+            WHERE idTaller = ?;
+            `;
+            const result = await db.execute(query, [idTaller]);
+            return result;
+        } catch (error) {
+            console.error("Error changestatus():", error);
+            throw error;
+        }
+    }
+    
     static async getWorkshops(){
         try{
             const rows = await db.query

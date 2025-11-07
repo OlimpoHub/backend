@@ -1,3 +1,7 @@
+## [0.1.0] - 07/11/2025
+
+### Added 
+- Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
 ## [0.1.0] - 06/11/2025
 
 ### Added 
@@ -29,6 +33,8 @@
  - Added Product Batch controller with error handling and response formatting.
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
+ - Added new fields for workshops model and controller.
+ - Added logic for Delete Workshop
  
 ## [0.0.0] - 04/11/2025
 
