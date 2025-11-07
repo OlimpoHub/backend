@@ -1,5 +1,18 @@
 ## [0.1.0] - 05/11/2025
 
+### Added 
+- Implemented routes, controllers, and model for the View Workshops use case.
+- Added new fields for workshops model and controller.
+
+## [0.0.0] - 04/11/2025 
+
+### Added
+ - Added the search for external collabs, allowing to search by name or lastname.
+ - Added filters to obtain external collabs by role or status.
+ - Added the possibility to order external collabs by name ASC or DESC.
+
+ ## [0.0.0] - 04/11/2025 
+
 ### Added
  - Added logic for Delete Supplie
  - Sequence diagram for Delete Supplie
@@ -12,7 +25,6 @@
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
  
-
 ## [0.0.0] - 04/11/2025
 
 ### Fixed

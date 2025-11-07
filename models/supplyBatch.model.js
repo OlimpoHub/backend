@@ -36,20 +36,19 @@ module.exports = class SupplyBatch {
 
     static async fetchOne(id) {
         try{
-            const rows = await database.query
+            const [rows] = await database.query
             (
                 `SELECT 
-                    i.idInsumo, i.nombre, i.unidadMedida, inv.FechaCaducidad,
-                    SUM(inv.CantidadActual) AS cantidad
+                    i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
+                    inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad
                 FROM Insumo i
-                JOIN InventarioInsumos inv 
+                LEFT JOIN InventarioInsumos inv 
                     ON inv.IdInsumo = i.idInsumo
                 WHERE i.idInsumo = ?
                 GROUP BY i.idInsumo, inv.FechaCaducidad`, [id]
             );
 
-            // console.log("rows: ", rows);
-            return rows;
+            return Array.isArray(rows) ? rows : [rows];
         } catch(err) {
             console.log("Error fetching one supply batch", err);
             throw err;

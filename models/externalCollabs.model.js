@@ -167,4 +167,113 @@ module.exports = class externalCollabs {
       throw err;
     }
   }
+
+  /* ------------------------------------------------------------------------- *
+  * Order --> receives a param type, which is the order type desired, it could 
+  * be either ASC(A-Z) or DESC(Z-A), and returns the external colaborators 
+  * ordered depending on the type
+  * 
+  * @param type: String -> order type (ASC || DESC)
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async order(type) {
+    try {
+      if (type === "asc") {
+        const rows = await database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          ORDER BY r.nombreRol ASC, u.nombre ASC`
+        );
+        console.log(rows);
+        return rows;
+      } else if(type === "desc") {
+        const rows = await database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          ORDER BY r.nombreRol ASC, u.nombre DESC`
+        );
+        console.log(rows);
+        return rows;
+      }
+    } catch(err) {
+      throw err;
+    }
+  }
+  /* ------------------------------------------------------------------------- *
+  * filter --> receives a param type and value, which is the filter type desired
+  * and the value of that filter, it is possible to filter either by role or 
+  * status, that way, one can see only an specific role or all active or 
+  * inactive collaborators
+  * 
+  * @param type: String -> order type (ASC || DESC)
+  * @param value: String || Int -> value of the filter
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async filter(type, value) {
+    try {
+      if (type === "role") {
+        const rows = database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          WHERE r.nombreRol = ? 
+            AND u.estatus = ?
+          ORDER BY r.nombreRol ASC`,
+          [value, 1]
+        );
+        return rows;
+      } else if(type === "status") {
+        const rows = database.query(
+          `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno, 
+            u.apellidoMaterno, r.nombreRol
+          FROM Usuarios u
+          JOIN Roles r
+            ON r.idRol = u.idRol
+          WHERE u.estatus = ?
+          ORDER BY r.nombreRol ASC`,
+          [value]
+        );
+        return rows;
+      }
+    } catch(err) {
+      throw err;
+    }
+  }
+  /* ------------------------------------------------------------------------- *
+  * Search --> recieves a key, which can vary from a name or a full name and 
+  * returns the info of the external collaborator that matches the most with the
+  * key.
+  * 
+  * @param key: String -> key to search an external collab
+  * @returns rows: array || object of externalCollabs
+  * ------------------------------------------------------------------------- */
+  static async search(key) {
+    try {
+      const rows = await database.query(
+        `SELECT u.idUsuario, u.nombre, u.estatus, u.apellidoPaterno,
+          u.apellidoMaterno, r.nombreRol
+        FROM Usuarios u
+        JOIN Roles r
+          ON r.idRol = u.idRol
+        WHERE CONCAT_WS(' ', u.nombre, u.apellidoPaterno, u.apellidoMaterno) 
+          LIKE CONCAT('%', ?, '%')
+          OR u.nombre LIKE CONCAT('%', ?, '%')
+          OR u.apellidoPaterno LIKE CONCAT('%', ?, '%')
+          OR u.apellidoMaterno LIKE CONCAT('%', ?, '%')
+        ORDER BY r.nombreRol ASC`, [key, key, key, key]
+      );
+      return rows;
+    } catch(err) {
+      throw err;
+    }
+  } 
 };
+
