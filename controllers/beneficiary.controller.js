@@ -62,3 +62,14 @@ exports.get_beneficiary = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch beneficiary.' });
     }
 };
+
+// Controller para BEN-02
+exports.beneficiaries_list = async (req, res) => {
+    try {
+        const beneficiaries = await Beneficiary.beneficiariesList();
+        res.status(200).json(beneficiaries);
+    } catch (error) {
+        console.error('Error fetching beneficiaries:', error);
+        res.status(500).json({ message: 'Failed to fetch beneficiaries.' });
+    }
+};
