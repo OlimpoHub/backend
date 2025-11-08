@@ -5,7 +5,7 @@ const WorkshopsController = require('../controllers/workshops.controller');
 
 router.post('/add', WorkshopsController.addWorkshops);
 router.get('/', WorkshopsController.viewWorkshops);
-router.get('/:idWorkshop', WorkshopsController.viewOneWorkshop);
+router.get('/:idTaller', WorkshopsController.viewOneWorkshop);
 
 router.post('/modify/:idTaller', WorkshopsController.modifyWorkshops);
 
