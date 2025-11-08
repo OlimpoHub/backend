@@ -11,4 +11,4 @@ router.post('/modify/:idTaller', WorkshopsController.modifyWorkshops);
 
 router.put('/delete/:idTaller', WorkshopsController.deleteWorkshops);
 
-module.exports = router;Taller
+module.exports = router;
