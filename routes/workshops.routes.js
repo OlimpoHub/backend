@@ -9,4 +9,6 @@ router.get('/:idWorkshop', WorkshopsController.viewOneWorkshop);
 
 router.post('/modify/:idTaller', WorkshopsController.modifyWorkshops);
 
+router.put('/delete/:idTaller', WorkshopsController.deleteWorkshops);
+
 module.exports = router;
