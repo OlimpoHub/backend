@@ -1,3 +1,22 @@
+## [0.1.0] - 08/11/2025
+
+### Added 
+- Documentation for register product implemetation.
+- Implemented routes, controllers, and model for the Register Product.
+- Added sequence diagram.
+
+### Fixed
+- Fix controller viewOneWorkshop
+
+## [0.1.0] - 07/11/2025
+
+### Added 
+- Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+## [0.1.0] - 06/11/2025
+
+### Added 
+- Sequence diagrams for supplies list
+
 ## [0.1.0] - 05/11/2025
 
 ### Added 
@@ -5,6 +24,13 @@
 - Added new fields for workshops model and controller.
 
 ## [0.0.0] - 04/11/2025 
+
+### Added
+ - Added the search for external collabs, allowing to search by name or lastname.
+ - Added filters to obtain external collabs by role or status.
+ - Added the possibility to order external collabs by name ASC or DESC.
+
+ ## [0.0.0] - 04/11/2025 
 
 ### Added
  - Added logic for Delete Supplie
@@ -17,6 +43,8 @@
  - Added Product Batch controller with error handling and response formatting.
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
+ - Added new fields for workshops model and controller.
+ - Added logic for Delete Workshop
  
 ## [0.0.0] - 04/11/2025
 
