@@ -5,6 +5,9 @@
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
 
+### Fixed
+- Fix controller viewOneWorkshop
+
 ## [0.1.0] - 07/11/2025
 
 ### Added 
