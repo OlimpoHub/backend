@@ -103,4 +103,134 @@ module.exports = class ProductBatch {
             throw err;
         }
     }
+
+    static async search(term) {
+        try {
+            const rows = await database.query(
+                `SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                        p.idProducto, p.Descripcion, p.Disponible,
+                        inv.idInventario, inv.CantidadProducida,
+                        inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                 FROM Productos p
+                 JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                 WHERE p.Nombre LIKE ? OR p.Descripcion LIKE ?`,
+                [`%${term}%`, `%${term}%`]
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error searching product batches", err);
+            throw err;
+        }
+    }
+
+    static async fetchAllWithOrder(orderBy = "p.Nombre", direction = "ASC") {
+        try {
+            const validColumns = ["p.Nombre", "PrecioVenta", "CantidadProducida", "FechaCaducidad", "FechaRealizacion"];
+            if (!validColumns.includes(orderBy)) orderBy = "p.Nombre";
+            if (!["ASC", "DESC"].includes(direction.toUpperCase())) direction = "ASC";
+
+            const rows = await database.query(
+                `SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                        p.idProducto, p.Descripcion, p.Disponible,
+                        inv.idInventario, inv.CantidadProducida,
+                        inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                 FROM Productos p
+                 JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                 ORDER BY ${orderBy} ${direction}`
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching ordered product batches", err);
+            throw err;
+        }
+    }
+
+    // Filtrar por precio (rango o valor único)
+    static async filterPrice({ minPrecio, maxPrecio }) {
+        try {
+            let conditions = [];
+            let values = [];
+
+            if (minPrecio !== undefined) {
+                conditions.push("inv.PrecioVenta >= ?");
+                values.push(parseFloat(minPrecio));
+            }
+            if (maxPrecio !== undefined) {
+                conditions.push("inv.PrecioVenta <= ?");
+                values.push(parseFloat(maxPrecio));
+            }
+
+            const whereClause = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
+
+            const rows = await database.query(
+                `SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                        p.idProducto, p.Descripcion, p.Disponible,
+                        inv.idInventario, inv.CantidadProducida,
+                        inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                FROM Productos p
+                JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                ${whereClause}`,
+                values
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error filtering by price", err);
+            throw err;
+        }
+    }
+
+    // Filtrar por disponibilidad
+    static async filterDisponible({ disponible }) {
+        try {
+            const rows = await database.query(
+                `SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                        p.idProducto, p.Descripcion, p.Disponible,
+                        inv.idInventario, inv.CantidadProducida,
+                        inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                FROM Productos p
+                JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                WHERE p.Disponible = ?`,
+                [disponible]
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error filtering by availability", err);
+            throw err;
+        }
+    }
+
+    // Filtrar por rango de fechas
+    static async filterDate({ startDate, endDate }) {
+        try {
+            let conditions = [];
+            let values = [];
+
+            if (startDate) {
+                conditions.push("inv.FechaRealizacion >= ?");
+                values.push(startDate);
+            }
+            if (endDate) {
+                conditions.push("inv.FechaRealizacion <= ?");
+                values.push(endDate);
+            }
+
+            const whereClause = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
+
+            const rows = await database.query(
+                `SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                        p.idProducto, p.Descripcion, p.Disponible,
+                        inv.idInventario, inv.CantidadProducida,
+                        inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                FROM Productos p
+                JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                ${whereClause}`,
+                values
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error filtering by date", err);
+            throw err;
+        }
+    }
+
 }

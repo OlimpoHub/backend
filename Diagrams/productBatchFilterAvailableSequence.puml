@@ -1,0 +1,35 @@
+@startuml
+
+actor api
+boundary productBatch.routes as routes
+control productBatch.controller as controller
+
+activate api
+api -> routes: GET /productBatch/filter/disponible?disponible=1
+
+activate routes
+routes -> controller: filterDisponiblePb(req, res)
+deactivate routes
+
+activate controller
+create entity ProductBatch as pb
+controller -> pb: ProductBatch.filterDisponible(disponible)
+
+database db
+
+activate pb
+pb ->> db: SELECT ... WHERE Disponible = ?
+activate db
+db -->> pb: lotes disponibles
+pb -->> controller: Array de lotes
+deactivate pb
+
+controller -->> routes: res.status(200).json(result)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+
+@enduml
