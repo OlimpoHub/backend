@@ -1,3 +1,9 @@
+## [0.1.0] - 08/11/2025
+
+### Added 
+- Implemented routes, controllers, and model for the Register Product.
+- Added sequence diagram.
+
 ## [0.1.0] - 07/11/2025
 
 ### Added 
