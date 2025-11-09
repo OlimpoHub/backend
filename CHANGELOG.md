@@ -1,6 +1,7 @@
 ## [0.1.0] - 08/11/2025
 
 ### Added 
+- Documentation for register product implemetation.
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
 
