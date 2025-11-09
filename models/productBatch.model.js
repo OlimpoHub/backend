@@ -59,10 +59,23 @@ module.exports = class ProductBatch {
     static async add(content) {
         try {
             const idInventario = content.idInventario || require('crypto').randomUUID();
-            const { idProducto, precioVenta, cantidadProducida, fechaCaducidad, fechaRealizacion } = content;
+            const { 
+                idProducto, 
+                precioVenta, 
+                cantidadProducida, 
+                fechaCaducidad, 
+                fechaRealizacion 
+            } = content;
             const result = await database.query(
                 `INSERT INTO InventarioProductos (idInventario, idProducto, PrecioVenta, CantidadProducida, FechaCaducidad, FechaRealizacion)
-                VALUES (?, ?, ?, ?, ?, ?)`, [idInventario, idProducto, precioVenta, cantidadProducida, fechaCaducidad || null, fechaRealizacion || null]
+                VALUES (?, ?, ?, ?, ?, ?)`, [
+                    idInventario, 
+                    idProducto, 
+                    precioVenta, 
+                    cantidadProducida, 
+                    fechaCaducidad || null, 
+                    fechaRealizacion || null
+                ]
             );
             return { idInventario, ...content };
         } catch (err) {
@@ -73,7 +86,13 @@ module.exports = class ProductBatch {
 
     static async update(id, content) {
         try {
-            const allowed = ['idProducto', 'PrecioVenta', 'CantidadProducida', 'FechaCaducidad', 'FechaRealizacion'];
+            const allowed = [
+                'idProducto', 
+                'PrecioVenta', 
+                'CantidadProducida', 
+                'FechaCaducidad', 
+                'FechaRealizacion'
+            ];
             // Safe keys filtering
             const keys = Object.keys(content).filter(k => allowed.includes(k));
             if (keys.length === 0) return null;
@@ -95,7 +114,10 @@ module.exports = class ProductBatch {
     static async remove(id) {
         try {
             const result = await database.query(
-                `DELETE FROM InventarioProductos WHERE idInventario = ?`, [id]
+                `DELETE FROM InventarioProductos WHERE idInventario = ?`, 
+                [
+                    id
+                ]
             );
             return result.affectedRows && result.affectedRows > 0;
         } catch (err) {
@@ -114,7 +136,10 @@ module.exports = class ProductBatch {
                  FROM Productos p
                  JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
                  WHERE p.Nombre LIKE ? OR p.Descripcion LIKE ?`,
-                [`%${term}%`, `%${term}%`]
+                [
+                    `%${term}%`, 
+                    `%${term}%`
+                ]
             );
             return rows;
         } catch (err) {
@@ -125,7 +150,13 @@ module.exports = class ProductBatch {
 
     static async fetchAllWithOrder(orderBy = "p.Nombre", direction = "ASC") {
         try {
-            const validColumns = ["p.Nombre", "PrecioVenta", "CantidadProducida", "FechaCaducidad", "FechaRealizacion"];
+            const validColumns = [
+                "p.Nombre", 
+                "PrecioVenta", 
+                "CantidadProducida", 
+                "FechaCaducidad", 
+                "FechaRealizacion"
+            ];
             if (!validColumns.includes(orderBy)) orderBy = "p.Nombre";
             if (!["ASC", "DESC"].includes(direction.toUpperCase())) direction = "ASC";
 
@@ -190,7 +221,9 @@ module.exports = class ProductBatch {
                 FROM Productos p
                 JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
                 WHERE p.Disponible = ?`,
-                [disponible]
+                [
+                    disponible
+                ]
             );
             return rows;
         } catch (err) {
@@ -224,7 +257,9 @@ module.exports = class ProductBatch {
                 FROM Productos p
                 JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
                 ${whereClause}`,
-                values
+                [
+                    values
+                ]
             );
             return rows;
         } catch (err) {
