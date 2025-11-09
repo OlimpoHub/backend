@@ -1,6 +1,6 @@
 const Product = require('../models/product.model');
 
-// POST /product
+// POST /product: register a new product
 exports.postRegisterProduct = async (request, response) => {
     try {
         const product = new Product (
@@ -12,8 +12,6 @@ exports.postRegisterProduct = async (request, response) => {
             request.body.imagen,
             request.body.Disponible,
         );
-
-        console.log(product);
 
         await product.save();
         response.status(201).json({ message: "Product added successfully" });

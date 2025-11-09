@@ -25,7 +25,7 @@ product.model --> product : save()
 
 create database elArca
 
-product --> elArca : execute(INSERT INTO Producto (nombre, precioUnitarios, idCategoria,\n descripcion, imagen, disponible) VALUES (?, ?, ?, ?, ?, ?)",\n  [ this.nombre, this.precioUnitarios, this.idCategoria, this.descripcion,\n this.imagen, this.disponible]))
+product --> elArca : execute(INSERT INTO Producto \n(idProducto, idTaller, Nombre, \nPrecioUnitario, idCategoria, \nDescripcion, imagen) VALUES \n(?, ?, ?, ?, ?, ?, ?, ?)", [ this.idProducto, \nthis.idTaller, this.Nombre, this.PrecioUnitario, \nthis.idCategoria, this.Descripcion, this.imagen]))
 
 activate elArca
 elArca --> product : OK
