@@ -1,48 +1,5 @@
 const Workshops = require("../models/workshops.model");
 
-function parseTimeTo24h(timeStr) {
-  if (!timeStr) return null;
-
-  const timeRegex24h = /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/;
-  if (timeRegex24h.test(timeStr)) {
-    return timeStr.length === 5 ? timeStr + ":00" : timeStr;
-  }
-
-  const match12h = timeStr.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s?(AM|PM)$/i);
-  if (match12h) {
-    let hour = parseInt(match12h[1], 10);
-    const minutes = match12h[2];
-    const seconds = match12h[3] || "00"; 
-    const period = match12h[4].toUpperCase();
-
-    if (period === "PM" && hour < 12) hour += 12;
-    if (period === "AM" && hour === 12) hour = 0;
-
-    const hh = hour.toString().padStart(2, "0");
-    return `${hh}:${minutes}:${seconds}`;
-  }
-
-  throw new Error(`Formato de hora inválido: ${timeStr}`);
-}
-
-function formatDateToSQL(date) {
-  if (!date) date = new Date();
-
-  if (date instanceof Date) {
-    if (date.getTime() === 0) date = new Date();
-    const yyyy = date.getFullYear();
-    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
-    const dd = date.getDate().toString().padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return date;
-  }
-
-  throw new Error(`Formato de fecha inválido: ${date}`);
-}
-
 exports.addWorkshops = async (request, response) => {
   try {
     const { 
@@ -58,21 +15,17 @@ exports.addWorkshops = async (request, response) => {
       url
     } = request.body;
 
-    const horaEntrada24 = parseTimeTo24h(horaEntrada);
-    const horaSalida24 = parseTimeTo24h(horaSalida);
-    const fechaSQL = formatDateToSQL(fecha);
-
     const taller = new Workshops(
       idTaller || null,
       idCapacitacion || null,
-      nombreTaller,
-      horaEntrada24,
-      horaSalida24,
-      estatus || 1,
+      nombreTaller || "",
+      horaEntrada || "",
+      horaSalida || "",
+      estatus || "1",
       idUsuario || null,
-      horarioTaller || null,
-      fechaSQL,
-      url || null
+      horarioTaller || "",
+      fecha || "",
+      url || ""
     );
 
     const result = await taller.save();
