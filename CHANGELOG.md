@@ -1,3 +1,7 @@
+## [0.1.0] - 08/11/2025
+### Fixed
+- Fix controller viewOneWorkshop
+
 ## [0.1.0] - 07/11/2025
 
 ### Added 
