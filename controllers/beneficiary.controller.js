@@ -65,11 +65,7 @@ exports.get_beneficiary = async (req, res) => {
 
 exports.post_beneficiary = async (req, res) => {
     try {
-        console.log("REQ BODY:", req.body);
-
         const data = req.body
-
-        console.log(data)
 
         const result = await Beneficiary.registerBeneficiary(data);
         res.status(200).json(result.message);

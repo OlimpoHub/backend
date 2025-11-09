@@ -38,13 +38,13 @@ module.exports = class Beneficiary {
         `;
 
         const params = [
-            beneficiaryData.nombre,
-            beneficiaryData.apellidoPaterno,
-            beneficiaryData.apellidoMaterno,
-            beneficiaryData.fechaNacimiento
+            data.nombre,
+            data.apellidoPaterno,
+            data.apellidoMaterno,
+            data.fechaNacimiento
         ];
 
-        const [rows] = await database.query(sql, params);
+        const rows = await database.query(sql, params);
         return rows.length > 0;
     }
 
@@ -53,7 +53,14 @@ module.exports = class Beneficiary {
     // Function to create new beneficiary BEN-001
     static async registerBeneficiary(data) {
         try {
-            console.log()
+
+            if (await this.exists(data)) {
+                return {
+                success: false,
+                message: "Beneficiario ya existente",
+            };
+            }
+
             const sql = `
                 INSERT INTO Beneficiarios 
                 (nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia,
