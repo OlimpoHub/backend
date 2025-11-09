@@ -51,67 +51,73 @@ module.exports = class Supplies {
         }
     }
 
-    // Filter supplies by category, measure, or workshop
-    static async filter(type, value) {
+    static async filterOrder(filters = {}) {
         try {
-            if (type == "category") {
-                const rows = await database.query
-                (
-                    `SELECT i.idInsumo, i.nombre, i.imagenInsumo 
-                    FROM Insumo i, Categoria c 
-                    WHERE i.idCategoria = c.idCategoria 
-                        AND c.descripcion = ?`,[value]
-                );
-                return rows;
-            } else if (type == "measure") {
-                const rows = await database.query
-                (
-                    `SELECT idInsumo, nombre, imagenInsumo 
-                    FROM Insumo 
-                    WHERE unidadMedida = ?`,[value]
-                );
-                return rows;
-            } else if (type == "workshop") {
-                const rows = await database.query
-                (
-                    `SELECT i.idInsumo, i.nombre, i.imagenInsumo 
-                    FROM Insumo i, Taller t 
-                    WHERE i.idTaller = t.idTaller 
-                        AND t.nombreTaller = ?`,[value]
-                );
-                return rows;
-            }
+
+            // Base query with joins to category and workshop tables
+            let query = `
+                SELECT i.idInsumo, i.nombre, i.imagenInsumo, c.descripcion, t.nombreTaller, i.unidadMedida
+                FROM Insumo i
+                LEFT JOIN Categoria c ON i.idCategoria = c.idCategoria
+                LEFT JOIN Taller t ON i.idTaller = t.idTaller
+                WHERE 1 = 1
+            `;
+
+            const params = [];
             
-        } catch (err){
-            console.error("Error searching supplies: ", err);
+            // Filter by categories if provided
+            if (filters.categories && filters.categories.length > 0) {
+                query += ` AND c.descripcion IN (${filters.categories.map(() => '?').join(', ')})`;
+                params.push(...filters.categories);
+            }
+            // Filter by measurement units if provided
+            if (filters.measures && filters.measures.length > 0) {
+                query += ` AND i.unidadMedida IN (${filters.measures.map(() => '?').join(', ')})`;
+                params.push(...filters.measures);
+            }
+            // Filter by workshops if provided
+            if (filters.workshops && filters.workshops.length > 0) {
+                query += ` AND t.nombreTaller IN (${filters.workshops.map(() => '?').join(', ')})`;
+                params.push(...filters.workshops);
+            }
+
+            if (filters.order){
+                query += ` ORDER BY i.nombre ` + filters.order;
+            }
+
+            // Execute query with accumulated parameters
+            const rows = await database.query(query, params);
+            return rows;
+
+        } catch (err) {
+            console.error("Error filtering supplies:", err);
             throw err;
         }
     }
 
-    // Order supplies by name (asc or desc)
-    static async orderSupplies(value) {
+    static async getFiltersData() {
         try {
-            if (value == "asc") {
-                const rows = await database.query
-                (
-                    `SELECT idInsumo, nombre, imagenInsumo 
-                    FROM Insumo 
-                    ORDER BY nombre 
-                        ASC`
-                );
-                return rows;
-            } else if (value == "desc") {
-                const rows = await database.query
-                (
-                    `SELECT idInsumo, nombre, imagenInsumo 
-                    FROM Insumo 
-                    ORDER BY nombre 
-                        DESC`
-                );
-                return rows;
-            }
-        } catch (err){
-            console.error("Error ordering supplies: ", err);
+            // Get all unique categories
+            const categories = await database.query(
+                `SELECT DISTINCT descripcion FROM Categoria`
+            );
+            // Get all unique measures
+            const measures = await database.query(
+                `SELECT DISTINCT unidadMedida FROM Insumo`
+            );
+            // Get all unique workshops
+            const workshops = await database.query(
+                `SELECT DISTINCT nombreTaller FROM Taller`
+            );
+            // Return simplified arrays with raw values
+            return {
+                categories: categories.map(c => c.descripcion),
+                measures: measures.map(m => m.unidadMedida),
+                workshops: workshops.map(t => t.nombreTaller)
+            };
+
+        } catch (err) {
+            console.error("Error fetching filter data:", err);
             throw err;
         }
     }
