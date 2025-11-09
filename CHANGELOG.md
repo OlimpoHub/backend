@@ -2,6 +2,7 @@
 
 ### Added 
 - Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+- Implemented Registration for new beneficiaries and prevents registration of beneficiaries already existing
 ## [0.1.0] - 06/11/2025
 
 ### Added 
