@@ -138,29 +138,19 @@ module.exports = class Workshops {
         try{
             const rows = await db.query(
                 `SELECT 
-	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion
+	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion, 
+                    t.URL, t.fecha, u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
                 JOIN Capacitaciones c
 	                ON t.idCapacitacion = c.idCapacitacion
+                JOIN Usuarios u
+                    ON t.idUsuario = u.idUsuario
                 WHERE t.estatus = ? AND t.idTaller = ?
                 `, [1, id]
             );
-            const usuariosRows = await db.query(
-                `SELECT
-                    u.nombre, u.apellidoPaterno, u.apellidoMaterno
-                FROM Usuarios u
-                JOIN UsuarioCapacitacion c
-                    ON u.idUsuario = c.idUsuario
-                JOIN Capacitaciones k
-                    ON k.idCapacitacion = c.idCapacitacion
-                JOIN Taller t
-                    ON t.idCapacitacion = t.idCapacitacion
-                WHERE t.estatus = ? AND t.idTaller = ?
-                `, [1, id]
-            )
             const beneficiariesRows = await db.query(
                 `SELECT  
-	                b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
+	                b.idbeneficiario, b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
                 FROM Beneficiarios b
                 JOIN BeneficiarioTaller e
 	                ON e.idBeneficiario = b.idBeneficiario
@@ -171,7 +161,6 @@ module.exports = class Workshops {
             );
             return {
                 workshop : rows,
-                users : usuariosRows,
                 beneficiaries : beneficiariesRows
             };
         }
