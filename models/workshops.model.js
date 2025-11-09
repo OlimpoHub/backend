@@ -136,7 +136,6 @@ module.exports = class Workshops {
 
     static async getOneWorkshop(id){ 
         try{
-            console.log(id);
             const rows = await db.query(
                 `SELECT 
 	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion

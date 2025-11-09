@@ -1,4 +1,8 @@
 ## [0.1.0] - 08/11/2025
+### Fixed
+- Fix Model viewOneWorkshop
+
+## [0.1.0] - 08/11/2025
 
 ### Added 
 - Documentation for register product implemetation.
