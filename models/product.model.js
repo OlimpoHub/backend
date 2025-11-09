@@ -29,14 +29,14 @@ module.exports = class Products {
                 (
                     idProducto, 
                     idTaller, 
-                    nombre, 
-                    precioUnidario, 
-                    idCategoría, 
-                    descripcion, 
+                    Nombre, 
+                    PrecioUnitario, 
+                    idCategoria, 
+                    Descripcion, 
                     imagen, 
-                    disponible
+                    Disponible
                 ) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     this.idProducto,
                     this.idTaller,

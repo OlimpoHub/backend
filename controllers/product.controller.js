@@ -1,32 +1,23 @@
 const Product = require('../models/product.model');
 
-// GET /product
-async function getAllPb(req, res) {
-    try {
-        const productes = await Product.fetchAll();
-        res.status(200).json(productes);
-    } catch (err) {
-        console.log('Failure in getAllProducts, error:', err);
-        res.status(500).json({ error: 'Failed to fetch all products' });
-    }
-}
-
 // POST /product
-async function addPb(req, res) {
+exports.postRegisterProduct = async (request, response) => {
     try {
-        const content = req.body;
-        const created = await Product.add(content);
-        res.status(201).json(created);
+        const product = new Product (
+            request.body.idTaller,
+            request.body.Nombre,
+            request.body.PrecioUnitario,
+            request.body.idCategoria,
+            request.body.Descripcion,
+            request.body.imagen,
+            request.body.Disponible,
+        );
+
+        console.log(product);
+
+        await product.save();
+        response.status(201).json({ message: "Product added successfully" });
     } catch (err) {
-        console.error('Failure in addProducts, error:', err);
-        res.status(500).json({ error: 'Failed to add product ' });
+        response.status(500).json({ message: "Failed to add a product", err });
     }
 }
-
-module.exports = {
-    getAllPb,
-    getPbById,
-    addPb,
-    updatePb,
-    removePb
-};
