@@ -1,0 +1,42 @@
+@startuml
+
+participant ArcaApi
+boundary supplyBatch.routes 
+control supplyBatch.controller
+entity supplyBatch.model
+database elArca
+
+activate ArcaApi
+ArcaApi -> supplyBatch.routes : POST /supplyBatch/filter
+deactivate ArcaApi
+
+activate supplyBatch.routes
+supplyBatch.routes -> supplyBatch.controller: getSupplyBatchFiltered(request, response)
+
+activate supplyBatch.controller
+supplyBatch.controller ->> supplyBatch.model : getSupplyBatchFiltered\n(type: String, value: String)
+
+activate supplyBatch.model
+
+group filter by expiration date
+    supplyBatch.model ->> elArca: elArca.execute(`SELECT a.Descripcion AS TipoAdquisicion, SUM(ii.CantidadActual) AS TotalCantidad, ii.FechaCaducidad \n FROM InventarioInsumos AS ii \n INNER JOIN TipoAdquisicion AS a \n ON ii.idTipoAdquisicion = a.idTipoAdquisicion \n WHERE ii.FechaCaducidad = ? \n GROUP BY a.Descripcion, ii.FechaCaducidad`, [value])
+    activate elArca
+end
+
+group filter by type of acquisition
+    supplyBatch.model ->> elArca: elArca.execute(`SELECT a.Descripcion AS TipoAdquisicion, SUM(ii.CantidadActual) AS TotalCantidad, ii.FechaCaducidad \n FROM InventarioInsumos AS ii \n INNER JOIN TipoAdquisicion AS a \n ON ii.idTipoAdquisicion = a.idTipoAdquisicion \n WHERE a.Descripcion = ? \n GROUP BY a.Descripcion, ii.FechaCaducidad`, [value])
+end
+
+elArca -->> supplyBatch.model: rows
+deactivate elArca
+
+supplyBatch.model -->> supplyBatch.controller: SupplyBatchesFiltered
+deactivate supplyBatch.model
+
+supplyBatch.controller -->> supplyBatch.routes: SupplyBatchesFilteredJson
+deactivate supplyBatch.controller
+
+supplyBatch.routes -->> ArcaApi: res.status(200).json(SupplyBatchesFiltered)
+deactivate supplyBatch.routes
+
+@enduml
