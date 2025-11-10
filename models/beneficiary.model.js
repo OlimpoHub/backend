@@ -27,6 +27,80 @@ module.exports = class Beneficiary {
         }
     }
 
+    // Revisar si el beneficiario existe BEN-001
+    static async exists(data) {
+        const sql = `
+            SELECT * FROM Beneficiarios
+            WHERE nombre = ?
+            AND apellidoPaterno = ?
+            AND apellidoMaterno = ?
+            AND fechaNacimiento = ?
+        `;
+
+        const params = [
+            data.nombre,
+            data.apellidoPaterno,
+            data.apellidoMaterno,
+            data.fechaNacimiento
+        ];
+
+        const rows = await database.query(sql, params);
+        return rows.length > 0;
+    }
+
+
+
+    // Function to create new beneficiary BEN-001
+    static async registerBeneficiary(data) {
+        try {
+
+            if (await this.exists(data)) {
+                return {
+                success: false,
+                message: "Beneficiario ya existente",
+            };
+            }
+
+            const sql = `
+                INSERT INTO Beneficiarios 
+                (nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia,
+                relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            const params = [
+                data.nombre,
+                data.apellidoPaterno,
+                data.apellidoMaterno,
+                data.fechaNacimiento,
+                data.numeroEmergencia,
+                data.nombreContactoEmergencia,
+                data.relacionContactoEmergencia,
+                data.descripcion,
+                data.fechaIngreso,
+                data.foto,
+                1
+            ];
+
+            const result = await database.query(sql, params);
+            return {
+                success: true,
+                insertId: result.insertId,
+                message: "Creado con éxito"
+            };
+
+        } catch (error) {
+            console.error("Error al registrar beneficiario:", error);
+
+            return {
+                success: false,
+                message: "Error interno del servidor",
+                error
+            };
+        }
+    }
+
+
     // Mock data for PokedexApp Lab.
     // In production we will use DB data
     static fetchAllPokemons() {
