@@ -52,6 +52,8 @@ module.exports = class Supplies {
     }
 
     static async filterOrder(filters = {}) {
+        console.log("Entro al filterOrder")
+        console.log("Filters: ", filters);
         try {
 
             // Base query with joins to category and workshop tables
@@ -87,6 +89,7 @@ module.exports = class Supplies {
 
             // Execute query with accumulated parameters
             const rows = await database.query(query, params);
+            console.log("ROWS: ", rows)
             return rows;
 
         } catch (err) {
@@ -110,6 +113,8 @@ module.exports = class Supplies {
                 `SELECT DISTINCT nombreTaller FROM Taller`
             );
             // Return simplified arrays with raw values
+            console.log("ENTRO AL GET FILTERS DATA");
+
             return {
                 categories: categories.map(c => c.descripcion),
                 measures: measures.map(m => m.unidadMedida),
