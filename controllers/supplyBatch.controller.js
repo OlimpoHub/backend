@@ -10,10 +10,14 @@ exports.getSupplyBatch = async (req, res) => {
     }
 }
 
+/* --------------------------------------------------------------------------- *
+* Receives the id within the route, then queries for the supply batch then
+* obtain the atributes of the supply, to convert it to a json of that supply
+* that has also the quantity and expiration date of each supply batch
+* --------------------------------------------------------------------------- */
 exports.getOneSupplyBatch = async (req, res) => {
     try {
         const id = req.params.idInsumo;
-        // console.log(id);
         const supplyBatch = await SupplyBatch.fetchOne(id);
         const { idInsumo: idInsumo, nombre, unidadMedida } = supplyBatch[0];
         const supplyBatchJson = supplyBatch.map(r => ({
@@ -36,5 +40,27 @@ exports.addSupply = async (request, response) => {
         response.status(200).json({ message: "Supply added successfully" });
     } catch (error) {
         console.error("Error adding supply: ", error);
+    }
+};
+
+exports.deleteSupplyBatch = async(request, response) => {
+    try {
+        // get the supplybatch id from request body
+        const idInventario = request.params.idInventario
+
+         // call the model method to delete the supply
+        const result = await SupplyBatch.delete(idInventario);
+
+        // send 200 if deleted, 404 if not found
+        response.status(result.success ? 200:404).json(result)
+    } catch (error) {
+        console.error()
+
+        // return 500 internal server error response
+        response.status(500).json({
+            success: false,
+            message: "Failed to delete a supply batch", 
+            error,
+        });
     }
 };

@@ -1,0 +1,44 @@
+@startuml
+
+actor api
+boundary externalColabs.routes as routes
+control externalColabs.controller as controller
+entity externalColabs.model as model
+database db
+
+activate api
+api -> routes: POST /externalColabs/order
+
+activate routes
+routes -> controller: getExternalColabsOrdered(req, res)
+deactivate routes
+
+activate controller
+controller ->> model: getExternalColabsOrdered(type: String)
+
+activate model
+
+group Order ASC
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tORDER BY r.nombreRol ASC, u.nombre ASC`\n\t)
+    activate db
+end
+
+group Order DESC
+    model ->> db: db.execute\n\t(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tORDER BY r.nombreRol ASC, u.nombre DESC`\n\t)
+end
+
+db -->> model: rows
+deactivate db
+
+model -->> controller: externalColabsOrdered
+deactivate model
+
+controller -->> routes: externalColabsOrderedJson
+deactivate controller
+
+activate routes
+routes -->> api: res\n\t.status(200)\n\t.json(externalColabsOrdered)
+deactivate routes
+deactivate api
+
+@enduml

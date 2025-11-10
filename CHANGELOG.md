@@ -1,3 +1,49 @@
+## [0.1.0] - 09/11/2025
+
+<<<<<<< HEAD
+### Added
+- Implemented separated filter functions in `ProductBatch` model:
+  - `filterPrice({ minPrecio, maxPrecio })`
+  - `filterDisponible({ disponible })`
+  - `filterDate({ startDate, endDate })`
+- Added search functionality: `search(term)`
+- Added ordering functionality: `fetchAllWithOrder(orderBy, direction)`
+- Created corresponding controller methods and route endpoints for each function.
+- Documented all functionalities with PlantUML diagrams:
+  - Sequence diagrams for search, order, and each filter.
+  - Class diagram for `ProductBatch` model.
+- Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
+
+=======
+### Added 
+- Delete supply batch functionality
+- Sequence diagrams for  Delete supplies batches and filter
+
+### Fixed
+- Fix Model viewOneWorkshop
+### Changed
+- viewOneWorkshop now returns URL, date and teh user in charge
+
+## [0.1.0] - 08/11/2025
+
+### Added 
+- Documentation for register product implemetation.
+- Implemented routes, controllers, and model for the Register Product.
+- Added sequence diagram.
+
+### Fixed
+- Fix controller viewOneWorkshop
+>>>>>>> 955d8220716485bf51b0abde6f6d4da57fd6c0a5
+
+## [0.1.0] - 07/11/2025
+
+### Added 
+- Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+## [0.1.0] - 06/11/2025
+
+### Added 
+- Sequence diagrams for supplies list
+
 ## [0.1.0] - 05/11/2025
 
 ### Added 
@@ -5,6 +51,13 @@
 - Added new fields for workshops model and controller.
 
 ## [0.0.0] - 04/11/2025 
+
+### Added
+ - Added the search for external collabs, allowing to search by name or lastname.
+ - Added filters to obtain external collabs by role or status.
+ - Added the possibility to order external collabs by name ASC or DESC.
+
+ ## [0.0.0] - 04/11/2025 
 
 ### Added
  - Added logic for Delete Supplie
@@ -17,6 +70,8 @@
  - Added Product Batch controller with error handling and response formatting.
  - Created routes for Product Batch operations with JSDoc documentation.
  - UUID generation for inventory IDs.
+ - Added new fields for workshops model and controller.
+ - Added logic for Delete Workshop
  
 ## [0.0.0] - 04/11/2025
 
