@@ -1,3 +1,10 @@
+## [0.1.0] - 09/11/2025
+### Fixed
+- Fix Model viewOneWorkshop
+### Changed
+- viewOneWorkshop now returns URL, date and teh user in charge
+
+
 ## [0.1.0] - 08/11/2025
 
 ### Added 
