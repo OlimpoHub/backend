@@ -1,6 +1,7 @@
 ## [0.1.0] - 09/11/2025
 
 ### Added 
+- Delete supply batch functionality
 - Sequence diagrams for  Delete supplies batches and filter
 
 ### Fixed
