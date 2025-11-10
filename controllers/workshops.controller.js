@@ -134,7 +134,7 @@ exports.viewWorkshops = async (request, response) => {
 
 exports.viewOneWorkshop = async (request, response) => {
     try{
-        const id = request.params.idWorkshop;
+        const id = request.params.idTaller;
         const workshop = await Workshops.getOneWorkshop(id);
         response.status(200).json(workshop);
     } catch(error) {

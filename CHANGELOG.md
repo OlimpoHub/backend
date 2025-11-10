@@ -1,5 +1,6 @@
 ## [0.1.0] - 09/11/2025
 
+<<<<<<< HEAD
 ### Added
 - Implemented separated filter functions in `ProductBatch` model:
   - `filterPrice({ minPrecio, maxPrecio })`
@@ -13,6 +14,26 @@
   - Class diagram for `ProductBatch` model.
 - Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
 
+=======
+### Added 
+- Delete supply batch functionality
+- Sequence diagrams for  Delete supplies batches and filter
+
+### Fixed
+- Fix Model viewOneWorkshop
+### Changed
+- viewOneWorkshop now returns URL, date and teh user in charge
+
+## [0.1.0] - 08/11/2025
+
+### Added 
+- Documentation for register product implemetation.
+- Implemented routes, controllers, and model for the Register Product.
+- Added sequence diagram.
+
+### Fixed
+- Fix controller viewOneWorkshop
+>>>>>>> 955d8220716485bf51b0abde6f6d4da57fd6c0a5
 
 ## [0.1.0] - 07/11/2025
 
