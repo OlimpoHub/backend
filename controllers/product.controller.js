@@ -13,9 +13,35 @@ exports.postRegisterProduct = async (request, response) => {
             request.body.Disponible,
         );
 
-        await product.save();
+        // Success
+        await Product.save();
         response.status(201).json({ message: "Product added successfully" });
     } catch (err) {
+        // Error
         response.status(500).json({ message: "Failed to add a product", err });
+    }
+}
+
+// GET: Consult all products
+exports.getProducts = async (request, response) => {
+    try {
+        // Success
+        const products = await Product.fetchAll();
+        response.status(200).json(products);
+    } catch (err) {
+        // Error
+        response.status(500).json({ message: "Failed to consult products", err });
+    }
+}
+
+exports.getOneProduct = async (request, response) => {
+    try {
+        const id = request.params.idProduct;
+        // Success
+        const product = await Product.fetchOne(id);
+        response.status(200).json(product);
+    } catch (err) {
+        // Error
+        response.status(500).json({ message: "Failed to consult products", err });
     }
 }
