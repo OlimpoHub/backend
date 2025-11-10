@@ -181,4 +181,28 @@ module.exports = class Workshops {
         }
         
     }
+
+    static async findWorkshop(nameWorkshop) {
+        try {
+            const query = `
+                SELECT 
+                    t.idTaller, 
+                    t.nombreTaller, 
+                    t.horaEntrada, 
+                    t.horaSalida,
+                    t.HorarioTaller,
+                    t.Fecha,
+                    t.URL
+                FROM Taller t
+                WHERE t.estatus = 1 AND t.nombreTaller LIKE ?;
+            `;
+            
+            const [rows] = await db.execute(query, [`%${nameWorkshop}%`]);
+            return rows;
+        } catch (error) {
+            console.error("Error findWorkshop:", error);
+            throw error;
+        }
+    }
+
 };

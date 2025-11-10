@@ -1,11 +1,13 @@
-## [0.1.0] - 09/11/2025
+## [0.1.0] - 10/11/2025
 
+### Added
+ - Add funtion to search a workshop in model, routes and controller.
+ - 
 ### Fixed
 - Fix routes on beneficiaries
 
 ## [0.1.0] - 09/11/2025
 
-<<<<<<< HEAD
 ### Added
 - Implemented separated filter functions in `ProductBatch` model:
   - `filterPrice({ minPrecio, maxPrecio })`
@@ -18,20 +20,19 @@
   - Sequence diagrams for search, order, and each filter.
   - Class diagram for `ProductBatch` model.
 - Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
-
-=======
-### Added 
 - Delete supply batch functionality
 - Sequence diagrams for  Delete supplies batches and filter
 
 ### Fixed
 - Fix Model viewOneWorkshop
+
 ### Changed
 - viewOneWorkshop now returns URL, date and teh user in charge
 
 ## [0.1.0] - 08/11/2025
 
 ### Added 
+- Changed the workshop controller to work with the front end.
 - Documentation for register product implemetation.
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
@@ -44,6 +45,8 @@
 
 ### Added 
 - Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+- Implemented Registration for new beneficiaries and prevents registration of beneficiaries already existing
+
 ## [0.1.0] - 06/11/2025
 
 ### Added 

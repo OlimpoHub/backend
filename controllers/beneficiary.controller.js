@@ -73,3 +73,14 @@ exports.beneficiariesList = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch beneficiaries.' });
     }
 };
+=======
+exports.post_beneficiary = async (req, res) => {
+    try {
+        const data = req.body
+
+        const result = await Beneficiary.registerBeneficiary(data);
+        res.status(200).json(result.message);
+    } catch {
+        res.status(500).json({ message: 'Failed to fetch Beneficiary data. '});
+    }
+}
