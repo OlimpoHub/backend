@@ -1,0 +1,39 @@
+@startuml
+
+actor user
+participant externalColabsScreen as screen
+participant externalColabsListViewModel as vm
+participant externalColabsFilterUseCase as us
+participant externalColabsRepositoryImpl as repo
+participant Api as api
+
+user -> screen: Tap the filter button
+
+activate screen
+screen ->> vm: sends the filter \ntype and value
+
+activate vm
+vm ->> us: invoke()
+
+activate us
+us ->> repo: getExternalColabsFilteredList\n(\n\ttype: String, \n\tvalue: String\n)
+
+
+activate repo
+repo ->> api: getExternalColabsFilteredList\n(\n\ttype: String, \n\tvalue: String\n)
+
+activate api
+api -->> repo: ExternalColabsListDto
+deactivate api
+
+repo -->> us: List<ExternalColabs>
+deactivate repo
+
+us -->> vm: Flow<Result<List<ExternalColabs>>>
+deactivate us
+
+vm -->> screen: StateFlow<ExternalColabsUiState>
+
+screen ->> user: Displays the external \ncolaborators filtered list
+
+@enduml

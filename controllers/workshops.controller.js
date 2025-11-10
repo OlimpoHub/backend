@@ -101,6 +101,24 @@ exports.modifyWorkshops = async (request, response) => {
       error: error.message
     });
   }
+}
+
+exports.deleteWorkshops = async (request, response) => {
+  try {
+    const { idTaller } = request.params;
+    const result = await Workshops.changestatus(idTaller);
+
+    if (!result || result.affectedRows === 0) {
+      return response.status(404).json({ message: "Taller no encontrado." });
+    }
+
+    return response.status(200).json({
+      affectedRows: result.affectedRows
+    });
+
+  } catch (error) {
+    return response.status(500).json({ message: "Error interno del servidor." });
+  }
 };
 
 exports.viewWorkshops = async (request, response) => {
@@ -116,7 +134,7 @@ exports.viewWorkshops = async (request, response) => {
 
 exports.viewOneWorkshop = async (request, response) => {
     try{
-        const id = request.params.idWorkshop;
+        const id = request.params.idTaller;
         const workshop = await Workshops.getOneWorkshop(id);
         response.status(200).json(workshop);
     } catch(error) {
