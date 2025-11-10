@@ -138,21 +138,19 @@ module.exports = class Workshops {
         try{
             const rows = await db.query(
                 `SELECT 
-	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion,
-	                u.nombre, u.apellidoPaterno
+	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion, 
+                    t.URL, t.fecha, u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
-                JOIN  UsuarioCapacitacion i
-	                ON t.idCapacitacion = i.idCapacitacion
                 JOIN Capacitaciones c
-	                ON i.idCapacitacion = c.idCapacitacion
+	                ON t.idCapacitacion = c.idCapacitacion
                 JOIN Usuarios u
-	                ON u.idUsuario = i.idUsuario
-                WHERE t.estatus = ? AND c.estatus = ? AND t.idTaller = ?
-                `, [1, 1, id]
+                    ON t.idUsuario = u.idUsuario
+                WHERE t.estatus = ? AND t.idTaller = ?
+                `, [1, id]
             );
             const beneficiariesRows = await db.query(
                 `SELECT  
-	                b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
+	                b.idbeneficiario, b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
                 FROM Beneficiarios b
                 JOIN BeneficiarioTaller e
 	                ON e.idBeneficiario = b.idBeneficiario
@@ -183,4 +181,28 @@ module.exports = class Workshops {
         }
         
     }
+
+    static async findWorkshop(nameWorkshop) {
+        try {
+            const query = `
+                SELECT 
+                    t.idTaller, 
+                    t.nombreTaller, 
+                    t.horaEntrada, 
+                    t.horaSalida,
+                    t.HorarioTaller,
+                    t.Fecha,
+                    t.URL
+                FROM Taller t
+                WHERE t.estatus = 1 AND t.nombreTaller LIKE ?;
+            `;
+            
+            const [rows] = await db.execute(query, [`%${nameWorkshop}%`]);
+            return rows;
+        } catch (error) {
+            console.error("Error findWorkshop:", error);
+            throw error;
+        }
+    }
+
 };

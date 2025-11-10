@@ -1,0 +1,55 @@
+@startuml
+actor Usuario as User
+
+participant "SplashViewModel" as SplashVM
+participant "UserPreferences" as Prefs
+participant "NavController" as Nav
+participant "LoginViewModel" as LoginVM
+participant "LoginUseCase" as LoginUC
+participant "UserRepositoryImpl" as Repo
+participant "ArcaApi" as Api
+
+== Splash Screen ==
+User -> SplashVM : app start / onCreate
+activate SplashVM
+SplashVM -> Prefs : getUserId(), getUsername(), getUserRole()
+activate Prefs
+Prefs --> SplashVM : id / username / role (or null)
+deactivate Prefs
+alt user stored locally
+    SplashVM -> Nav : navigate to HomeScreen (by role)
+else no local session
+    SplashVM -> Nav : navigate to LoginScreen
+end
+deactivate SplashVM
+
+== Login ==
+User -> LoginVM : enter credentials + submit
+activate LoginVM
+LoginVM -> LoginUC : login(username, password)
+activate LoginUC
+LoginUC -> Repo : repository.login(username, password)
+activate Repo
+Repo -> Api : POST /auth/login {username, password}
+activate Api
+alt success (200)
+    Api --> Repo : { user, accessToken, refreshToken }
+    Repo -> Prefs : saveTokens(accessToken, refreshToken)
+    activate Prefs
+    Repo -> Prefs : saveUser(id, username, role)
+    deactivate Prefs
+    Repo --> LoginUC : User (domain)
+    deactivate Repo
+    LoginUC --> LoginVM : Result.Success(User)
+    deactivate LoginUC
+    LoginVM -> Nav : navigate to HomeScreen (by role)
+else failure (400/401)
+    Api --> Repo : 400 / 401
+    Repo --> LoginUC : AppError.Unauthorized
+    deactivate Repo
+    LoginUC --> LoginVM : Result.Error
+    deactivate LoginUC
+    LoginVM --> User : show "Credenciales inválidas"
+end
+deactivate LoginVM
+@enduml

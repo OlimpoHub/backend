@@ -22,6 +22,28 @@ const productBatchController = require("../controllers/productBatch.controller")
 router.get("/", productBatchController.getAllPb);
 
 /**
+ * GET /productBatch/search?q=term
+ * @description Search product batches by name or description
+ */
+router.get("/search", productBatchController.searchPb);
+
+/**
+ * GET /productBatch/order?orderBy=PrecioVenta&direction=DESC
+ * @description Get product batches ordered by a field
+ */
+router.get("/order", productBatchController.getOrderedPb);
+
+/**
+ * GET /productBatch/filter?disponible=1&startDate=2025-01-01&endDate=2025-12-31
+ * @description Filter product batches by availability and/or date range
+ */
+// Filtros separados
+router.get("/filter/price", productBatchController.filterPricePb);
+router.get("/filter/disponible", productBatchController.filterDisponiblePb);
+router.get("/filter/date", productBatchController.filterDatePb);
+
+
+/**
  * GET /productBatch/:idProductBatch
  * @description Obtiene los detalles de un lote específico
  * @param {string} idProductBatch - ID del producto a consultar
