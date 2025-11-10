@@ -3,6 +3,8 @@ const router = express.Router();
 
 const workshopsController = require('../controllers/workshops.controller');
 
+router.get('/search', workshopsController.searchWorkshops);
+
 router.post('/add', workshopsController.addWorkshops);
 router.get('/', workshopsController.viewWorkshops);
 router.get('/:idTaller', workshopsController.viewOneWorkshop);
