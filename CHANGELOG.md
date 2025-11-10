@@ -5,6 +5,9 @@
  - 
 ### Fixed
 - Fix routes on beneficiaries
+- Implementation for consult products.
+- Sequence diagram for consult products.
+- Add funtion to search a workshop in model, routes and controller.
 
 ## [0.1.0] - 09/11/2025
 
