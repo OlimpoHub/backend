@@ -1,0 +1,42 @@
+@startuml
+
+participant ArcaApi
+boundary supplyBatch.routes 
+control supplyBatch.controller
+entity supplyBatch.model
+database elArca
+
+activate ArcaApi
+ArcaApi -> supplyBatch.routes : POST /supplyBatch/order
+deactivate ArcaApi
+
+activate supplyBatch.routes
+supplyBatch.routes -> supplyBatch.controller: getSupplyBatchOrdered(request, response)
+
+activate supplyBatch.controller
+supplyBatch.controller ->> supplyBatch.model : getSupplyBatchOrdered\n(type: String)
+
+activate supplyBatch.model
+
+group Order ASC (Min to Max)
+    supplyBatch.model ->> elArca: elArca.execute(`SELECT a.Descripcion AS TipoAdquisicion, ii.FechaCaducidad, SUM(ii.CantidadActual) AS TotalCantidad \n FROM InventarioInsumos AS ii \n INNER JOIN TipoAdquisicion AS a \n ON ii.idTipoAdquisicion = a.idTipoAdquisicion \n GROUP BY a.Descripcion, ii.FechaCaducidad \n ORDER BY TotalCantidad ASC`)
+    activate elArca
+end
+
+group filter by type of acquisition
+    supplyBatch.model ->> elArca: elArca.execute(`SELECT a.Descripcion AS TipoAdquisicion, ii.FechaCaducidad, SUM(ii.CantidadActual) AS TotalCantidad \n FROM InventarioInsumos AS ii \n INNER JOIN TipoAdquisicion AS a \n ON ii.idTipoAdquisicion = a.idTipoAdquisicion \n GROUP BY a.Descripcion, ii.FechaCaducidad \n ORDER BY TotalCantidad DESC`)
+end
+
+elArca -->> supplyBatch.model: rows
+deactivate elArca
+
+supplyBatch.model -->> supplyBatch.controller: SupplyBatchesOrdered
+deactivate supplyBatch.model
+
+supplyBatch.controller -->> supplyBatch.routes: SupplyBatchesOrderedJson
+deactivate supplyBatch.controller
+
+supplyBatch.routes -->> ArcaApi: res.status(200).json(SupplyBatchesOrdered)
+deactivate supplyBatch.routes
+
+@enduml

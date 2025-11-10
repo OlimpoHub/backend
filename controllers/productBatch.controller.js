@@ -72,10 +72,75 @@ async function removePb(req, res) {
     }
 }
 
+// SEARCH /productBatch/search?q=term
+async function searchPb(req, res) {
+    try {
+        const term = req.query.q;
+        if (!term) {
+            return res.status(400).json({ error: "Search term is required" });
+        }
+        const results = await ProductBatch.search(term);
+        res.status(200).json(results);
+    } catch (err) {
+        console.error("Failure in searchPb, error:", err);
+        res.status(500).json({ error: "Failed to search product batches" });
+    }
+}
+
+// GET /productBatch/order?orderBy=PrecioVenta&direction=DESC
+async function getOrderedPb(req, res) {
+    try {
+        const { orderBy, direction } = req.query;
+        const results = await ProductBatch.fetchAllWithOrder(orderBy, direction);
+        res.status(200).json(results);
+    } catch (err) {
+        console.error("Failure in getOrderedPb, error:", err);
+        res.status(500).json({ error: "Failed to fetch ordered product batches" });
+    }
+}
+
+async function filterPricePb(req, res) {
+    try {
+        const { minPrecio, maxPrecio } = req.query;
+        const result = await ProductBatch.filterPrice({ minPrecio, maxPrecio });
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("Failure in filterPricePb:", err);
+        res.status(500).json({ error: "Failed to filter by price" });
+    }
+}
+
+async function filterDisponiblePb(req, res) {
+    try {
+        const { disponible } = req.query;
+        const result = await ProductBatch.filterDisponible({ disponible });
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("Failure in filterDisponiblePb:", err);
+        res.status(500).json({ error: "Failed to filter by availability" });
+    }
+}
+
+async function filterDatePb(req, res) {
+    try {
+        const { startDate, endDate } = req.query;
+        const result = await ProductBatch.filterDate({ startDate, endDate });
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("Failure in filterDatePb:", err);
+        res.status(500).json({ error: "Failed to filter by date" });
+    }
+}
+
 module.exports = {
     getAllPb,
     getPbById,
     addPb,
     updatePb,
-    removePb
+    removePb,
+    searchPb,
+    getOrderedPb,
+    filterPricePb,
+    filterDisponiblePb,
+    filterDatePb
 };
