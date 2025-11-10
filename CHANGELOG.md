@@ -8,6 +8,7 @@
 
 ### Fixed
 - Fix routes on beneficiaries
+- Fix the 'horario taller' to 'descripcion' from the data base in workshops.
 
 ## [0.1.0] - 09/11/2025
 
