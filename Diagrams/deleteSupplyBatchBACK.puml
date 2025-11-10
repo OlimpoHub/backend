@@ -1,0 +1,36 @@
+@startuml
+header Delete SupplyBatch
+
+participant ArcaApi
+boundary supplyBatch.routes 
+control supplyBatch.controller
+entity supplyBatch.model
+database elArca
+
+activate ArcaApi
+ArcaApi -> supplyBatch.routes : DELETE /supplyBatch/:id
+deactivate ArcaApi
+
+activate supplyBatch.routes
+supplyBatch.routes -> supplyBatch.controller: deleteSupplyBatch(request, response)
+
+activate supplyBatch.controller
+supplyBatch.controller ->> supplyBatch.model : deleteSupplyBatch(id)
+
+activate supplyBatch.model
+supplyBatch.model ->> elArca : execute("DELETE FROM InventarioInsumos WHERE idInventario = ?")
+activate elArca
+elArca --> supplyBatch.model : result (affectedRows)
+deactivate elArca
+
+supplyBatch.model --> supplyBatch.controller : result
+deactivate supplyBatch.model
+
+supplyBatch.controller --> supplyBatch.routes : responseJSON(result)
+deactivate supplyBatch.controller
+
+supplyBatch.routes --> ArcaApi : HTTP 200 OK + JSON({ success: true })
+deactivate supplyBatch.routes
+
+@enduml
+

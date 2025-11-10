@@ -2,11 +2,13 @@ const database = require("../utils/db")
 module.exports = class SupplyBatch {
     constructor
     (
+        idInventario,
         idInsumos, 
         cantidadActual, 
         fechaCaducidad, 
         idTipoAdquisicion
     ){
+        this.idInventario = idInventario;
         this.idInsumos = idInsumos;
         this.cantidadActual = cantidadActual;
         this.fechaCaducidad = fechaCaducidad;
@@ -78,6 +80,33 @@ module.exports = class SupplyBatch {
         } catch (err) {
             console.error("Error al agregar insumo: ", err);
             throw err;
+        }
+    }
+
+    // performs a delete of the supply batch
+
+        static async delete(inventoryId) {
+        try {
+
+        // run SQL query to set the supply status to 0 
+        const result = await database.execute
+        (
+            `DELETE FROM InventarioInsumos 
+            WHERE idInventario = ?`, 
+            [inventoryId]
+        );
+
+        // check if any row was affected (supply found)
+        if (result.affectedRows === 0) 
+            return { success: false, message: "No supply batch found with that ID." };
+
+        
+        return { success: true, message: "Supply batch deleted successfully." };
+        } catch (error) {
+        console.error("Error deleting supply batch:", error);
+        
+        // rethrow the error to be handled by the controller
+        throw error;
         }
     }
 }
