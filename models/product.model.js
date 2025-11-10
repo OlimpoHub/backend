@@ -55,4 +55,41 @@ module.exports = class Products {
         }
     }
 
+    // Consult all products
+    static async fetchAll() {
+        try {
+            const rows = await database.query
+            (
+                `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller 
+                 FROM Productos as p, Taller as t 
+                 WHERE p.idTaller = t.idTaller`
+            );
+            console.log("ROWS:", rows);
+            return rows; // Return the result 
+        } catch (err) {
+            console.error("Error fetching products:", err);
+            throw err;
+        }
+    }
+
+    static async fetchOne(id) {
+        try{
+            const [rows] = await database.query
+            (
+                `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller, 
+                        c.Descripcion AS Categoria, p.Disponible, 
+                        p.Descripcion, p.imagen 
+                 FROM Productos as p, Taller as t, Categoria as c 
+                 WHERE p.idTaller = t.idTaller 
+                   and p.idCategoria = c.idCategoria 
+                   and p.idProducto = ?`, [id]
+            );
+
+            return rows && Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+        } catch(err) {
+            console.log("Error fetching one product", err);
+            throw err;
+        }
+    }
+
 };

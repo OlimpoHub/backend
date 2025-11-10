@@ -3,9 +3,14 @@ const router = express.Router();
 
 const productController = require("../controllers/product.controller");
 
-//router.get("/", productController.registerProduct); 
-
 // POST: Register a new product
-router.post("/", productController.postRegisterProduct)
+router.post("/add", productController.postRegisterProduct);
+
+// GET: Consult all products
+router.get("/", productController.getProducts);
+
+// GET: Consult one product
+router.get("/:idProduct", productController.getOneProduct);
+
 
 module.exports = router;
