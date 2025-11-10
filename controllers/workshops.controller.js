@@ -10,7 +10,7 @@ exports.addWorkshops = async (request, response) => {
       horaSalida, 
       estatus, 
       idUsuario,
-      horarioTaller,
+      descripcion,
       fecha,
       url
     } = request.body;
@@ -23,7 +23,7 @@ exports.addWorkshops = async (request, response) => {
       horaSalida || "",
       estatus || "1",
       idUsuario || null,
-      horarioTaller || "",
+      descripcion || "",
       fecha || "",
       url || ""
     );
@@ -40,7 +40,7 @@ exports.addWorkshops = async (request, response) => {
         horaSalida,
         estatus,
         idUsuario,
-        horarioTaller,
+        descripcion,
         fecha,
         url
       }
@@ -62,7 +62,7 @@ exports.modifyWorkshops = async (request, response) => {
       horaEntrada, 
       horaSalida, 
       estatus, 
-      horarioTaller, 
+      descripcion, 
       fecha, 
       url 
     } = request.body;
@@ -73,7 +73,7 @@ exports.modifyWorkshops = async (request, response) => {
       horaEntrada,
       horaSalida,
       estatus,
-      horarioTaller,
+      descripcion,
       fecha,
       url
     );
@@ -87,7 +87,7 @@ exports.modifyWorkshops = async (request, response) => {
           ...(horaEntrada && { horaEntrada }),
           ...(horaSalida && { horaSalida }),
           ...(estatus !== undefined && { estatus }),
-          ...(horarioTaller && { horarioTaller }),
+          ...(descripcion && { descripcion }),
           ...(fecha && { fecha }),
           ...(url && { url })
         },
