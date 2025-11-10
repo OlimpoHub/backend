@@ -1,0 +1,75 @@
+@startuml INV-003 Modify Product
+participant Api
+boundary product.routes as routes
+control product.controller as controller
+entity product.model as model  
+database elArca
+
+autonumber
+activate Api
+Api -> routes: GET /product/:idProduct
+deactivate Api
+
+activate routes
+routes -> controller: getUpdateProduct(request, response)
+deactivate routes
+
+activate controller
+controller ->> model: fetchOne(id: string)
+
+activate model
+model ->> elArca: db.execute(`SELECT p.Nombre, p.PrecioUnitario, \n\t\t\t\tt.nombreTaller, c.Descripcion AS Categoria, \n\t\t\t\tp.Disponible, p.Descripcion, p.imagen \n\t\t  FROM Productos as p, Taller as t, Categoria as c \n\t\t  WHERE p.idTaller = t.idTaller \n\t\t\t and p.idCategoria = c.idCategoria \n\t\t\t and p.idProducto = ?`)
+
+activate elArca 
+elArca -->> model: rows
+deactivate elArca
+
+model -->> controller: product
+deactivate model
+
+controller -->> routes: product
+deactivate controller
+
+activate routes
+routes -> Api: response.status(200) + \nproduct
+deactivate routes
+
+activate Api
+Api -> routes : POST /product/update
+deactivate Api
+
+activate routes
+
+routes -> controller : updateProduct(request, response)
+deactivate routes
+activate controller
+
+controller ->> model : update(id: string);
+
+activate model
+
+model ->> elArca :  .execute(`UPDATE Productos \n\t\tSET imagen = ?, PrecioUnitario = ?, \n\t\t\tidCategoria = ?, Disponible = ?, \n\t\t\tDescripcion = ? \n\t\tWHERE idProducto = ?`,
+
+activate elArca
+
+elArca -->> model : promise
+
+deactivate elArca
+
+model -->> controller : promise
+
+deactivate model
+
+controller -->> routes : responseJSON(result)
+deactivate controller
+
+activate routes
+
+routes -->> Api : responseJSON(result)
+
+deactivate routes
+activate Api
+
+deactivate Api
+
+@enduml
