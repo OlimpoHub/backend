@@ -5,8 +5,8 @@ const beneficiaryController = require('../controllers/beneficiary.controller');
 
 // Ruta para BEN-02
 router.get('/list', beneficiaryController.beneficiariesList);
-router.get('/', beneficiaryController.get_beneficiaries);
-router.get('/:id', beneficiaryController.get_beneficiary);
+router.get('/', beneficiaryController.getBeneficiaries);
+router.get('/:id', beneficiaryController.getBeneficiary);
 // Ruta para BEN-04
 router.delete('/:id', beneficiaryController.deleteBeneficiary);
 

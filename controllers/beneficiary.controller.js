@@ -43,7 +43,7 @@ exports.deleteBeneficiary = async (req, res) => {
 };
 // FIN DE FUNCION PARA BEN-04
 
-exports.get_beneficiaries = async (req, res) => {
+exports.getBeneficiaries = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.fetchAll();
         res.status(200).json(beneficiaries);
@@ -53,7 +53,7 @@ exports.get_beneficiaries = async (req, res) => {
     }
 };
 
-exports.get_beneficiary = async (req, res) => {
+exports.getBeneficiary = async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const data = await Beneficiary.fetchById(id);
