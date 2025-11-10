@@ -1,3 +1,19 @@
+## [0.1.0] - 09/11/2025
+
+### Added
+- Implemented separated filter functions in `ProductBatch` model:
+  - `filterPrice({ minPrecio, maxPrecio })`
+  - `filterDisponible({ disponible })`
+  - `filterDate({ startDate, endDate })`
+- Added search functionality: `search(term)`
+- Added ordering functionality: `fetchAllWithOrder(orderBy, direction)`
+- Created corresponding controller methods and route endpoints for each function.
+- Documented all functionalities with PlantUML diagrams:
+  - Sequence diagrams for search, order, and each filter.
+  - Class diagram for `ProductBatch` model.
+- Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
+
+
 ## [0.1.0] - 07/11/2025
 
 ### Added 
