@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const beneficiary_controller = require('../controllers/beneficiary.controller');
+const beneficiaryController = require('../controllers/beneficiary.controller');
 
 // Ruta para BEN-02
-router.get('/list', beneficiary_controller.beneficiariesList);
-router.get('/', beneficiary_controller.get_beneficiaries);
-router.get('/:id', beneficiary_controller.get_beneficiary);
+router.get('/list', beneficiaryController.beneficiariesList);
+router.get('/', beneficiaryController.get_beneficiaries);
+router.get('/:id', beneficiaryController.get_beneficiary);
 // Ruta para BEN-04
-router.delete('/:id', beneficiary_controller.deleteBeneficiary);
+router.delete('/:id', beneficiaryController.deleteBeneficiary);
 
 module.exports = router;

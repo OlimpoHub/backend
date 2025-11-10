@@ -1,5 +1,10 @@
 ## [0.1.0] - 09/11/2025
 
+### Fixed
+- Fix routes on beneficiaries
+
+## [0.1.0] - 09/11/2025
+
 <<<<<<< HEAD
 ### Added
 - Implemented separated filter functions in `ProductBatch` model:
