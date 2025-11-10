@@ -4,7 +4,7 @@ const router = express.Router();
 const beneficiary_controller = require('../controllers/beneficiary.controller');
 
 // Ruta para BEN-02
-router.get('/list', beneficiary_controller.beneficiaries_list);
+router.get('/list', beneficiary_controller.beneficiariesList);
 router.get('/', beneficiary_controller.get_beneficiaries);
 router.get('/:id', beneficiary_controller.get_beneficiary);
 // Ruta para BEN-04

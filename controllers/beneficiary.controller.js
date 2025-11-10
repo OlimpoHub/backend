@@ -64,7 +64,7 @@ exports.get_beneficiary = async (req, res) => {
 };
 
 // Controller para BEN-02
-exports.beneficiaries_list = async (req, res) => {
+exports.beneficiariesList = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.beneficiariesList();
         res.status(200).json(beneficiaries);

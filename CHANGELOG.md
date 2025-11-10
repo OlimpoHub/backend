@@ -30,10 +30,10 @@
 - Documentation for register product implemetation.
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
+- Added logic for consult beneficiaries
 
 ### Fixed
 - Fix controller viewOneWorkshop
->>>>>>> 955d8220716485bf51b0abde6f6d4da57fd6c0a5
 
 ## [0.1.0] - 07/11/2025
 
