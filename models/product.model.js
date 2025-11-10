@@ -74,7 +74,7 @@ module.exports = class Products {
 
     static async fetchOne(id) {
         try{
-            const [rows] = await database.query
+            const rows = await database.query
             (
                 `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller, 
                         c.Descripcion AS Categoria, p.Disponible, 
@@ -85,7 +85,7 @@ module.exports = class Products {
                    and p.idProducto = ?`, [id]
             );
 
-            return rows && Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+            return rows.length > 0 ? rows[0] : null;
         } catch(err) {
             console.log("Error fetching one product", err);
             throw err;
