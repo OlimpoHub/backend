@@ -150,4 +150,22 @@ module.exports = class Beneficiary {
             throw err;
         }
     }
+
+    // Model para BEN-02:
+    // Lista de beneficiarios + discapacidad ordenado por nombre de beneficiario
+    static async beneficiariesList() {
+        try {
+            const rows = await database.query(
+                `SELECT Ben.*, LD.nombre AS discapacidad
+                FROM Beneficiarios Ben
+                INNER JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                INNER JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                ORDER BY Ben.nombre`);
+            console.log("ROWS:", rows);
+            return rows;
+        } catch (err) {
+            console.error("Error al obtener beneficiarios:", err);
+            throw err; 
+        }
+    }
 }

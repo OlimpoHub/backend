@@ -43,7 +43,7 @@ exports.deleteBeneficiary = async (req, res) => {
 };
 // FIN DE FUNCION PARA BEN-04
 
-exports.get_beneficiaries = async (req, res) => {
+exports.getBeneficiaries = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.fetchAll();
         res.status(200).json(beneficiaries);
@@ -53,7 +53,7 @@ exports.get_beneficiaries = async (req, res) => {
     }
 };
 
-exports.get_beneficiary = async (req, res) => {
+exports.getBeneficiary = async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const data = await Beneficiary.fetchById(id);
@@ -63,6 +63,17 @@ exports.get_beneficiary = async (req, res) => {
     }
 };
 
+// Controller para BEN-02
+exports.beneficiariesList = async (req, res) => {
+    try {
+        const beneficiaries = await Beneficiary.beneficiariesList();
+        res.status(200).json(beneficiaries);
+    } catch (error) {
+        console.error('Error fetching beneficiaries:', error);
+        res.status(500).json({ message: 'Failed to fetch beneficiaries.' });
+    }
+};
+=======
 exports.post_beneficiary = async (req, res) => {
     try {
         const data = req.body

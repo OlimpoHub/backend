@@ -1,9 +1,13 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+ - Add funtion to search a workshop in model, routes and controller.
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.
+
+### Fixed
+- Fix routes on beneficiaries
 
 ## [0.1.0] - 09/11/2025
 
@@ -35,6 +39,7 @@
 - Documentation for register product implemetation.
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
+- Added logic for consult beneficiaries
 
 ### Fixed
 - Fix controller viewOneWorkshop
