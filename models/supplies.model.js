@@ -51,12 +51,12 @@ module.exports = class Supplies {
         }
     }
 
-    static async filterOrder(filters = {}) {
-        // console.log("Entro al filterOrder")
-        // console.log("Filters: ", filters)
-        try {
+    static async filterOrder(body = {}) {
+        // console.log("ENTRO AL FILTER POST", body);
 
-            // Base query with joins to category and workshop tables
+        const filters = body.filters || {};
+
+        try {
             let query = `
                 SELECT i.idInsumo, i.nombre, i.imagenInsumo
                 FROM Insumo i
@@ -66,30 +66,33 @@ module.exports = class Supplies {
             `;
 
             const params = [];
-            
-            // Filter by categories if provided
-            if (filters.categories && filters.categories.length > 0) {
-                query += ` AND c.descripcion IN (${filters.categories.map(() => '?').join(', ')})`;
-                params.push(...filters.categories);
-            }
-            // Filter by measurement units if provided
-            if (filters.measures && filters.measures.length > 0) {
-                query += ` AND i.unidadMedida IN (${filters.measures.map(() => '?').join(', ')})`;
-                params.push(...filters.measures);
-            }
-            // Filter by workshops if provided
-            if (filters.workshops && filters.workshops.length > 0) {
-                query += ` AND t.nombreTaller IN (${filters.workshops.map(() => '?').join(', ')})`;
-                params.push(...filters.workshops);
+
+            // Categorías
+            if (filters["Categorías"] && filters["Categorías"].length > 0) {
+                query += ` AND c.descripcion IN (${filters["Categorías"].map(() => '?').join(', ')})`;
+                params.push(...filters["Categorías"]);
             }
 
-            if (filters.order){
-                query += ` ORDER BY i.nombre ` + filters.order;
+            // Medidas
+            if (filters["Medidas"] && filters["Medidas"].length > 0) {
+                query += ` AND i.unidadMedida IN (${filters["Medidas"].map(() => '?').join(', ')})`;
+                params.push(...filters["Medidas"]);
             }
 
-            // Execute query with accumulated parameters
+            // Talleres
+            if (filters["Talleres"] && filters["Talleres"].length > 0) {
+                query += ` AND t.nombreTaller IN (${filters["Talleres"].map(() => '?').join(', ')})`;
+                params.push(...filters["Talleres"]);
+            }
+
+            // Orden
+            if (body.order) {
+                query += ` ORDER BY i.nombre ${body.order}`;
+            }
+
             const rows = await database.query(query, params);
-            console.log("ROWS: ", rows)
+            console.log("ROWS:", rows);
+
             return rows;
 
         } catch (err) {
@@ -97,6 +100,8 @@ module.exports = class Supplies {
             throw err;
         }
     }
+
+
 
     static async getFiltersData() {
         try {

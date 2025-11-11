@@ -1,7 +1,8 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
- - Add funtion to search a workshop in model, routes and controller.
+- Add filter and order organism with generic approach finished
+- Add funtion to search a workshop in model, routes and controller.
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.

@@ -29,10 +29,10 @@ exports.searchSupplies = async (request, response) => {
 // Filter supplies by category, measure, or workshop
 exports.filterOrderSupplies = async (request, response) => {
     try {
-        // console.log("BODY: ", request.body);
+        console.log("BODY: ", request.body);
         const filters  = request.body;
-        // console.log("Filters received in controller: ", filters)
         const supplies = await Supplies.filterOrder(filters);
+        console.log("SUPPLIES", supplies);
         response.status(200).json(supplies);
     } catch (error) {
         console.error("Error filtering supplies: ", error);
