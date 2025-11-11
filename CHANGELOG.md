@@ -1,11 +1,14 @@
 ## [0.1.0] - 11/11/2025
 
 ### Added
+- Modify product implementation
+- Sequence diagram for modify product
 - Added filter functionality to workshops
 - Added the order functionality by name
 
 ### Fixed
 - Fixed name variables for errors in workshops.model.js
+
 ## [0.1.0] - 10/11/2025
 
 ### Added

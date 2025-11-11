@@ -12,5 +12,9 @@ router.get("/", productController.getProducts);
 // GET: Consult one product
 router.get("/:idProduct", productController.getOneProduct);
 
+//GET: Modify product
+router.get("/:idProduct/update", productController.getOneProduct);
+router.put("/:idProduct/update", productController.updateProduct);
+
 
 module.exports = router;
