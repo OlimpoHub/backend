@@ -1,13 +1,11 @@
-const database = require("../utils/db")
+const database = require("../utils/db");
+
+/**
+ * Represents a supply batch record in the inventory.
+ * Provides static methods for CRUD and filter operations.
+ */
 module.exports = class SupplyBatch {
-    constructor
-    (
-        idInventario,
-        idInsumos, 
-        cantidadActual, 
-        fechaCaducidad, 
-        idTipoAdquisicion
-    ){
+    constructor(idInventario, idInsumos, cantidadActual, fechaCaducidad, idTipoAdquisicion) {
         this.idInventario = idInventario;
         this.idInsumos = idInsumos;
         this.cantidadActual = cantidadActual;
@@ -15,31 +13,33 @@ module.exports = class SupplyBatch {
         this.idTipoAdquisicion = idTipoAdquisicion;
     }
 
+    /**
+     * Fetches all supply batches with their associated supplies.
+     */
     static async fetchAll() {
         try {
-            const rows = await database.query
-            (
+            const rows = await database.query(
                 `SELECT i.nombre, i.imagenInsumo, i.unidadMedida, 
-                    i.idInsumo, inv.idInventario, inv.cantidadActual, 
-                    inv.fechaCaducidad
+                        i.idInsumo, inv.idInventario, inv.cantidadActual, 
+                        inv.fechaCaducidad
                 FROM Insumo i
-                JOIN InventarioInsumos inv
-                    ON i.idInsumo = inv.idInsumo
+                JOIN InventarioInsumos inv ON i.idInsumo = inv.idInsumo
                 GROUP BY i.idInsumo, i.nombre, i.imagenInsumo`
             );
-            
-            // console.log("rows", rows);
             return rows;
-        } catch(err) {
+        } catch (err) {
             console.log("Error fetching supply batch ", err);
             throw err;
         }
     }
 
+    /**
+     * Fetches one specific supply and its batch details.
+     * @param {string} id - The ID of the supply.
+     */
     static async fetchOne(id) {
-        try{
-            const [rows] = await database.query
-            (
+        try {
+            const [rows] = await database.query(
                 `SELECT 
                     i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
                     inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad
@@ -49,64 +49,83 @@ module.exports = class SupplyBatch {
                 WHERE i.idInsumo = ?
                 GROUP BY i.idInsumo, inv.FechaCaducidad`, [id]
             );
-
             return Array.isArray(rows) ? rows : [rows];
-        } catch(err) {
+        } catch (err) {
             console.log("Error fetching one supply batch", err);
             throw err;
         }
     }
 
+    /**
+     * Inserts a new supply batch record into the database.
+     */
     static async addSupply(supplyId, quantity, expirationDate, acquisitionId) {
         try {
-            const result = await database.query
-            (   
-                `INSERT INTO InventarioInsumos 
-                    (
-                        idInsumo, 
-                        CantidadActual, 
-                        FechaCaducidad, 
-                        idTipoAdquisicion
-                VALUES (?, ?, ?, ?)`,
-                [
-                    supplyId,
-                    quantity, 
-                    expirationDate, 
-                    acquisitionId
-                ]
+            const result = await database.query(
+                `INSERT INTO InventarioInsumos (
+                    idInsumo, CantidadActual, FechaCaducidad, idTipoAdquisicion
+                ) VALUES (?, ?, ?, ?)`,
+                [supplyId, quantity, expirationDate, acquisitionId]
             );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
         } catch (err) {
-            console.error("Error al agregar insumo: ", err);
+            console.error("Error adding supply: ", err);
             throw err;
         }
     }
 
-    // performs a delete of the supply batch
-
-        static async delete(inventoryId) {
+    /**
+     * Deletes a supply batch by its inventory ID.
+     */
+    static async delete(inventoryId) {
         try {
+            const result = await database.execute(
+                `DELETE FROM InventarioInsumos WHERE idInventario = ?`, 
+                [inventoryId]
+            );
 
-        // run SQL query to set the supply status to 0 
-        const result = await database.execute
-        (
-            `DELETE FROM InventarioInsumos 
-            WHERE idInventario = ?`, 
-            [inventoryId]
-        );
+            if (result.affectedRows === 0)
+                return { success: false, message: "No supply batch found with that ID." };
 
-        // check if any row was affected (supply found)
-        if (result.affectedRows === 0) 
-            return { success: false, message: "No supply batch found with that ID." };
-
-        
-        return { success: true, message: "Supply batch deleted successfully." };
+            return { success: true, message: "Supply batch deleted successfully." };
         } catch (error) {
-        console.error("Error deleting supply batch:", error);
-        
-        // rethrow the error to be handled by the controller
-        throw error;
+            console.error("Error deleting supply batch:", error);
+            throw error;
         }
     }
-}
+
+    /**
+     * Filters supply batches either by expiration date or acquisition type.
+     */
+    static async filter(type, value) {
+        try {
+            if (type === "expiration date") {
+                return await database.query(
+                    `SELECT a.Descripcion AS TipoAdquisicion, 
+                            SUM(ii.CantidadActual) AS TotalCantidad, 
+                            ii.FechaCaducidad 
+                    FROM InventarioInsumos AS ii 
+                    INNER JOIN TipoAdquisicion AS a 
+                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
+                    WHERE ii.FechaCaducidad = ?
+                    GROUP BY a.Descripcion, ii.FechaCaducidad`, [value]
+                );
+            } else if (type === "acquisition") {
+                return await database.query(
+                    `SELECT a.Descripcion AS TipoAdquisicion, 
+                            SUM(ii.CantidadActual) AS TotalCantidad, 
+                            ii.FechaCaducidad 
+                    FROM InventarioInsumos AS ii 
+                    INNER JOIN TipoAdquisicion AS a 
+                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
+                    WHERE a.Descripcion = ? 
+                    GROUP BY a.Descripcion, ii.FechaCaducidad`, [value]
+                );
+            }
+        } catch (err) {
+            console.error("Error filtering supply batch: ", err);
+            throw err;
+        }
+    }
+};
