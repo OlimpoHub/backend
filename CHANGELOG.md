@@ -1,3 +1,8 @@
+## [0.1.0] - 11/11/2025
+
+### Added
+- Added filter functionality to workshops
+
 ## [0.1.0] - 10/11/2025
 
 ### Added
