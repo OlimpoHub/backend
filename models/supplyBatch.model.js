@@ -5,7 +5,13 @@ const database = require("../utils/db");
  * Provides static methods for CRUD and filter operations.
  */
 module.exports = class SupplyBatch {
-    constructor(idInventario, idInsumos, cantidadActual, fechaCaducidad, idTipoAdquisicion) {
+    constructor(
+        idInventario,
+        idInsumos,
+        cantidadActual,
+        fechaCaducidad,
+        idTipoAdquisicion
+    ) {
         this.idInventario = idInventario;
         this.idInsumos = idInsumos;
         this.cantidadActual = cantidadActual;
@@ -38,16 +44,28 @@ module.exports = class SupplyBatch {
      * @param {string} id - The ID of the supply.
      */
     static async fetchOne(id) {
+        const status = 1;
+
         try {
             const [rows] = await database.query(
                 `SELECT 
                     i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
-                    inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad
+                    inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad, 
+                    t.nombreTaller, c.Descripcion, i.status, 
+                    ta.Descripcion AS adquisicion
                 FROM Insumo i
                 LEFT JOIN InventarioInsumos inv 
                     ON inv.IdInsumo = i.idInsumo
-                WHERE i.idInsumo = ?
-                GROUP BY i.idInsumo, inv.FechaCaducidad`, [id]
+                JOIN TipoAdquisicion ta
+                    ON ta.idTipoAdquisicion = inv.idTipoAdquisicion
+                JOIN Taller t
+                    ON t.idTaller = i.idTaller
+                JOIN Categoria c
+                    ON c.idCategoria = i.idCategoria
+                WHERE i.idInsumo = ? 
+                    AND i.status = ?
+                GROUP BY i.idInsumo, inv.FechaCaducidad`,
+                [id, status]
             );
             return Array.isArray(rows) ? rows : [rows];
         } catch (err) {
@@ -81,14 +99,20 @@ module.exports = class SupplyBatch {
     static async delete(inventoryId) {
         try {
             const result = await database.execute(
-                `DELETE FROM InventarioInsumos WHERE idInventario = ?`, 
+                `DELETE FROM InventarioInsumos WHERE idInventario = ?`,
                 [inventoryId]
             );
 
             if (result.affectedRows === 0)
-                return { success: false, message: "No supply batch found with that ID." };
+                return {
+                    success: false,
+                    message: "No supply batch found with that ID.",
+                };
 
-            return { success: true, message: "Supply batch deleted successfully." };
+            return {
+                success: true,
+                message: "Supply batch deleted successfully.",
+            };
         } catch (error) {
             console.error("Error deleting supply batch:", error);
             throw error;
