@@ -1,12 +1,13 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
- - Add funtion to search a workshop in model, routes and controller.
+- Add funtion to search a workshop in model, routes and controller.
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.
 
 ### Fixed
+- Fix routes, model and controller for external collabs.
 - Fix routes on beneficiaries
 - Fix post beneficiary function
 - Fix the 'horario taller' to 'descripcion' from the data base in workshops.
