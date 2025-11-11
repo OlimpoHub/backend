@@ -52,13 +52,13 @@ module.exports = class Supplies {
     }
 
     static async filterOrder(filters = {}) {
-        console.log("Entro al filterOrder")
-        console.log("Filters: ", filters);
+        // console.log("Entro al filterOrder")
+        // console.log("Filters: ", filters)
         try {
 
             // Base query with joins to category and workshop tables
             let query = `
-                SELECT i.idInsumo, i.nombre, i.imagenInsumo, c.descripcion, t.nombreTaller, i.unidadMedida
+                SELECT i.idInsumo, i.nombre, i.imagenInsumo
                 FROM Insumo i
                 LEFT JOIN Categoria c ON i.idCategoria = c.idCategoria
                 LEFT JOIN Taller t ON i.idTaller = t.idTaller
