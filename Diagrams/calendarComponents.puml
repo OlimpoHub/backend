@@ -1,0 +1,20 @@
+@startuml
+
+package "Calendar" {
+    [DayFiles] --> [WeekFIles]
+    [WeekFIles] --> [MonthFiles]
+    [MonthFiles] --> [CalendarFiles]
+    [DayItem] --> [CalendarFiles]
+    
+    [Repository] --> [Requirement]
+    [Model] --> [Network]
+    [Repository] --> [Network]
+
+    [Requirement] --> CalendarItemsRequirement
+    [Repository] --> CalendarRepository
+
+}
+
+[Network] --> API_Backend
+
+@enduml

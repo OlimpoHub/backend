@@ -30,7 +30,7 @@ module.exports = class externalCollabs {
   }
     
   //Insert into table `Users` using parameters (safe SQL).
-  static async save(hashedPassword,photo) {
+  async save(hashedPassword,photo) {
     return database
       .execute(
         `INSERT INTO Usuarios (

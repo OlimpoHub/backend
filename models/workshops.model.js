@@ -2,7 +2,7 @@ const db = require('../utils/db.js');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Workshops {
-    constructor(idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, horarioTaller, fecha, url) {
+    constructor(idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url) {
         this.idTaller = idTaller || uuidv4();
         this.idCapacitacion = idCapacitacion;
         this.nombreTaller = nombreTaller;
@@ -10,7 +10,7 @@ module.exports = class Workshops {
         this.horaSalida = horaSalida;
         this.estatus = estatus;
         this.idUsuario = idUsuario;
-        this.horarioTaller = horarioTaller;
+        this.descripcion = descripcion;
         this.fecha = fecha;
         this.url = url;
     }
@@ -19,7 +19,7 @@ module.exports = class Workshops {
         try {
             const query = `
                 INSERT INTO Taller 
-                (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, HorarioTaller, Fecha, URL) 
+                (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, Descripcion, Fecha, URL) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             
@@ -31,7 +31,7 @@ module.exports = class Workshops {
                 this.horaSalida,
                 this.estatus,
                 this.idUsuario,
-                this.horarioTaller,
+                this.descripcion,
                 this.fecha,
                 this.url
             ];
@@ -55,7 +55,7 @@ module.exports = class Workshops {
                 'horaSalida',
                 'estatus',
                 'idUsuario',
-                'HorarioTaller',
+                'Descripcion',
                 'Fecha',
                 'URL'
             ];
@@ -74,7 +74,7 @@ module.exports = class Workshops {
         }
     }
 
-    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, horarioTaller, fecha, url) {
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url) {
         try {
             const query = `
                 UPDATE Taller 
@@ -82,13 +82,13 @@ module.exports = class Workshops {
                     horaEntrada = ?,
                     horaSalida = ?,
                     estatus = ?,
-                    HorarioTaller = ?,
+                    Descripcion = ?,
                     Fecha = ?,
                     URL = ?
                 WHERE idTaller = ?
             `;
             
-            const params = [nombreTaller, horaEntrada, horaSalida, estatus, horarioTaller, fecha, url, idTaller];
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, idTaller];
             const result = await db.execute(query, params);
             return result;
             
@@ -121,7 +121,7 @@ module.exports = class Workshops {
                 t.nombreTaller, 
                 t.horaEntrada, 
                 t.horaSalida,
-                t.HorarioTaller,
+                t.Descripcion,
                 t.Fecha,
                 t.URL
                 FROM Taller t 
@@ -190,7 +190,7 @@ module.exports = class Workshops {
                     t.nombreTaller, 
                     t.horaEntrada, 
                     t.horaSalida,
-                    t.HorarioTaller,
+                    t.Descripcion,
                     t.Fecha,
                     t.URL
                 FROM Taller t
