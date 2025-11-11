@@ -1,0 +1,49 @@
+@startuml View Calendar
+header View Calendar
+
+participant CalendarApi
+boundary calendar.routes
+control calendar.controller
+entity calendar.model 
+database elArca.sql
+
+' Flujo que sigue el usuario
+activate CalendarApi
+CalendarApi -> calendar.routes: GET /calendar
+
+activate calendar.routes
+calendar.routes -> calendar.controller: getCalendar(request, response)
+deactivate calendar.routes
+
+activate calendar.controller
+calendar.controller -> calendar.model: fetchAll()
+
+activate calendar.model
+calendar.model ->> elArca.sql: execute('SELECT \n\
+    Taller.idTaller,\n\
+    Taller.idCapacitacion,\n\
+    Taller.idUsuario,\n\
+    Taller.nombreTaller,\n\
+    Taller.fecha,\n\
+    Taller.horarioTaller\n\
+FROM Taller\n\
+INNER JOIN Usuarios\n\
+    ON Taller.idUsuario = Usuarios.idUsuario;')
+
+activate elArca.sql
+elArca.sql --> calendar.model: calendar
+deactivate elArca.sql
+
+calendar.model --> calendar.controller: calendar
+deactivate calendar.model
+
+calendar.controller -> calendar.routes: calendarJSON
+deactivate calendar.controller
+
+activate calendar.routes
+calendar.routes --> CalendarApi: HTTP 200 OK + CalendarJSON
+deactivate calendar.routes
+
+deactivate CalendarApi
+
+@enduml

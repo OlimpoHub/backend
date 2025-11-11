@@ -74,7 +74,8 @@ exports.beneficiariesList = async (req, res) => {
     }
 };
 
-exports.post_beneficiary = async (req, res) => {
+
+exports.postBeneficiary = async (req, res) => {
     try {
         const data = req.body
 

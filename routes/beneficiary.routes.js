@@ -10,6 +10,6 @@ router.get('/:id', beneficiaryController.getBeneficiary);
 // Ruta para BEN-04
 router.delete('/:id', beneficiaryController.deleteBeneficiary);
 //Ruta para BEN-001
-router.post('/create', beneficiaryController.post_beneficiary);
+router.post('/create', beneficiaryController.postBeneficiary);
 
 module.exports = router;
