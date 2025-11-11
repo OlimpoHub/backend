@@ -1,19 +1,46 @@
+## [0.1.0] - 10/11/2025
+
+### Added
+ - Add funtion to search a workshop in model, routes and controller.
+- Implementation for consult products.
+- Sequence diagram for consult products.
+- Add funtion to search a workshop in model, routes and controller.
+
+### Fixed
+- Fix routes on beneficiaries
+- Fix post beneficiary function
+- Fix the 'horario taller' to 'descripcion' from the data base in workshops.
+
 ## [0.1.0] - 09/11/2025
 
-### Added 
+### Added
+- Implemented separated filter functions in `ProductBatch` model:
+  - `filterPrice({ minPrecio, maxPrecio })`
+  - `filterDisponible({ disponible })`
+  - `filterDate({ startDate, endDate })`
+- Added search functionality: `search(term)`
+- Added ordering functionality: `fetchAllWithOrder(orderBy, direction)`
+- Created corresponding controller methods and route endpoints for each function.
+- Documented all functionalities with PlantUML diagrams:
+  - Sequence diagrams for search, order, and each filter.
+  - Class diagram for `ProductBatch` model.
+- Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
 - Delete supply batch functionality
 - Sequence diagrams for  Delete supplies batches and filter
 ### Fixed
 - Fix Model viewOneWorkshop
+
 ### Changed
 - viewOneWorkshop now returns URL, date and teh user in charge
 
 ## [0.1.0] - 08/11/2025
 
 ### Added 
+- Changed the workshop controller to work with the front end.
 - Documentation for register product implemetation.
 - Implemented routes, controllers, and model for the Register Product.
 - Added sequence diagram.
+- Added logic for consult beneficiaries
 
 ### Fixed
 - Fix controller viewOneWorkshop
@@ -22,6 +49,8 @@
 
 ### Added 
 - Implemented routes, controllers, and model for the Eliminate Workshops fucntionality.
+- Implemented Registration for new beneficiaries and prevents registration of beneficiaries already existing
+
 ## [0.1.0] - 06/11/2025
 
 ### Added 

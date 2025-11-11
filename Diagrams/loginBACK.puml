@@ -1,0 +1,49 @@
+@startuml
+actor Client as "Client"
+
+participant "user.controller" as Controller
+participant "user.model" as UserModel
+participant "DB" as DB
+participant "argon2.verify" as Argon2
+participant "tokenUtils" as TokenUtils
+
+Client -> Controller : POST /auth/login\n{ username, password }
+activate Controller
+
+alt Missing username or password
+    Controller --> Client : 400 Bad Request\n{ message: "Email and password required" }
+else Valid credentials
+    Controller -> UserModel : findByEmail(username)
+    activate UserModel
+    UserModel -> DB : SELECT * FROM Usuarios\nWHERE correoElectronico = ?
+    activate DB
+    DB --> UserModel : user record OR null
+    deactivate DB
+    UserModel --> Controller : user OR null
+    deactivate UserModel
+
+    alt user not found
+        Controller --> Client : 401 Unauthorized\n{ message: "Invalid email or password" }
+    else user found
+        Controller -> Argon2 : verify(user.contrasena, password)
+        activate Argon2
+        Argon2 --> Controller : true / false
+        deactivate Argon2
+
+        alt password invalid
+            Controller --> Client : 401 Unauthorized\n{ message: "Invalid email or password" }
+        else password valid
+            Controller -> TokenUtils : generateAccessToken({ id: user.idUsuario, role: user.idRol })
+            activate TokenUtils
+            TokenUtils --> Controller : accessToken
+            Controller -> TokenUtils : generateRefreshToken({ id: user.idUsuario })
+            TokenUtils --> Controller : refreshToken
+            deactivate TokenUtils
+
+            Controller --> Client : 200 OK\n{ user: safeUser, accessToken, refreshToken }
+        end
+    end
+end
+
+deactivate Controller
+@enduml

@@ -10,7 +10,7 @@ exports.addWorkshops = async (request, response) => {
       horaSalida, 
       estatus, 
       idUsuario,
-      horarioTaller,
+      descripcion,
       fecha,
       url
     } = request.body;
@@ -18,14 +18,14 @@ exports.addWorkshops = async (request, response) => {
     const taller = new Workshops(
       idTaller || null,
       idCapacitacion || null,
-      nombreTaller,
-      horaEntrada || null,
-      horaSalida || null,
-      estatus || 1,
+      nombreTaller || "",
+      horaEntrada || "",
+      horaSalida || "",
+      estatus || "1",
       idUsuario || null,
-      horarioTaller || null,
-      fecha || null,
-      url || null
+      descripcion || "",
+      fecha || "",
+      url || ""
     );
 
     const result = await taller.save();
@@ -40,7 +40,7 @@ exports.addWorkshops = async (request, response) => {
         horaSalida,
         estatus,
         idUsuario,
-        horarioTaller,
+        descripcion,
         fecha,
         url
       }
@@ -62,7 +62,7 @@ exports.modifyWorkshops = async (request, response) => {
       horaEntrada, 
       horaSalida, 
       estatus, 
-      horarioTaller, 
+      descripcion, 
       fecha, 
       url 
     } = request.body;
@@ -73,7 +73,7 @@ exports.modifyWorkshops = async (request, response) => {
       horaEntrada,
       horaSalida,
       estatus,
-      horarioTaller,
+      descripcion,
       fecha,
       url
     );
@@ -87,7 +87,7 @@ exports.modifyWorkshops = async (request, response) => {
           ...(horaEntrada && { horaEntrada }),
           ...(horaSalida && { horaSalida }),
           ...(estatus !== undefined && { estatus }),
-          ...(horarioTaller && { horarioTaller }),
+          ...(descripcion && { descripcion }),
           ...(fecha && { fecha }),
           ...(url && { url })
         },
@@ -142,3 +142,26 @@ exports.viewOneWorkshop = async (request, response) => {
         response.status(500).json({message: "Failed to fetch workshop"});
     }
 }
+
+exports.searchWorkshops = async (request, response) => {
+    try {
+        const { nameWorkshop } = request.query;
+
+        if (!nameWorkshop || nameWorkshop.trim() === "") {
+            return response.status(400).json({ message: "The name is required" });
+        }
+
+        const workshops = await Workshops.findWorkshop(nameWorkshop);
+
+        if (workshops.length === 0) {
+            return response.status(404).json({ message: "No workshops found with that name." });
+        }
+        response.status(200).json(workshops);
+    } catch (error) {
+
+        response.status(500).json({ message: "Error searching workshop", error: error.message });
+    }
+}
+
+
+
