@@ -81,3 +81,17 @@ exports.filterSupplyBatch = async (request, response) => {
         response.status(500).json({ message: "Failed to filter supply batches" });
     }
 };
+
+/**
+ * Order supply batches in ascending and descending order.
+ */
+exports.orderSupplyBatch = async (request, response) => {
+    try {
+        const { value } = request.body;
+        const supplyBatch = await SupplyBatch.order(value);
+        response.status(200).json(supplyBatch);
+    } catch (error) {
+        console.error("Error ordering supply batch: ", error);
+        response.status(500).json({ message: "Failed to order supply batches" });
+    }
+};
