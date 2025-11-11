@@ -155,4 +155,42 @@ module.exports = class SupplyBatch {
             throw err;
         }
     }
+
+    /**
+     * Orders supply batches either by ascending or descending order.
+     */
+    static async order(value) {
+        try {
+            if (value == "asc") {
+                const rows = await database.query
+                (
+                    `SELECT a.Descripcion AS TipoAdquisicion, 
+                        ii.FechaCaducidad, 
+                        SUM(ii.CantidadActual) AS TotalCantidad 
+                    FROM InventarioInsumos AS ii 
+                    INNER JOIN TipoAdquisicion AS a 
+                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
+                    GROUP BY a.Descripcion, ii.FechaCaducidad 
+                    ORDER BY TotalCantidad ASC`
+                );
+                return rows;
+            } else if (value == "desc") {
+                const rows = await database.query
+                (
+                    `SELECT a.Descripcion AS TipoAdquisicion, 
+                        ii.FechaCaducidad, 
+                        SUM(ii.CantidadActual) AS TotalCantidad 
+                    FROM InventarioInsumos AS ii 
+                    INNER JOIN TipoAdquisicion AS a 
+                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
+                    GROUP BY a.Descripcion, ii.FechaCaducidad 
+                    ORDER BY TotalCantidad DESC`
+                );
+                return rows;
+            }
+        } catch (err){
+            console.error("Error ordering supply batch: ", err);
+            throw err;
+        }
+    }
 };

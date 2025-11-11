@@ -1,6 +1,8 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- Add filter and order organism with generic approach finished
+- Add order supply batches functionality 
 - Add filter supply batches functionality 
 - Add funtion to search a workshop in model, routes and controller.
 - Implementation for consult products.
@@ -8,9 +10,11 @@
 - Add funtion to search a workshop in model, routes and controller.
 
 ### Fixed
+- Fix routes, model and controller for external collabs.
 - Fix routes on beneficiaries
 - Fix post beneficiary function
 - Fix the 'horario taller' to 'descripcion' from the data base in workshops.
+- Fix Calendar model query to match the database fields.
 
 ## [0.1.0] - 09/11/2025
 

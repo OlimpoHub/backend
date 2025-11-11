@@ -27,26 +27,29 @@ exports.searchSupplies = async (request, response) => {
 };
 
 // Filter supplies by category, measure, or workshop
-exports.filterSupplies = async (request, response) => {
+exports.filterOrderSupplies = async (request, response) => {
     try {
-        const { type, value } = request.body;
-        const supplies = await Supplies.filter(type, value);
+        console.log("BODY: ", request.body);
+        const filters  = request.body;
+        const supplies = await Supplies.filterOrder(filters);
+        console.log("SUPPLIES", supplies);
         response.status(200).json(supplies);
     } catch (error) {
         console.error("Error filtering supplies: ", error);
+        response.status(500).json({ message: "Error filtering supplies." });
     }
 };
 
-// Order supplies by name (asc or desc)
-exports.orderSupplies = async (request, response) => {
+// Get supply categories, measures and workshops for filters
+exports.getFilterData = async (request, response) => {
     try {
-        const { value } = request.body;
-        const supplies = await Supplies.orderSupplies(value);
-        response.status(200).json(supplies);
+        const filterData = await Supplies.getFiltersData();
+        response.status(200).json(filterData);
     } catch (error) {
-        console.error("Error ordering supplies: ", error);
+        console.error("Error fetching filter data: ", error);
+        response.status(500).json({ message: "Failed to fetch filter data." });
     }
-};
+}
 
 exports.addOneSupply = async (req, res) => {
     try {

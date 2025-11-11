@@ -4,7 +4,7 @@ const router = express.Router();
 const externalCollabsController = require("../controllers/externalCollabs.controller");
 
 router.get("/", externalCollabsController.getExternalCollabs);
-router.post("/deleteExternalCollab", externalCollabsController.deleteExternalCollab);
+router.post("/deleteExternalCollab/:id", externalCollabsController.deleteExternalCollab);
 router.get("/:id", externalCollabsController.getExternalCollabsByID);
 
 router.post("/register", externalCollabsController.registerExternalCollabs);
