@@ -51,10 +51,13 @@ module.exports = class SupplyBatch {
                 `SELECT 
                     i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
                     inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad, 
-                    t.nombreTaller, c.Descripcion, i.status
+                    t.nombreTaller, c.Descripcion, i.status, 
+                    ta.Descripcion AS adquisicion
                 FROM Insumo i
                 LEFT JOIN InventarioInsumos inv 
                     ON inv.IdInsumo = i.idInsumo
+                JOIN TipoAdquisicion ta
+                    ON ta.idTipoAdquisicion = inv.idTipoAdquisicion
                 JOIN Taller t
                     ON t.idTaller = i.idTaller
                 JOIN Categoria c

@@ -21,6 +21,7 @@ exports.getSupplyBatch = async (req, res) => {
 exports.getOneSupplyBatch = async (req, res) => {
     try {
         const id = req.params.idInsumo;
+        console.log("Params", id);
         const supplyBatch = await SupplyBatch.fetchOne(id);
 
         const {
@@ -36,6 +37,7 @@ exports.getOneSupplyBatch = async (req, res) => {
         const supplyBatchJson = supplyBatch.map((r) => ({
             cantidad: r.cantidad,
             FechaCaducidad: r.FechaCaducidad,
+            adquisicion: r.adquisicion,
         }));
 
         res.status(200).json({
