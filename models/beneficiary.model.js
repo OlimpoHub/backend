@@ -158,14 +158,40 @@ module.exports = class Beneficiary {
             const rows = await database.query(
                 `SELECT Ben.*, LD.nombre AS discapacidad
                 FROM Beneficiarios Ben
-                INNER JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
-                INNER JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
                 ORDER BY Ben.nombre`);
             console.log("ROWS:", rows);
             return rows;
         } catch (err) {
             console.error("Error al obtener beneficiarios:", err);
             throw err; 
+        }
+    }
+
+    // Model para BEN-003
+    static async update(beneficiaryId, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus) {
+        try {
+            const query = `UPDATE Beneficiarios
+                           SET nombre = ?,
+                           apellidoPaterno = ?,
+                           apellidoMaterno = ?,
+                           fechaNacimiento = ?,
+                           numeroEmergencia = ?,
+                           nombreContactoEmergencia = ?,
+                           relacionContactoEmergencia = ?,
+                           descripcion = ?,
+                           fechaIngreso = ?,
+                           foto = ?,
+                           estatus  = ?
+                           WHERE idBeneficiario = ?`;
+
+                           const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, beneficiaryId];
+                           const result = await database.execute(query, params);
+                           return result;
+        } catch (err) {
+            console.error(`Error al actualizar beneficiario con id ${beneficiaryId}:`, err);
+            throw err;
         }
     }
 }

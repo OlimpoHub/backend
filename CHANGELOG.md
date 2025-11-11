@@ -15,6 +15,7 @@
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.
+- Add function to modify a beneficiary in model, routes and controller.
 
 ### Fixed
 - Fix routes, model and controller for external collabs.
