@@ -163,5 +163,27 @@ exports.searchWorkshops = async (request, response) => {
     }
 }
 
+/* Controller function to get all diferent results by date or entry hour*/
+exports.getWorkshopsCategories = async (request, response) => {
+  try{
+    const categories = await Workshops.getWorkshopsCategories();
+    response.status(200).json(categories);
+  } catch(error){
+    console.error("Error fetching filter data: ", error);
+    response.status(500).json({ message: "Failed to fetch filter data." });
+  }
+}
+
+/* Controller function to filter the workshops depending on a type*/
+exports.viewWorkshopsFiltered = async (request, response) => {
+  try {
+      const filters  = request.body;
+      const workshopsFiltered = await Workshops.getWorkshopsFiltered(filters);
+      response.status(200).json(workshopsFiltered);
+  } catch(error) {
+      console.error("Error filtering Workshops: ", error);
+      response.status(500).json({ message: "Error filtering Workshops." });
+  }
+}
 
 

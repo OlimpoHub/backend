@@ -1,6 +1,16 @@
+## [0.1.0] - 11/11/2025
+
+### Added
+- Added filter functionality to workshops
+- Added the order functionality by name
+
+### Fixed
+- Fixed name variables for errors in workshops.model.js
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- More parameters to match the data with the view of the supply batch
+- Add new filter and ordering format added
 - Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 
@@ -8,6 +18,7 @@
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.
+- Add function to modify a beneficiary in model, routes and controller.
 
 ### Fixed
 - Fix routes, model and controller for external collabs.
