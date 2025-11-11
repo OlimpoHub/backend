@@ -23,13 +23,32 @@ exports.getOneSupplyBatch = async (req, res) => {
         const id = req.params.idInsumo;
         const supplyBatch = await SupplyBatch.fetchOne(id);
 
-        const { idInsumo, nombre, unidadMedida } = supplyBatch[0];
-        const supplyBatchJson = supplyBatch.map(r => ({
+        const {
+            idInsumo,
+            nombre,
+            unidadMedida,
+            imagenInsumo,
+            cantidad,
+            nombreTaller,
+            Descripcion,
+            status,
+        } = supplyBatch[0];
+        const supplyBatchJson = supplyBatch.map((r) => ({
             cantidad: r.cantidad,
-            FechaCaducidad: r.FechaCaducidad
+            FechaCaducidad: r.FechaCaducidad,
         }));
 
-        res.status(200).json({ idInsumo, nombre, unidadMedida, supplyBatchJson });
+        res.status(200).json({
+            idInsumo,
+            nombre,
+            unidadMedida,
+            imagenInsumo,
+            cantidad,
+            nombreTaller,
+            Descripcion,
+            status,
+            supplyBatchJson,
+        });
     } catch (err) {
         console.log("Error fetching one supply batch", err);
         res.status(500).json({ message: "Failed to fetch one supply batch" });
@@ -41,8 +60,14 @@ exports.getOneSupplyBatch = async (req, res) => {
  */
 exports.addSupply = async (request, response) => {
     try {
-        const { supplyId, quantity, expirationDate, acquisitionId } = request.body;
-        await SupplyBatch.addSupply(supplyId, quantity, expirationDate, acquisitionId);
+        const { supplyId, quantity, expirationDate, acquisitionId } =
+            request.body;
+        await SupplyBatch.addSupply(
+            supplyId,
+            quantity,
+            expirationDate,
+            acquisitionId
+        );
         response.status(200).json({ message: "Supply added successfully" });
     } catch (error) {
         console.error("Error adding supply: ", error);
@@ -78,6 +103,8 @@ exports.filterSupplyBatch = async (request, response) => {
         response.status(200).json(supplyBatch);
     } catch (error) {
         console.error("Error filtering supply batch: ", error);
-        response.status(500).json({ message: "Failed to filter supply batches" });
+        response
+            .status(500)
+            .json({ message: "Failed to filter supply batches" });
     }
 };
