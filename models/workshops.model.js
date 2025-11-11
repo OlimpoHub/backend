@@ -206,8 +206,9 @@ module.exports = class Workshops {
     }
 
      /* Model function gets a filter list and returns workshop list filtered.*/
-    static async getWorkshopsFiltered(filters){
-        
+    static async getWorkshopsFiltered(body = {}){
+        const filters = body.filter;
+        console.log(filters)
         try{
             let query = `
             SELECT t.idTaller, 
@@ -230,12 +231,16 @@ module.exports = class Workshops {
                 query += ` AND t.Fecha IN (${filters["date"].map(() => '?').join(', ')})`;
                 params.push(...filters["date"]);
             }
+
+            if (body.order){
+                query += ` ORDER BY t.nombreTaller ${body.order}`;
+            }
             const rows = await db.query(query, params);
             return rows;
         }
         catch(error){
             console.log("Error fetching workshops filtered", error);
-            throw err;
+            throw error;
         }
     }
 
