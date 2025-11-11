@@ -67,7 +67,6 @@ module.exports = class SupplyBatch {
                 GROUP BY i.idInsumo, inv.FechaCaducidad`,
                 [id, status]
             );
-            console.log("Fetched supply batch: ", rows);
             return Array.isArray(rows) ? rows : [rows];
         } catch (err) {
             console.log("Error fetching one supply batch", err);
@@ -162,8 +161,7 @@ module.exports = class SupplyBatch {
     static async order(value) {
         try {
             if (value == "asc") {
-                const rows = await database.query
-                (
+                const rows = await database.query(
                     `SELECT a.Descripcion AS TipoAdquisicion, 
                         ii.FechaCaducidad, 
                         SUM(ii.CantidadActual) AS TotalCantidad 
@@ -175,8 +173,7 @@ module.exports = class SupplyBatch {
                 );
                 return rows;
             } else if (value == "desc") {
-                const rows = await database.query
-                (
+                const rows = await database.query(
                     `SELECT a.Descripcion AS TipoAdquisicion, 
                         ii.FechaCaducidad, 
                         SUM(ii.CantidadActual) AS TotalCantidad 
@@ -188,7 +185,7 @@ module.exports = class SupplyBatch {
                 );
                 return rows;
             }
-        } catch (err){
+        } catch (err) {
             console.error("Error ordering supply batch: ", err);
             throw err;
         }

@@ -1,6 +1,7 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- More parameters to match the data with the view of the supply batch
 - Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 

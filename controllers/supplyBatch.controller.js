@@ -21,7 +21,6 @@ exports.getSupplyBatch = async (req, res) => {
 exports.getOneSupplyBatch = async (req, res) => {
     try {
         const id = req.params.idInsumo;
-        console.log("Params", id);
         const supplyBatch = await SupplyBatch.fetchOne(id);
 
         const {
@@ -121,6 +120,8 @@ exports.orderSupplyBatch = async (request, response) => {
         response.status(200).json(supplyBatch);
     } catch (error) {
         console.error("Error ordering supply batch: ", error);
-        response.status(500).json({ message: "Failed to order supply batches" });
+        response
+            .status(500)
+            .json({ message: "Failed to order supply batches" });
     }
 };
