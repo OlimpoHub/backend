@@ -102,7 +102,7 @@ exports.getExternalCollabsByID = async (request, response) => {
 
 exports.deleteExternalCollab = async (request, response) => {
   try {
-    const idUsuario   = request.body.id;
+    const idUsuario = request.params.id;
     const result = await externalCollabs.delete(idUsuario);
     response.status(200).json(result);
   } catch (error) {
