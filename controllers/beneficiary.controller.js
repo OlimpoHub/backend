@@ -63,7 +63,7 @@ exports.getBeneficiary = async (req, res) => {
     }
 };
 
-// Controller para BEN-02
+// Controller for BEN-02
 exports.beneficiariesList = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.beneficiariesList();
@@ -83,5 +83,66 @@ exports.postBeneficiary = async (req, res) => {
         res.status(200).json(result.message);
     } catch {
         res.status(500).json({ message: 'Failed to fetch Beneficiary data. '});
+    }
+}
+
+// Controller para BEN-003
+exports.updateBeneficiary = async (req, response) => {
+    try {
+        const { id: beneficiaryId } = req.params;
+        const {
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            fechaNacimiento,
+            numeroEmergencia,
+            nombreContactoEmergencia,
+            relacionContactoEmergencia,
+            descripcion,
+            fechaIngreso,
+            foto,
+            estatus
+        } = req.body;
+
+        const result = await Beneficiary.update(
+            beneficiaryId,
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            fechaNacimiento,
+            numeroEmergencia,
+            nombreContactoEmergencia,
+            relacionContactoEmergencia,
+            descripcion,
+            fechaIngreso,
+            foto,
+            estatus
+        );
+        response.status(200).json({
+        message: "Beneficiario modificado correctamente",
+        data: {
+            beneficiaryId,
+            modifiedFields: {
+            ...(nombre && { nombre }),
+            ...(apellidoPaterno && { apellidoPaterno }),
+            ...(apellidoMaterno && { apellidoMaterno }),
+            ...(fechaNacimiento && { fechaNacimiento }),
+            ...(numeroEmergencia && { numeroEmergencia }),
+            ...(nombreContactoEmergencia && { nombreContactoEmergencia }),
+            ...(relacionContactoEmergencia && { relacionContactoEmergencia }),
+            ...(descripcion && { descripcion }),
+            ...(fechaIngreso && { fechaIngreso }),
+            ...(foto && { foto }),
+            ...(estatus !== undefined && { estatus })
+            },
+            affectedRows: result[0]?.affectedRows || result.affectedRows
+        }
+        });
+
+    } catch (error) {
+        console.error("Error en updateBeneficiary():", error);
+        response.status(500).json({
+        error: error.message
+        });
     }
 }
