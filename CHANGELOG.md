@@ -1,6 +1,7 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- Add filter supply batches functionality 
 - Add funtion to search a workshop in model, routes and controller.
 - Implementation for consult products.
 - Sequence diagram for consult products.
@@ -28,7 +29,6 @@
 - Refactored code to follow formatting standards (multi-line destructuring and parameter arrays).
 - Delete supply batch functionality
 - Sequence diagrams for  Delete supplies batches and filter
-
 ### Fixed
 - Fix Model viewOneWorkshop
 
