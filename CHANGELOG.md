@@ -1,6 +1,7 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 
 - Add funtion to search a workshop in model, routes and controller.
