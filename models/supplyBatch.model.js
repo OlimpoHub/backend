@@ -122,72 +122,79 @@ module.exports = class SupplyBatch {
     /**
      * Filters supply batches either by expiration date or acquisition type.
      */
-    static async filter(type, value) {
+    static async filterOrder(body = {}) {
+
+        const filters = body.filters || {};
+
         try {
-            if (type === "expiration date") {
-                return await database.query(
-                    `SELECT a.Descripcion AS TipoAdquisicion, 
-                            SUM(ii.CantidadActual) AS TotalCantidad, 
-                            ii.FechaCaducidad 
-                    FROM InventarioInsumos AS ii 
-                    INNER JOIN TipoAdquisicion AS a 
-                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
-                    WHERE ii.FechaCaducidad = ?
-                    GROUP BY a.Descripcion, ii.FechaCaducidad`,
-                    [value]
-                );
-            } else if (type === "acquisition") {
-                return await database.query(
-                    `SELECT a.Descripcion AS TipoAdquisicion, 
-                            SUM(ii.CantidadActual) AS TotalCantidad, 
-                            ii.FechaCaducidad 
-                    FROM InventarioInsumos AS ii 
-                    INNER JOIN TipoAdquisicion AS a 
-                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
-                    WHERE a.Descripcion = ? 
-                    GROUP BY a.Descripcion, ii.FechaCaducidad`,
-                    [value]
-                );
+            let query = `
+                SELECT 
+                    a.Descripcion AS TipoAdquisicion,
+                    ii.FechaCaducidad,
+                    SUM(ii.CantidadActual) AS TotalCantidad
+                FROM InventarioInsumos AS ii
+                INNER JOIN TipoAdquisicion AS a 
+                    ON ii.idTipoAdquisicion = a.idTipoAdquisicion
+                WHERE 1 = 1
+            `;
+
+            const params = [];
+
+            // Acquisition type
+            if (filters["Tipo de Adquisición"] && filters["Tipo de Adquisición"].length > 0) {
+                query += ` AND a.Descripcion IN (${filters["Tipo de Adquisición"].map(() => '?').join(', ')})`;
+                params.push(...filters["Tipo de Adquisición"]);
             }
+
+            // Expiration date
+            if (filters["Fecha de caducidad"] && filters["Fecha de caducidad"].length > 0) {
+                query += ` AND ii.FechaCaducidad IN (${filters["Fecha de caducidad"].map(() => '?').join(', ')})`;
+                params.push(...filters["Fecha de caducidad"]);
+            }
+
+            query += `
+                GROUP BY a.Descripcion, ii.FechaCaducidad
+            `;
+
+            // Order
+            if (body.order) {
+                query += ` ORDER BY TotalCantidad ${body.order}`;
+            }
+
+            const rows = await database.query(query, params);
+            console.log("Filtered Supply Batch Rows:", rows);
+
+            return rows;
+
         } catch (err) {
             console.error("Error filtering supply batch: ", err);
             throw err;
         }
     }
 
-    /**
-     * Orders supply batches either by ascending or descending order.
-     */
-    static async order(value) {
+    static async getFiltersData() {
         try {
-            if (value == "asc") {
-                const rows = await database.query(
-                    `SELECT a.Descripcion AS TipoAdquisicion, 
-                        ii.FechaCaducidad, 
-                        SUM(ii.CantidadActual) AS TotalCantidad 
-                    FROM InventarioInsumos AS ii 
-                    INNER JOIN TipoAdquisicion AS a 
-                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
-                    GROUP BY a.Descripcion, ii.FechaCaducidad 
-                    ORDER BY TotalCantidad ASC`
-                );
-                return rows;
-            } else if (value == "desc") {
-                const rows = await database.query(
-                    `SELECT a.Descripcion AS TipoAdquisicion, 
-                        ii.FechaCaducidad, 
-                        SUM(ii.CantidadActual) AS TotalCantidad 
-                    FROM InventarioInsumos AS ii 
-                    INNER JOIN TipoAdquisicion AS a 
-                        ON ii.idTipoAdquisicion = a.idTipoAdquisicion 
-                    GROUP BY a.Descripcion, ii.FechaCaducidad 
-                    ORDER BY TotalCantidad DESC`
-                );
-                return rows;
+            // Get all unique acquisition types
+            const acquisitionTypes = await database.query(`
+                SELECT DISTINCT Descripcion 
+                FROM TipoAdquisicion
+            `);
+            // Get all unique expiration dates
+            const expirationDates = await database.query(`
+                SELECT DISTINCT FechaCaducidad 
+                FROM InventarioInsumos
+            `);
+            // Return simplified arrays with raw values
+            console.log("ENTRO AL GET SUPPLY BATCH FILTERS DATA");
+
+            return {
+                acquisitionTypes: acquisitionTypes.map(a => a.Descripcion),
+                expirationDates: expirationDates.map(f => f.FechaCaducidad)
             }
+
         } catch (err) {
-            console.error("Error ordering supply batch: ", err);
+            console.error("Error fetching supply batch filter data:", err);
             throw err;
         }
     }
-};
+}

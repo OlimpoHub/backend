@@ -2,6 +2,7 @@
 
 ### Added
 - More parameters to match the data with the view of the supply batch
+- Add new filter and ordering format added
 - Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 
