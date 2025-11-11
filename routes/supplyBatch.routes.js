@@ -37,5 +37,11 @@ router.delete("/:idInventario", supplyBatchController.deleteSupplyBatch);
  */
 router.post("/filter", supplyBatchController.filterSupplyBatch);
 
+/**
+ * POST /order
+ * Orders supply batches in ascending and descending order.
+ */
+router.post("/order", supplyBatchController.orderSupplyBatch);
+
 // Export the router to be used in the main application
 module.exports = router;
