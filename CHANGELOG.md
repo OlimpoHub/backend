@@ -1,6 +1,7 @@
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- Add new filter and ordering format added
 - Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 

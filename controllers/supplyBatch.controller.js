@@ -71,27 +71,26 @@ exports.deleteSupplyBatch = async (request, response) => {
 /**
  * Filters supply batches by expiration date or acquisition type.
  */
-exports.filterSupplyBatch = async (request, response) => {
+exports.filterOrderSupplyBatch = async (request, response) => {
     try {
-        const { type, value } = request.body;
-        const supplyBatch = await SupplyBatch.filter(type, value);
+        console.log("BODY: ", request.body);
+        const filters  = request.body;
+        const supplyBatch = await SupplyBatch.filterOrder(filters);
+        console.log("SUPPLY BATCH", supplyBatch);
         response.status(200).json(supplyBatch);
     } catch (error) {
-        console.error("Error filtering supply batch: ", error);
-        response.status(500).json({ message: "Failed to filter supply batches" });
+        console.error("Error filtering supply Batch: ", error);
+        response.status(500).json({ message: "Error filtering supply Batch." });
     }
 };
 
-/**
- * Order supply batches in ascending and descending order.
- */
-exports.orderSupplyBatch = async (request, response) => {
+// Get supply categories, measures and workshops for filters
+exports.getFilterData = async (request, response) => {
     try {
-        const { value } = request.body;
-        const supplyBatch = await SupplyBatch.order(value);
-        response.status(200).json(supplyBatch);
+        const filterData = await SupplyBatch.getFiltersData();
+        response.status(200).json(filterData);
     } catch (error) {
-        console.error("Error ordering supply batch: ", error);
-        response.status(500).json({ message: "Failed to order supply batches" });
+        console.error("Error fetching filter data: ", error);
+        response.status(500).json({ message: "Failed to fetch filter data." });
     }
-};
+}
