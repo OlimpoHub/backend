@@ -11,6 +11,7 @@
 - Fix routes on beneficiaries
 - Fix post beneficiary function
 - Fix the 'horario taller' to 'descripcion' from the data base in workshops.
+- Fix Calendar model query to match the database fields.
 
 ## [0.1.0] - 09/11/2025
 
