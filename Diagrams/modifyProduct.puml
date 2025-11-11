@@ -7,7 +7,7 @@ database elArca
 
 autonumber
 activate Api
-Api -> routes: GET /product/:idProduct
+Api -> routes: GET /product/:idProduct/update
 deactivate Api
 
 activate routes
@@ -35,7 +35,7 @@ routes -> Api: response.status(200) + \nproduct
 deactivate routes
 
 activate Api
-Api -> routes : POST /product/update
+Api -> routes : POST /product/:idProduct/update
 deactivate Api
 
 activate routes

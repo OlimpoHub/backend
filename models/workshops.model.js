@@ -205,4 +205,21 @@ module.exports = class Workshops {
         }
     }
 
+    // GET: Obtener idTaller por nombreTaller
+    static async getId(nombreTaller) {
+        try {
+            const rows = await db.query
+            (
+                `SELECT idTaller
+                 FROM Taller 
+                 WHERE nombreTaller = ?`,
+                [nombreTaller]
+            );
+            return rows.length > 0 ? rows[0].idTaller : null;
+        } catch (err) {
+            console.error("Error fetching workshop ID by name:", err);
+            throw err;
+        }
+    }
+
 };
