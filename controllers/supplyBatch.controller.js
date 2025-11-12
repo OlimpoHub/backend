@@ -61,13 +61,14 @@ exports.getOneSupplyBatch = async (req, res) => {
  */
 exports.addSupply = async (request, response) => {
     try {
-        const { supplyId, quantity, expirationDate, acquisitionId } =
+        const { supplyId, quantity, expirationDate, acquisitionId, boughtDate} =
             request.body;
         await SupplyBatch.addSupply(
             supplyId,
             quantity,
             expirationDate,
-            acquisitionId
+            acquisitionId,
+            boughtDate
         );
         response.status(200).json({ message: "Supply added successfully" });
     } catch (error) {
