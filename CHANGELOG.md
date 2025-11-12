@@ -10,6 +10,7 @@
 - Added the order functionality by name
 
 ### Fixed
+- Missing get route for register product.
 - Fixed name variables for errors in workshops.model.js
 
 ## [0.1.0] - 10/11/2025
