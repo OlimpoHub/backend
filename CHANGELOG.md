@@ -1,6 +1,7 @@
 ## [0.1.0] - 11/11/2025
 
 ### Added
+- Add deleteOneSupplyFront Secuence Diagram
 - Add deleteOneSupplyFrontPakages Diagram
 - Modify product implementation
 - Sequence diagram for modify product
