@@ -160,6 +160,7 @@ module.exports = class Beneficiary {
                 FROM Beneficiarios Ben
                 LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
                 LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                WHERE estatus = 1
                 ORDER BY Ben.nombre`);
             console.log("ROWS:", rows);
             return rows;
@@ -192,6 +193,54 @@ module.exports = class Beneficiary {
         } catch (err) {
             console.error(`Error al actualizar beneficiario con id ${beneficiaryId}:`, err);
             throw err;
+        }
+    }
+
+    // Filter beneficiaries by disability (list ordered by name)
+    static async filter(body = {}){
+        const filters = body.filter;
+        try{
+            let query = `
+            SELECT Ben.*, LD.nombre AS discapacidad
+            FROM Beneficiarios Ben
+            LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+            LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+            WHERE estatus = 1
+            `;
+            const  params =[];
+            if (filters["disability"] && filters["disability"].length > 0) {
+                query += ` AND LD.nombre IN (${filters["disability"].map(() => '?').join(', ')})`;
+                params.push(...filters["disability"]);
+            }
+
+            if (body.order){
+                query += ` ORDER BY Ben.nombre ${body.order}`;
+            }
+            const rows = await database.query(query, params);
+            return rows;
+        }
+        catch(error){
+            console.log("Error al obtener lista de beneficiarios", error);
+            throw error;
+        }
+    }
+
+    // Get categories on the disabilities for filtering
+    static async getCategories(){
+        try{
+            const discapacidad = await database.query(
+                `
+                SELECT DISTINCT nombre as discapacidad
+                FROM ListaDiscapacidades
+                `
+            );
+
+            return {
+                    discapacidad: discapacidad.map(e => e.discapacidad),
+                };
+        } catch(error){
+            console.error("Error al obtener datos de filtrado:", error);
+            throw error;
         }
     }
 

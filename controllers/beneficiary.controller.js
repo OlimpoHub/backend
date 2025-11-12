@@ -170,3 +170,26 @@ exports.searchBeneficiaries = async (req, res) => {
         res.status(500).json({ message: 'Error in the server when searching beneficiaries.' });
     }
 };
+
+// Controller for getting disability categories
+exports.getCategories = async (request, response) => {
+  try{
+    const categories = await Beneficiary.getCategories();
+    response.status(200).json(categories);
+  } catch(error){
+    console.error("Error al obtener datos: ", error);
+    response.status(500).json({ message: "Error al obtener datos de filtrado." });
+  }
+}
+
+// Controller for filtering beneficiaries by disabilities
+exports.filter = async (request, response) => {
+  try {
+      const filters  = request.body;
+      const parameters = await Beneficiary.filter(filters);
+      response.status(200).json(parameters);
+  } catch(error) {
+      console.error("Error al obtener datos: ", error);
+      response.status(500).json({ message: "Error al obtener datos de filtrado." });
+  }
+}
