@@ -4,6 +4,7 @@
 - model getFiltersData updated to also send back the id from the workshops and categories
 
 ### Added
+- Endpoint to send only workshop and categories ids and names.
 - Add deleteOneSupplyFront Secuence Diagram
 - Add deleteOneSupplyFrontPakages Diagram
 - Modify product implementation

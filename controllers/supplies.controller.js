@@ -92,3 +92,17 @@ exports.deleteOneSupply = async (request, response) => {
         });
     }
 };
+
+// Get id and name for both workshop and supplies
+exports.getWorkshopAndSupplies = async (req, res) => {
+    try {
+        const data = await Supplies.getWorkshopAndSupplies();
+        res.status(200).json(data);
+    } catch(err) {
+        console.error("Error fetching workshop and supplies: ", err);
+        res.status(500)
+            .json({ 
+                message: "Failed to fetch workshop and supplies." 
+            });
+    }
+}
