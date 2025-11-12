@@ -44,8 +44,6 @@ module.exports = class SupplyBatch {
      * @param {string} id - The ID of the supply.
      */
     static async fetchOne(id) {
-        const status = 1;
-
         try {
             const [rows] = await database.query(
                 `SELECT 
@@ -56,17 +54,17 @@ module.exports = class SupplyBatch {
                 FROM Insumo i
                 LEFT JOIN InventarioInsumos inv 
                     ON inv.IdInsumo = i.idInsumo
-                JOIN TipoAdquisicion ta
+                LEFT JOIN TipoAdquisicion ta
                     ON ta.idTipoAdquisicion = inv.idTipoAdquisicion
                 JOIN Taller t
                     ON t.idTaller = i.idTaller
                 JOIN Categoria c
                     ON c.idCategoria = i.idCategoria
                 WHERE i.idInsumo = ? 
-                    AND i.status = ?
                 GROUP BY i.idInsumo, inv.FechaCaducidad`,
-                [id, status]
+                [id]
             );
+            console.log("FETCH ONE SUPPLY BATCH: ", rows);
             return Array.isArray(rows) ? rows : [rows];
         } catch (err) {
             console.log("Error fetching one supply batch", err);
