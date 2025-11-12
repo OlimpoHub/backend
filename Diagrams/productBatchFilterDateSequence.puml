@@ -1,0 +1,35 @@
+@startuml
+
+actor api
+boundary productBatch.routes as routes
+control productBatch.controller as controller
+
+activate api
+api -> routes: GET /productBatch/filter/date?startDate=2025-08-01&endDate=2025-11-30
+
+activate routes
+routes -> controller: filterDatePb(req, res)
+deactivate routes
+
+activate controller
+create entity ProductBatch as pb
+controller -> pb: ProductBatch.filterDate(startDate, endDate)
+
+database db
+
+activate pb
+pb ->> db: SELECT ... WHERE FechaRealizacion BETWEEN ? AND ?
+activate db
+db -->> pb: lotes en rango de fechas
+pb -->> controller: Array de lotes
+deactivate pb
+
+controller -->> routes: res.status(200).json(result)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+
+@enduml

@@ -1,5 +1,9 @@
-# macOS System Files
+# Mac
 .DS_Store
-.AppleDouble
-.LSOverride
+Thumbs.db
+# Express
+node_modules
+package-lock.json
 
+
+.env

@@ -1,0 +1,63 @@
+@startuml
+title Diagrama de Secuencia: Eliminar Beneficiario (MVVM)
+skinparam participantPadding 10
+skinparam boxPadding 10
+
+actor Usuario
+
+box "Aplicación Cliente (MVVM)"
+    participant Vista as "Vista (View)\n(Pantalla de Beneficiarios)"
+    participant ViewModel as "ViewModel\n(BeneficiarioListViewModel)"
+    participant Repositorio as "Repositorio/Servicio\n(Model)"
+end box
+
+autonumber "<b>0.</b>"
+
+Usuario -> Vista: Clic en "Eliminar" (para un beneficiario)
+activate Vista
+
+Vista -> ViewModel: EliminarCommand.Execute(beneficiario)
+activate ViewModel
+
+ViewModel -> ViewModel: Verificar estado del beneficiario
+' --- Inicio del Flujo Lógico Principal ---
+alt Beneficiario está ACTIVO (Flujo Alterno 5.1)
+    ViewModel -> Vista: MostrarMensajeError("Beneficiario activo, no se puede eliminar.")
+    activate Vista
+    Vista -> Usuario: (Muestra mensaje de error)
+    deactivate Vista
+    
+else Beneficiario está INACTIVO (Flujo Principal "Validación")
+    ViewModel -> Vista: SolicitarConfirmacion("¿Desea eliminar a {beneficiario.Nombre}?")
+    activate Vista
+    Vista -> Usuario: (Muestra popup de confirmación)
+    
+    ' --- Inicio de Sub-flujo (Confirmar o Cancelar) ---
+    alt Usuario Confirma (Validación Pasos 5-7)
+        Usuario -> Vista: Clic en "Confirmar"
+        Vista -> ViewModel: ConfirmarEliminacionCommand.Execute()
+        
+        ViewModel -> Repositorio: EliminarBeneficiario(beneficiario.Id)
+        activate Repositorio
+        Repositorio -> Repositorio: (Acceso a Base de Datos para DELETE)
+        Repositorio --> ViewModel: (Resultado: Éxito)
+        deactivate Repositorio
+        
+        ViewModel -> Vista: OcultarPopup()
+        ViewModel -> ViewModel: (Elimina beneficiario de la lista interna/ObservableCollection)
+        Vista -> Usuario: (Lista se actualiza, beneficiario desaparece)
+        ViewModel -> Vista: MostrarNotificacion("Beneficiario eliminado")
+        deactivate Vista
+
+    else Usuario Cancela (Flujo Alterno 2.1)
+        Usuario -> Vista: Clic en "Cancelar"
+        Vista -> ViewModel: CancelarEliminacionCommand.Execute()
+        ViewModel -> Vista: OcultarPopup()
+        Vista -> Usuario: (Popup se cierra, no hay cambios)
+        deactivate Vista
+    end
+end
+
+deactivate ViewModel
+deactivate Vista
+@enduml
