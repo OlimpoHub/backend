@@ -2,6 +2,7 @@
 
 ### Added
 - Implemented routes, controllers, and model for the Modify Supply Batch.
+- Deployment diagram updated with the Mail API
 
 ## [0.1.0] - 11/11/2025
 
