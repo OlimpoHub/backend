@@ -2,6 +2,7 @@
 
 ### Added
 - Added filter functionality to workshops
+- Added functionality for search, order, filter and modify for beneficiaries
 
 ## [0.1.0] - 10/11/2025
 

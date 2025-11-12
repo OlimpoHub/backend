@@ -194,4 +194,23 @@ module.exports = class Beneficiary {
             throw err;
         }
     }
+
+    // --- Nuevo para BEN-007
+    static async searchByName(searchTerm) {
+        try {
+            const query = `
+                SELECT * FROM Beneficiarios
+                WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
+                AND estatus = 1
+            `;
+            const params = [`%${searchTerm}%`];
+
+            const rows = await database.query(query, params);
+
+            return rows;
+        } catch (err) {
+            console.error(`Error al buscar beneficiarios con termino "${searchTerm}":`, err);
+            throw err;
+        }
+    }
 }
