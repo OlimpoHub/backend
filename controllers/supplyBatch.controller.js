@@ -61,13 +61,13 @@ exports.getOneSupplyBatch = async (req, res) => {
  */
 exports.addSupply = async (request, response) => {
     try {
-        const { supplyId, quantity, expirationDate, acquisitionId, boughtDate} =
+        const { supplyId, quantity, expirationDate, acquisition, boughtDate} =
             request.body;
         await SupplyBatch.addSupply(
             supplyId,
             quantity,
             expirationDate,
-            acquisitionId,
+            acquisition,
             boughtDate
         );
         response.status(200).json({ message: "Supply added successfully" });
@@ -119,5 +119,16 @@ exports.getFilterData = async (request, response) => {
     } catch (error) {
         console.error("Error fetching filter data: ", error);
         response.status(500).json({ message: "Failed to fetch filter data." });
+    }
+}
+
+
+exports.getAcquisitionTypes = async (request, response) => {
+    try {
+        const acquisitionTypes = await SupplyBatch.fetchAcquisitionTypes();
+        response.status(200).json(acquisitionTypes);
+    } catch (error) {
+        console.error("Error fetching acquisition types: ", error);
+        response.status(500).json({ message: "Failed to fetch acquisition types." });
     }
 }

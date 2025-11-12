@@ -197,4 +197,17 @@ module.exports = class SupplyBatch {
             throw err;
         }
     }
+
+    static async fetchAcquisitionTypes() {
+        try {
+            const acquisitionTypes = database.query(`
+                SELECT idTipoAdquisicion, Descripcion 
+                FROM TipoAdquisicion
+            `);
+            return acquisitionTypes;
+        } catch (err) {
+            console.error("Error fetching acquisition types:", err);
+            throw err;
+        }
+    }
 }

@@ -37,5 +37,8 @@ router.get("/filter/data", supplyBatchController.getFilterData);
 // Define a POST endpoint to filter or order supply batches
 router.post("/filter", supplyBatchController.filterOrderSupplyBatch);
 
+// Define a GET endpoint to retrieve acquisition types
+router.get("/acquisition/types", supplyBatchController.getAcquisitionTypes);
+
 // Export the router to be used in the main application
 module.exports = router;
