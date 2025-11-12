@@ -18,4 +18,19 @@ module.exports = class Category {
             throw err;
         }
     }
+
+    // GET: Obtener todas las categorías
+    static async getDescriptions() {
+        try {
+            const rows = await db.query
+            (
+                `SELECT Descripcion
+                 FROM Categoria`
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching all categories", err);
+            throw err;
+        }
+    }
 }

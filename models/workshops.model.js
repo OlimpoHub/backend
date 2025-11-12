@@ -287,4 +287,20 @@ module.exports = class Workshops {
         }
     }
 
+    // GET: Obtener todas las categorías
+    static async getName() {
+        try {
+            const rows = await db.query
+            (
+                `SELECT nombreTaller
+                 FROM Taller
+                 WHERE estatus = 1`
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching all categories", err);
+            throw err;
+        }
+    }
+
 };

@@ -4,6 +4,23 @@ const Workshops = require('../models/workshops.model');
 const Category = require('../models/category.model');
 const { response } = require('express');
 
+// GET: Names needed for register a product (categories, workshops)
+exports.getRegisterProduct = async (request, response) => {
+    try {
+        // Success
+        const workshops = await Workshops.getName();
+        const categories = await Category.getDescriptions();
+
+        response.status(200).json({
+            "Categories": categories,
+            "Workshops": workshops,
+        });
+    } catch (err) {
+        // Error
+        response.status(500).json({ message: "Failed to consult products", err });
+    }
+}
+
 // POST /product: register a new product
 exports.postRegisterProduct = async (request, response) => {
     try {
