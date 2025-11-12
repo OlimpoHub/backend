@@ -122,7 +122,7 @@ exports.getFilterData = async (request, response) => {
     }
 }
 
-
+// Get Acquisition Types 
 exports.getAcquisitionTypes = async (request, response) => {
     try {
         const acquisitionTypes = await SupplyBatch.fetchAcquisitionTypes();

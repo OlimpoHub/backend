@@ -197,7 +197,11 @@ module.exports = class SupplyBatch {
             throw err;
         }
     }
-
+    
+    /**
+     * Gets all the Acquisition types available
+     * @returns acquisitionTypes
+     */
     static async fetchAcquisitionTypes() {
         try {
             const acquisitionTypes = database.query(`
