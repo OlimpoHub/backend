@@ -10,6 +10,7 @@
 - Added the order functionality by name
 
 ### Fixed
+- Fixing commit regist
 - Missing get route for register product.
 - Fixed name variables for errors in workshops.model.js
 
