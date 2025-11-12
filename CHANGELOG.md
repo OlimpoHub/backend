@@ -4,6 +4,7 @@
 - Modify product implementation
 - Sequence diagram for modify product
 - Added filter functionality to workshops
+- Added functionality for search, order, filter and modify for beneficiaries
 - Added the order functionality by name
 
 ### Fixed
