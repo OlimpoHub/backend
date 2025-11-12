@@ -1,7 +1,18 @@
 ## [0.1.0] - 11/11/2025
 
 ### Added
+- Add deleteOneSupplyFront Secuence Diagram
+- Add deleteOneSupplyFrontPakages Diagram
+- Modify product implementation
+- Sequence diagram for modify product
 - Added filter functionality to workshops
+- Added functionality for search, order, filter and modify for beneficiaries
+- Added the order functionality by name
+
+### Fixed
+- Fixing commit regist
+- Missing get route for register product.
+- Fixed name variables for errors in workshops.model.js
 
 ## [0.1.0] - 10/11/2025
 
