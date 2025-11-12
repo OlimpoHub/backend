@@ -214,4 +214,27 @@ module.exports = class SupplyBatch {
             throw err;
         }
     }
+
+    static async modifySupplyBatch(idSupplyBatch,supplyId,quantity,expirationDate,acquisition,boughtDate,) {
+        try{
+            const result = await database.query(`
+                UPDATE InventarioInsumos
+                SET idInsumo = ?,
+                    CantidadActual = ?, 
+                    FechaActualizacion = ?,
+                    FechaCaducidad = ?,
+                    idTipoAdquisicion = ?
+                WHERE idInventario = ?
+            `, [supplyId, quantity, boughtDate, expirationDate, acquisition, idSupplyBatch] );
+            if (result && typeof result.insertId === 'bigint') {
+                result.insertId = Number(result.insertId);
+            }
+            
+            console.log("SUPPLY BATCH MODIFIED: ", result);
+            return result
+        } catch (error) {
+            console.error('Error modifySupplyBatch():', error);
+            throw error;
+        }
+    }
 }

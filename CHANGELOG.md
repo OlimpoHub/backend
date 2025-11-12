@@ -1,3 +1,8 @@
+## [0.1.0] - 12/11/2025
+
+### Added
+- Implemented routes, controllers, and model for the Modify Supply Batch.
+
 ## [0.1.0] - 11/11/2025
 
 ### Changed

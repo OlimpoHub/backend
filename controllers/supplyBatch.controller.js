@@ -61,8 +61,13 @@ exports.getOneSupplyBatch = async (req, res) => {
  */
 exports.addSupply = async (request, response) => {
     try {
-        const { supplyId, quantity, expirationDate, acquisition, boughtDate} =
-            request.body;
+        const { 
+            supplyId, 
+            quantity, 
+            expirationDate, 
+            acquisition, 
+            boughtDate
+        } = request.body;
         await SupplyBatch.addSupply(
             supplyId,
             quantity,
@@ -132,3 +137,42 @@ exports.getAcquisitionTypes = async (request, response) => {
         response.status(500).json({ message: "Failed to fetch acquisition types." });
     }
 }
+
+/**
+ * Modify supply batches by etheir ID
+ */ 
+exports.modifySupplyBatch = async (request, response) => {
+    try {
+        console.log(request.params);
+        console.log(request.body);
+        let { idSupplyBatch } = request.params; 
+        console.log(idSupplyBatch);
+        
+        if (idSupplyBatch && idSupplyBatch.startsWith(':')) {
+            idSupplyBatch = idSupplyBatch.replace(':', '');
+        }
+        console.log(idSupplyBatch);
+        const { 
+            supplyId, 
+            quantity, 
+            expirationDate, 
+            acquisition, 
+            boughtDate
+        } = request.body;
+        const result = await SupplyBatch.modifySupplyBatch(
+            idSupplyBatch,
+            supplyId,
+            quantity,
+            expirationDate,
+            acquisition,
+            boughtDate,
+        )
+
+        response.status(200).json(result);
+    } catch (error) {
+        console.error("Error en modifySupplyBatch():", error);
+        response.status(500).json({
+        error: error.message
+        });
+    }
+};
