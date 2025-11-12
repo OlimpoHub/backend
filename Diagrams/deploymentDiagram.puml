@@ -1,0 +1,53 @@
+@startuml
+Actor "User" as iOSUser
+
+node "Smarpthone" <<Device>> as iOSSmartphone {
+    node "iOS" <<Execution Enviorment>> as iOS {
+        artifact "MobileAppiOS"
+    }
+}
+
+iOSUser -- "MobileAppiOS"
+
+Actor "User" as AndroidUser
+
+node "Smarpthone" <<Device>> as AndroidSmartphone {
+    node "Android" <<Execution Enviorment>> as Android {
+        artifact "MobileAppAndroid"
+    }
+}
+
+AndroidUser -- "MobileAppAndroid"
+
+cloud "Internet"
+
+MobileAppiOS -- Internet: https
+MobileAppAndroid -- Internet: https
+
+node "AWS" <<Infrastructure>> {
+    node "VPC" <<Virtual Private Cloud>> {
+        node "Subnet 1" <<Subnet>> {
+            node "Ubuntu Server" <<Elastic Computing Cloud EC2>> {
+                artifact Nginx
+                database MariaDB
+                node "Node JS" <<Execution Enviormente>> {
+                    node "Express" <<Framework>> {
+                        artifact System
+                    }
+                }
+            }
+        }
+    }
+}
+
+Internet -- Nginx: https
+Nginx -- System: http
+System -- MariaDB: MySQL Protocol
+
+node "Mailgun" <<Mail API>> {
+    artifact "Mailgun API"
+}
+
+"Mailgun API" -- System: https
+
+@enduml
