@@ -1,5 +1,9 @@
 ## [0.1.0] - 11/11/2025
 
+### Changed
+- model getFiltersData updated to also send back the id from the workshops and 
+  categories
+
 ### Added
 - Add deleteOneSupplyFront Secuence Diagram
 - Add deleteOneSupplyFrontPakages Diagram
