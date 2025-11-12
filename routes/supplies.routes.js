@@ -17,6 +17,9 @@ router.get("/filter/data", suppliesController.getFilterData);
 // Define a POST endpoint to filter or order supplies
 router.post("/filter", suppliesController.filterOrderSupplies);
 
+// Define a GET enpoint to get workshop and supplies
+router.get("/workshop/category", suppliesController.getWorkshopAndSupplies)
+
 
 // Export the router to be used in the main routes file
 module.exports = router;

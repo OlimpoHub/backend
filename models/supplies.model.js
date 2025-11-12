@@ -192,4 +192,33 @@ module.exports = class Supplies {
         }
     }
 
+    // Fetches the id and name for both workshop and categories, then returns them
+    static async getWorkshopAndSupplies() { 
+        try {
+            const categories = await database.query(
+                `SELECT DISTINCT c.idCategoria, c.descripcion
+                FROM Categoria c`
+            )
+
+            const workshops = await database.query(
+                `SELECT DISTINCT t.idTaller, t.nombreTaller
+                FROM Taller t`
+            )
+
+            return {
+            categories: categories.map(c => ({
+                idCategory: c.idCategoria,
+                categoryType: c.descripcion
+            })),
+            workshops: workshops.map(t => ({
+                idTaller: t.idTaller,
+                name: t.nombreTaller
+            }))
+        };
+
+        } catch(err) {
+            console.error("Error fetching workshop and supplies:", err);
+            throw err;
+        }
+    }
 };
