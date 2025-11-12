@@ -8,11 +8,13 @@
 - Added filter functionality to workshops
 - Added functionality for search, order, filter and modify for beneficiaries
 - Added the order functionality by name
+- Added Acquisition type get route
 
 ### Fixed
 - Fixing commit regist
 - Missing get route for register product.
 - Fixed name variables for errors in workshops.model.js
+- Parameters needed for RegisterSupplyBatch
 
 ## [0.1.0] - 10/11/2025
 
