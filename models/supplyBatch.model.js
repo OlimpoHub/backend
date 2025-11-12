@@ -77,13 +77,13 @@ module.exports = class SupplyBatch {
     /**
      * Inserts a new supply batch record into the database.
      */
-    static async addSupply(supplyId, quantity, expirationDate, acquisitionId) {
+    static async addSupply(supplyId, quantity, expirationDate, acquisitionId, boughtDate) {
         try {
             const result = await database.query(
                 `INSERT INTO InventarioInsumos (
-                    idInsumo, CantidadActual, FechaCaducidad, idTipoAdquisicion
-                ) VALUES (?, ?, ?, ?)`,
-                [supplyId, quantity, expirationDate, acquisitionId]
+                    idInsumo, CantidadActual, FechaActualizacion, FechaCaducidad, idTipoAdquisicion
+                ) VALUES (?, ?, ?, ?, ?)`,
+                [supplyId, quantity, boughtDate, expirationDate, acquisitionId]
             );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
@@ -194,6 +194,23 @@ module.exports = class SupplyBatch {
 
         } catch (err) {
             console.error("Error fetching supply batch filter data:", err);
+            throw err;
+        }
+    }
+    
+    /**
+     * Gets all the Acquisition types available
+     * @returns acquisitionTypes
+     */
+    static async fetchAcquisitionTypes() {
+        try {
+            const acquisitionTypes = database.query(`
+                SELECT idTipoAdquisicion, Descripcion 
+                FROM TipoAdquisicion
+            `);
+            return acquisitionTypes;
+        } catch (err) {
+            console.error("Error fetching acquisition types:", err);
             throw err;
         }
     }
