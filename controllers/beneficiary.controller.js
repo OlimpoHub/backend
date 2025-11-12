@@ -171,6 +171,7 @@ exports.searchBeneficiaries = async (req, res) => {
     }
 };
 
+// Controller for getting disability categories
 exports.getCategories = async (request, response) => {
   try{
     const categories = await Beneficiary.getCategories();
@@ -181,6 +182,7 @@ exports.getCategories = async (request, response) => {
   }
 }
 
+// Controller for filtering beneficiaries by disabilities
 exports.filter = async (request, response) => {
   try {
       const filters  = request.body;

@@ -196,6 +196,7 @@ module.exports = class Beneficiary {
         }
     }
 
+    // Filter beneficiaries by disability (list ordered by name)
     static async filter(body = {}){
         const filters = body.filter;
         try{
@@ -224,6 +225,7 @@ module.exports = class Beneficiary {
         }
     }
 
+    // Get categories on the disabilities for filtering
     static async getCategories(){
         try{
             const discapacidad = await database.query(
