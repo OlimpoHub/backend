@@ -1,3 +1,11 @@
+## [0.1.0] - 12/11/2025
+
+### Added
+- Add funtion to search product
+- Add funtion to order product
+- Add funtion to remove product
+- Add funtion to filter product
+
 ## [0.1.0] - 10/11/2025
 
 ### Added
