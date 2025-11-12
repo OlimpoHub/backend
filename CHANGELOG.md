@@ -3,6 +3,7 @@
 ### Fixed
 - Fix the undefind response when the supply doesnt contain a supply batch in the 
   supply batch model
+- Fix the model and controller for a better connection with Front
 
 ### Added
 - Implemented routes, controllers, and model for the Modify Supply Batch.
