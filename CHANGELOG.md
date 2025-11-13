@@ -15,6 +15,10 @@
 - Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
+- Add funtion to search product
+- Add funtion to order product
+- Add funtion to remove product
+- Add funtion to filter product
 
 ## [0.1.0] - 11/11/2025
 
