@@ -16,10 +16,10 @@ exports.createQR = async (req, res) => {
     let qrRawData = {
         'userID': creator.idUsuario,
         'workshopID': workshopID,
-        'time': Date.now() // Al hacer new Date(qrRawData.time); se obtiene devuelta,
+        'time': Date.now()
     }
 
-    let qrValue = JSON.stringify(qrRawData); // Con parse se obtiene devuelta
+    let qrValue = JSON.stringify(qrRawData);
 
     let qrEnctryptedValue = Encryption.encrypt(qrValue);
 

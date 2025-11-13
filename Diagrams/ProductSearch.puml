@@ -1,0 +1,35 @@
+@startuml
+
+actor api
+boundary product.routes as routes
+control product.controller as controller
+
+activate api
+api -> routes: GET /product/search?q=term
+
+activate routes
+routes -> controller: searchP(req, res)
+deactivate routes
+
+activate controller
+create entity Product as p
+controller -> p: Product.search(term)
+
+database db
+
+activate p
+p ->> db: SELECT ... WHERE p.Nombre LIKE ? OR p.Descripcion LIKE ?
+activate db
+db -->> p: resultados
+p -->> controller: Array de producto
+deactivate p
+
+controller -->> routes: res.status(200).json(result)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+
+@enduml

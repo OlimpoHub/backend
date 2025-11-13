@@ -10,12 +10,17 @@
 - Fix the undefined request when the supply doesnt contain a supply batch in the 
   supply batch model
 - Fix the model and controller for a better connection with Front
+- Fixed a problem with FetchAll ProductBatches
 
 ### Added
 - Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
 - Implemented routes, controllers and model for the QR Code generation & validation.
+- Add funtion to search product
+- Add funtion to order product
+- Add funtion to remove product
+- Add funtion to filter product
 
 ## [0.1.0] - 11/11/2025
 
