@@ -42,14 +42,21 @@ router.get("/filter/price", productBatchController.filterPricePb);
 router.get("/filter/disponible", productBatchController.filterDisponiblePb);
 router.get("/filter/date", productBatchController.filterDatePb);
 
-
 /**
  * GET /productBatch/:idProductBatch
  * @description Obtiene los detalles de un lote específico
+ * @param {string} idProductBatch - ID del lote a consultar
+ * @returns {Object|Array} Detalles del lote
+ */
+router.get("/:idProductBatch", productBatchController.getOnePb);
+
+/**
+ * GET /productBatch/product/:idProduct
+ * @description Obtiene los detalles de lotes de un producto específico
  * @param {string} idProductBatch - ID del producto a consultar
  * @returns {Object|Array} Detalles del lote o lotes del producto
  */
-router.get("/:idProductBatch", productBatchController.getPbById);
+router.get("/product/:idProduct", productBatchController.getPbById);
 
 /**
  * POST /productBatch
