@@ -16,6 +16,7 @@
 - Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
+- Implemented routes, controllers and model for the QR Code generation & validation.
 - Add funtion to search product
 - Add funtion to order product
 - Add funtion to remove product
