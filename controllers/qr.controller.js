@@ -1,12 +1,9 @@
 const User = require("../models/user.model.js");
 const Attendance = require("../models/attendance.model.js");
 const QRCode = require("qrcode") 
+const Encryption = require("../utils/encryption.js")
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- */
+// GET: Generates a qr for attendance
 exports.createQR = async (req, res) => {
     let creatorID = req.body.userID;
     let workshopID = req.body.workshopID;
@@ -24,29 +21,27 @@ exports.createQR = async (req, res) => {
 
     let qrValue = JSON.stringify(qrRawData); // Con parse se obtiene devuelta
 
-    // Encriptar
+    let qrEnctryptedValue = Encryption.encrypt(qrValue);
 
-    const qrImage = await QRCode.toBuffer(qrValue, { type: "png", width: 300 });
+    const qrImage = await QRCode.toBuffer(qrEnctryptedValue, { type: "png", width: 400 });
     
-    //res.setHeader("Content-Type", "image/png");
-    //res.status(201).send(qrImage);
-    res.json({qrValue, qrRawData});
+    // Sends the image
+    res.setHeader("Content-Type", "image/png");
+    res.status(201).send(qrImage);
 }
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- */
+// POST: Validates a QR and gives the assistance to the one who read it
 exports.validateQR = async (req, res) => {
-    // Descencriptar
+    let qrEncryptedValue = req.body.qrValue;
 
-    let qrValue = req.body.qrValue;
-    let readTime = Number(req.body.readTime); // It must be in miliseconds
+    let qrValue = Encryption.decrypt(qrEncryptedValue);
+
+    // It must be in miliseconds
+    let readTime = Number(req.body.readTime);
     let readerID = req.body.userID;
 
-    let qrRawData = JSON.parse(JSON.parse(qrValue));
-    let creationTime = new Date(qrRawData.time);
+    let qrRawData = JSON.parse(qrValue);
+    let creationTime = new Date(qrRawData.time).getTime();
     let workshopID = qrRawData.workshopID;
 
     // 15 minutes = 15 * 60 * 1000 = 900000 ms
@@ -68,12 +63,14 @@ exports.validateQR = async (req, res) => {
 
     let currentAttendance = await Attendance.getCurrentAttendance(readerID, readTimeString.split(' ')[0]);
 
+    // If there are no rows, is a new attendance
     if (currentAttendance.length === 0) {
         let attendance = new Attendance(readerID, workshopID, readTimeString);
         await attendance.save();
         return res.status(201).json({ message: 'The entrance attendance was registered correctly.' });
     }
     
+    // Checks wether the user has a finished attendance
     if (!(currentAttendance[0].fechaFin === null)) {
         return res.status(406).json({ message: 'The attendance was already registered for the day' });
     }
