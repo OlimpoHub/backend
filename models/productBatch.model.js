@@ -35,6 +35,27 @@ module.exports = class ProductBatch {
         }
     }
 
+    // Fetch one product batch by inventory id
+    static async fetchByInventoryId(idInventario) {
+        try {
+            const rows = await database.query(
+                `SELECT p.idProducto, p.Nombre, p.PrecioUnitario,
+                    p.Descripcion, p.imagen, p.Disponible,
+                    inv.idInventario, inv.PrecioVenta,
+                    inv.CantidadProducida, inv.FechaCaducidad,
+                    inv.FechaRealizacion
+                FROM Productos p
+                JOIN InventarioProductos inv
+                    ON inv.idProducto = p.idProducto
+                WHERE inv.idInventario = ?`, [idInventario]
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching product batch by inventory id", err);
+            throw err;
+        }
+    }
+
     // Fetch for a single product id
     static async fetchById(id) {
         try {
