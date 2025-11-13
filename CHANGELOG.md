@@ -1,13 +1,33 @@
 ## [0.1.0] - 12/11/2025
 
 ### Fixed
-- Fix the undefind response when the supply doesnt contain a supply batch in the 
+- Beneficiary querys (update and fetch)
+- Deleted unused functionalities on beneficiary
+
+## [0.1.0] - 12/11/2025
+
+### Changed
+- .gitignore to ignore all the content from uploads/ however track the directory
+  anayway so there is no problems
+
+### Fixed
+- Fix the undefined request when the supply add information was received from the
+  frontend
+- Fix the undefined request when the supply doesnt contain a supply batch in the 
   supply batch model
+- Fix the model and controller for a better connection with Front
+- Fixed a problem with FetchAll ProductBatches
 
 ### Added
+- Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
 - Fetch all users
+- Implemented routes, controllers and model for the QR Code generation & validation.
+- Add funtion to search product
+- Add funtion to order product
+- Add funtion to remove product
+- Add funtion to filter product
 
 ## [0.1.0] - 11/11/2025
 

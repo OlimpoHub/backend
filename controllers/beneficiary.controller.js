@@ -43,16 +43,6 @@ exports.deleteBeneficiary = async (req, res) => {
 };
 // FIN DE FUNCION PARA BEN-04
 
-exports.getBeneficiaries = async (req, res) => {
-    try {
-        const beneficiaries = await Beneficiary.fetchAll();
-        res.status(200).json(beneficiaries);
-    } catch (error) {
-        console.error('Error fetching beneficiaries:', error);
-        res.status(500).json({ message: 'Failed to fetch beneficiaries.' });
-    }
-};
-
 exports.getBeneficiary = async (req, res) => {
     const id = req.params.id;
     try {
@@ -106,7 +96,8 @@ exports.updateBeneficiary = async (req, response) => {
             descripcion,
             fechaIngreso,
             foto,
-            estatus
+            estatus,
+            idDiscapacidad
         } = req.body;
 
         const result = await Beneficiary.update(
@@ -121,7 +112,8 @@ exports.updateBeneficiary = async (req, response) => {
             descripcion !== undefined ? descripcion : existingData.descripcion,
             fechaIngreso !== undefined ? fechaIngreso : existingData.fechaIngreso,
             foto !== undefined ? foto : existingData.foto,
-            estatus !== undefined ? estatus : existingData.estatus
+            estatus !== undefined ? estatus : existingData.estatus,
+            idDiscapacidad !== undefined ? idDiscapacidad : existingData.idDiscapacidad,
         );
         
         response.status(200).json({
@@ -139,7 +131,8 @@ exports.updateBeneficiary = async (req, response) => {
             ...(descripcion && { descripcion }),
             ...(fechaIngreso && { fechaIngreso }),
             ...(foto && { foto }),
-            ...(estatus !== undefined && { estatus })
+            ...(estatus !== undefined && { estatus }),
+            ...(idDiscapacidad !== undefined && { idDiscapacidad })
             },
             affectedRows: result[0]?.affectedRows || result.affectedRows
         }

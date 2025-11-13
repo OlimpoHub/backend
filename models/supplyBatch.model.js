@@ -77,11 +77,16 @@ module.exports = class SupplyBatch {
      */
     static async addSupply(supplyId, quantity, expirationDate, acquisitionId, boughtDate) {
         try {
+            const [dayC, monthC, yearC] = boughtDate.split('/');
+            const [dayE, monthE, yearE] = expirationDate.split('/');
+
+            const fechaCompraSQL = `${yearC}-${monthC}-${dayC}`;
+            const fechaCaducidadSQL = `${yearE}-${monthE}-${dayE}`;
             const result = await database.query(
                 `INSERT INTO InventarioInsumos (
                     idInsumo, CantidadActual, FechaActualizacion, FechaCaducidad, idTipoAdquisicion
                 ) VALUES (?, ?, ?, ?, ?)`,
-                [supplyId, quantity, boughtDate, expirationDate, acquisitionId]
+                [supplyId, quantity, fechaCompraSQL, fechaCaducidadSQL, acquisitionId]
             );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
