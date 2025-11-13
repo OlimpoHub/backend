@@ -1,5 +1,9 @@
 ## [0.1.0] - 12/11/2025
 
+### Fixed
+- Fix the undefind response when the supply doesnt contain a supply batch in the 
+  supply batch model
+
 ### Added
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
