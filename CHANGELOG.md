@@ -1,5 +1,11 @@
 ## [0.1.0] - 12/11/2025
 
+### Fixed
+- Beneficiary querys (update and fetch)
+- Deleted unused functionalities on beneficiary
+
+## [0.1.0] - 12/11/2025
+
 ### Changed
 - .gitignore to ignore all the content from uploads/ however track the directory
   anayway so there is no problems

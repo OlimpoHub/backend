@@ -303,4 +303,4 @@ module.exports = class Workshops {
         }
     }
 
-};
+    };
