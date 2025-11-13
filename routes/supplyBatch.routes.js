@@ -31,17 +31,17 @@ router.post("/addBatch", supplyBatchController.addSupply);
  */
 router.delete("/:idInventario", supplyBatchController.deleteSupplyBatch);
 
-/**
- * POST /filter
- * Filters supply batches by expiration date or acquisition type.
- */
-router.post("/filter", supplyBatchController.filterSupplyBatch);
+// Define a GET endpoint to retrieve supply batches expiration date and acquisition type
+router.get("/filter/data", supplyBatchController.getFilterData);
 
-/**
- * POST /order
- * Orders supply batches in ascending and descending order.
- */
-router.post("/order", supplyBatchController.orderSupplyBatch);
+// Define a POST endpoint to filter or order supply batches
+router.post("/filter", supplyBatchController.filterOrderSupplyBatch);
+
+// Define a GET endpoint to retrieve acquisition types
+router.get("/acquisition/types", supplyBatchController.getAcquisitionTypes);
+
+// Define a POST endpoint to modify one supply batch
+router.post("/update/:idSupplyBatch", supplyBatchController.modifySupplyBatch);
 
 // Export the router to be used in the main application
 module.exports = router;

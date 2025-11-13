@@ -107,7 +107,8 @@ module.exports = class Supplies {
         try {
             // Get all unique categories
             const categories = await database.query(
-                `SELECT DISTINCT descripcion FROM Categoria`
+                `SELECT DISTINCT idCategoria, descripcion 
+                FROM Categoria`
             );
             // Get all unique measures
             const measures = await database.query(
@@ -115,7 +116,8 @@ module.exports = class Supplies {
             );
             // Get all unique workshops
             const workshops = await database.query(
-                `SELECT DISTINCT nombreTaller FROM Taller`
+                `SELECT DISTINCT idTaller, nombreTaller 
+                FROM Taller`
             );
             // Return simplified arrays with raw values
             console.log("ENTRO AL GET FILTERS DATA");
@@ -190,4 +192,33 @@ module.exports = class Supplies {
         }
     }
 
+    // Fetches the id and name for both workshop and categories, then returns them
+    static async getWorkshopAndSupplies() { 
+        try {
+            const categories = await database.query(
+                `SELECT DISTINCT c.idCategoria, c.descripcion
+                FROM Categoria c`
+            )
+
+            const workshops = await database.query(
+                `SELECT DISTINCT t.idTaller, t.nombreTaller
+                FROM Taller t`
+            )
+
+            return {
+            categories: categories.map(c => ({
+                idCategory: c.idCategoria,
+                categoryType: c.descripcion
+            })),
+            workshops: workshops.map(t => ({
+                idTaller: t.idTaller,
+                name: t.nombreTaller
+            }))
+        };
+
+        } catch(err) {
+            console.error("Error fetching workshop and supplies:", err);
+            throw err;
+        }
+    }
 };

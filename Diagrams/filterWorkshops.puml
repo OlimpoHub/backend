@@ -1,0 +1,66 @@
+@startuml
+
+actor api
+boundary workshops.routes as routes
+control workshops.controller as controller
+entity workshops.model as model
+database db
+
+activate api
+api -> routes: GET /workshop/filter/data
+deactivate api
+
+activate routes
+routes -> controller: getWorkshopsCategories(req, res)
+deactivate routes
+
+activate controller
+controller -> model: getWorkshopsCategories()
+activate model
+
+model ->> db: db.query(\n\t`\n\tSELECT DISTINCT horaEntrada\n\tFROM Taller\n\t`\n\t);
+
+activate db
+
+db -->> model: entryHour
+deactivate db
+
+
+model ->> db: db.query(\n\t`\n\tSELECT DISTINCT Fecha\n\tFROM Taller\n\t`\n\t);
+
+activate db
+
+db -->> model: date
+deactivate db
+
+
+model -> controller: entryHour, date
+deactivate model
+
+
+controller -> api: entryHour, date
+deactivate controller
+activate api
+
+api -> controller: POST /filter
+deactivate api
+activate controller
+
+controller -> model: viewWorkshopsFiltered(req, res)
+deactivate controller
+activate model
+
+model ->> db: db.query(query, params);
+activate db
+
+db -->> model: rows
+deactivate db 
+
+model -> controller: rows
+deactivate model
+activate controller
+
+controller -> api: rows
+deactivate controller
+activate api
+@enduml

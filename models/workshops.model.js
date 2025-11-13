@@ -205,4 +205,102 @@ module.exports = class Workshops {
         }
     }
 
+     /* Model function gets a filter list and returns workshop list filtered.*/
+    static async getWorkshopsFiltered(body = {}){
+        const filters = body.filter;
+        console.log(filters)
+        try{
+            let query = `
+            SELECT t.idTaller, 
+                t.nombreTaller, 
+                t.horaEntrada, 
+                t.horaSalida,
+                t.Descripcion,
+                t.Fecha,
+                t.URL
+                FROM Taller t
+                WHERE t.estatus = 1
+                `;
+            const  params =[];
+            if (filters["entryHour"] && filters["entryHour"].length > 0) {
+                query += ` AND t.horaEntrada IN (${filters["entryHour"].map(() => '?').join(', ')})`;
+                params.push(...filters["entryHour"]);
+            }
+
+            if (filters["date"] && filters["date"].length > 0) {
+                query += ` AND t.Fecha IN (${filters["date"].map(() => '?').join(', ')})`;
+                params.push(...filters["date"]);
+            }
+
+            if (body.order){
+                query += ` ORDER BY t.nombreTaller ${body.order}`;
+            }
+            const rows = await db.query(query, params);
+            return rows;
+        }
+        catch(error){
+            console.log("Error fetching workshops filtered", error);
+            throw error;
+        }
+    }
+
+    /* Model function gets all posible results in entry hour and date */
+    static async getWorkshopsCategories(){
+        try{
+            const entryHour = await db.query(
+                `
+                SELECT DISTINCT horaEntrada
+                FROM Taller
+                `
+            );
+
+            const date = await db.query(
+                `
+                SELECT DISTINCT Fecha
+                FROM Taller
+                `
+            )
+            return {
+                    entryHour: entryHour.map(e => e.horaEntrada),
+                    date: date.map(d => d.Fecha)
+                };
+        } catch(error){
+            console.error("Error fetching filter data:", error);
+            throw error;
+        }
+    }
+    
+    // GET: Obtener idTaller por nombreTaller
+    static async getId(nombreTaller) {
+        try {
+            const rows = await db.query
+            (
+                `SELECT idTaller
+                 FROM Taller 
+                 WHERE nombreTaller = ?`,
+                [nombreTaller]
+            );
+            return rows.length > 0 ? rows[0].idTaller : null;
+        } catch (err) {
+            console.error("Error fetching workshop ID by name:", err);
+            throw err;
+        }
+    }
+
+    // GET: Obtener todas las categorías
+    static async getName() {
+        try {
+            const rows = await db.query
+            (
+                `SELECT nombreTaller
+                 FROM Taller
+                 WHERE estatus = 1`
+            );
+            return rows;
+        } catch (err) {
+            console.error("Error fetching all categories", err);
+            throw err;
+        }
+    }
+
 };

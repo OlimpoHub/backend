@@ -23,13 +23,33 @@ exports.getOneSupplyBatch = async (req, res) => {
         const id = req.params.idInsumo;
         const supplyBatch = await SupplyBatch.fetchOne(id);
 
-        const { idInsumo, nombre, unidadMedida } = supplyBatch[0];
-        const supplyBatchJson = supplyBatch.map(r => ({
+        const {
+            idInsumo,
+            nombre,
+            unidadMedida,
+            imagenInsumo,
+            cantidad,
+            nombreTaller,
+            Descripcion,
+            status,
+        } = supplyBatch[0];
+        const supplyBatchJson = supplyBatch.map((r) => ({
             cantidad: r.cantidad,
-            FechaCaducidad: r.FechaCaducidad
+            FechaCaducidad: r.FechaCaducidad,
+            adquisicion: r.adquisicion,
         }));
 
-        res.status(200).json({ idInsumo, nombre, unidadMedida, supplyBatchJson });
+        res.status(200).json({
+            idInsumo,
+            nombre,
+            unidadMedida,
+            imagenInsumo,
+            cantidad,
+            nombreTaller,
+            Descripcion,
+            status,
+            supplyBatchJson,
+        });
     } catch (err) {
         console.log("Error fetching one supply batch", err);
         res.status(500).json({ message: "Failed to fetch one supply batch" });
@@ -41,8 +61,20 @@ exports.getOneSupplyBatch = async (req, res) => {
  */
 exports.addSupply = async (request, response) => {
     try {
-        const { supplyId, quantity, expirationDate, acquisitionId } = request.body;
-        await SupplyBatch.addSupply(supplyId, quantity, expirationDate, acquisitionId);
+        const { 
+            supplyId, 
+            quantity, 
+            expirationDate, 
+            acquisition, 
+            boughtDate
+        } = request.body;
+        await SupplyBatch.addSupply(
+            supplyId,
+            quantity,
+            expirationDate,
+            acquisition,
+            boughtDate
+        );
         response.status(200).json({ message: "Supply added successfully" });
     } catch (error) {
         console.error("Error adding supply: ", error);
@@ -71,27 +103,76 @@ exports.deleteSupplyBatch = async (request, response) => {
 /**
  * Filters supply batches by expiration date or acquisition type.
  */
-exports.filterSupplyBatch = async (request, response) => {
+exports.filterOrderSupplyBatch = async (request, response) => {
     try {
-        const { type, value } = request.body;
-        const supplyBatch = await SupplyBatch.filter(type, value);
+        console.log("BODY: ", request.body);
+        const filters  = request.body;
+        const supplyBatch = await SupplyBatch.filterOrder(filters);
+        console.log("SUPPLY BATCH", supplyBatch);
         response.status(200).json(supplyBatch);
     } catch (error) {
-        console.error("Error filtering supply batch: ", error);
-        response.status(500).json({ message: "Failed to filter supply batches" });
+        console.error("Error filtering supply Batch: ", error);
+        response.status(500).json({ message: "Error filtering supply Batch." });
     }
 };
 
-/**
- * Order supply batches in ascending and descending order.
- */
-exports.orderSupplyBatch = async (request, response) => {
+// Get supply categories, measures and workshops for filters
+exports.getFilterData = async (request, response) => {
     try {
-        const { value } = request.body;
-        const supplyBatch = await SupplyBatch.order(value);
-        response.status(200).json(supplyBatch);
+        const filterData = await SupplyBatch.getFiltersData();
+        response.status(200).json(filterData);
     } catch (error) {
-        console.error("Error ordering supply batch: ", error);
-        response.status(500).json({ message: "Failed to order supply batches" });
+        console.error("Error fetching filter data: ", error);
+        response.status(500).json({ message: "Failed to fetch filter data." });
+    }
+}
+
+// Get Acquisition Types 
+exports.getAcquisitionTypes = async (request, response) => {
+    try {
+        const acquisitionTypes = await SupplyBatch.fetchAcquisitionTypes();
+        response.status(200).json(acquisitionTypes);
+    } catch (error) {
+        console.error("Error fetching acquisition types: ", error);
+        response.status(500).json({ message: "Failed to fetch acquisition types." });
+    }
+}
+
+/**
+ * Modify supply batches by etheir ID
+ */ 
+exports.modifySupplyBatch = async (request, response) => {
+    try {
+        console.log(request.params);
+        console.log(request.body);
+        let { idSupplyBatch } = request.params; 
+        console.log(idSupplyBatch);
+        
+        if (idSupplyBatch && idSupplyBatch.startsWith(':')) {
+            idSupplyBatch = idSupplyBatch.replace(':', '');
+        }
+        console.log(idSupplyBatch);
+        const { 
+            supplyId, 
+            quantity, 
+            expirationDate, 
+            acquisition, 
+            boughtDate
+        } = request.body;
+        const result = await SupplyBatch.modifySupplyBatch(
+            idSupplyBatch,
+            supplyId,
+            quantity,
+            expirationDate,
+            acquisition,
+            boughtDate,
+        )
+
+        response.status(200).json(result);
+    } catch (error) {
+        console.error("Error en modifySupplyBatch():", error);
+        response.status(500).json({
+        error: error.message
+        });
     }
 };

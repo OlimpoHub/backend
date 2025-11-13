@@ -54,7 +54,7 @@ exports.getBeneficiaries = async (req, res) => {
 };
 
 exports.getBeneficiary = async (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     try {
         const data = await Beneficiary.fetchById(id);
         res.status(200).json(data);
@@ -63,7 +63,7 @@ exports.getBeneficiary = async (req, res) => {
     }
 };
 
-// Controller para BEN-02
+// Controller for BEN-02
 exports.beneficiariesList = async (req, res) => {
     try {
         const beneficiaries = await Beneficiary.beneficiariesList();
@@ -84,4 +84,112 @@ exports.postBeneficiary = async (req, res) => {
     } catch {
         res.status(500).json({ message: 'Failed to fetch Beneficiary data. '});
     }
+};
+
+// Controller para BEN-003
+exports.updateBeneficiary = async (req, response) => {
+    try {
+        const { id: beneficiaryId } = req.params;
+        const existingData = await Beneficiary.fetchById(beneficiaryId);
+
+        if (!existingData) {
+            return response.status(404).json({ message: "Beneficiario no encontrado para actualizar." });
+        }
+        const {
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            fechaNacimiento,
+            numeroEmergencia,
+            nombreContactoEmergencia,
+            relacionContactoEmergencia,
+            descripcion,
+            fechaIngreso,
+            foto,
+            estatus
+        } = req.body;
+
+        const result = await Beneficiary.update(
+            beneficiaryId,
+            nombre !== undefined ? nombre : existingData.nombre,
+            apellidoPaterno !== undefined ? apellidoPaterno : existingData.apellidoPaterno,
+            apellidoMaterno !== undefined ? apellidoMaterno : existingData.apellidoMaterno,
+            fechaNacimiento !== undefined ? fechaNacimiento : existingData.fechaNacimiento,
+            numeroEmergencia !== undefined ? numeroEmergencia : existingData.numeroEmergencia,
+            nombreContactoEmergencia !== undefined ? nombreContactoEmergencia : existingData.nombreContactoEmergencia,
+            relacionContactoEmergencia !== undefined ? relacionContactoEmergencia : existingData.relacionContactoEmergencia,
+            descripcion !== undefined ? descripcion : existingData.descripcion,
+            fechaIngreso !== undefined ? fechaIngreso : existingData.fechaIngreso,
+            foto !== undefined ? foto : existingData.foto,
+            estatus !== undefined ? estatus : existingData.estatus
+        );
+        
+        response.status(200).json({
+        message: "Beneficiario modificado correctamente",
+        data: {
+            beneficiaryId,
+            modifiedFields: {
+            ...(nombre && { nombre }),
+            ...(apellidoPaterno && { apellidoPaterno }),
+            ...(apellidoMaterno && { apellidoMaterno }),
+            ...(fechaNacimiento && { fechaNacimiento }),
+            ...(numeroEmergencia && { numeroEmergencia }),
+            ...(nombreContactoEmergencia && { nombreContactoEmergencia }),
+            ...(relacionContactoEmergencia && { relacionContactoEmergencia }),
+            ...(descripcion && { descripcion }),
+            ...(fechaIngreso && { fechaIngreso }),
+            ...(foto && { foto }),
+            ...(estatus !== undefined && { estatus })
+            },
+            affectedRows: result[0]?.affectedRows || result.affectedRows
+        }
+        });
+
+    } catch (error) {
+        console.error("Error en updateBeneficiary():", error);
+        response.status(500).json({
+        error: error.message
+        });
+    }
+};
+
+exports.searchBeneficiaries = async (req, res) => {
+    try {
+        const { term } = req.query;
+
+        if (!term) {
+            return res.status(400).json({ message: "The search term is required." });
+        }
+
+        const beneficiaries = await Beneficiary.searchByName(term);
+
+        res.status(200).json(beneficiaries);
+
+    } catch (error) {
+        console.error('Error in searchBeneficiaries:', error);
+        res.status(500).json({ message: 'Error in the server when searching beneficiaries.' });
+    }
+};
+
+// Controller for getting disability categories
+exports.getCategories = async (request, response) => {
+  try{
+    const categories = await Beneficiary.getCategories();
+    response.status(200).json(categories);
+  } catch(error){
+    console.error("Error al obtener datos: ", error);
+    response.status(500).json({ message: "Error al obtener datos de filtrado." });
+  }
+}
+
+// Controller for filtering beneficiaries by disabilities
+exports.filter = async (request, response) => {
+  try {
+      const filters  = request.body;
+      const parameters = await Beneficiary.filter(filters);
+      response.status(200).json(parameters);
+  } catch(error) {
+      console.error("Error al obtener datos: ", error);
+      response.status(500).json({ message: "Error al obtener datos de filtrado." });
+  }
 }

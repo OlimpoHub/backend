@@ -1,6 +1,40 @@
+## [0.1.0] - 12/11/2025
+
+### Fixed
+- Fix the undefind response when the supply doesnt contain a supply batch in the 
+  supply batch model
+
+### Added
+- Implemented routes, controllers, and model for the Modify Supply Batch.
+- Deployment diagram updated with the Mail API
+
+## [0.1.0] - 11/11/2025
+
+### Changed
+- model getFiltersData updated to also send back the id from the workshops and categories
+
+### Added
+- Endpoint to send only workshop and categories ids and names.
+- Add deleteOneSupplyFront Secuence Diagram
+- Add deleteOneSupplyFrontPakages Diagram
+- Modify product implementation
+- Sequence diagram for modify product
+- Added filter functionality to workshops
+- Added functionality for search, order, filter and modify for beneficiaries
+- Added the order functionality by name
+- Added Acquisition type get route
+
+### Fixed
+- Fixing commit regist
+- Missing get route for register product.
+- Fixed name variables for errors in workshops.model.js
+- Parameters needed for RegisterSupplyBatch
+
 ## [0.1.0] - 10/11/2025
 
 ### Added
+- More parameters to match the data with the view of the supply batch
+- Add new filter and ordering format added
 - Add filter and order organism with generic approach finished
 - Add order supply batches functionality 
 - Add filter supply batches functionality 
@@ -8,6 +42,7 @@
 - Implementation for consult products.
 - Sequence diagram for consult products.
 - Add funtion to search a workshop in model, routes and controller.
+- Add function to modify a beneficiary in model, routes and controller.
 
 ### Fixed
 - Fix routes, model and controller for external collabs.
