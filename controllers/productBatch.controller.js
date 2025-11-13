@@ -20,7 +20,7 @@ async function getOnePb(req, res) {
             res.status(404).json({ error: 'Product batch not found' });
             return;
         }
-        res.json(productBatch);
+        res.json(productBatch[0]);
     } catch (err) {
         console.error('Failure in getOnePb, error:', err);
         res.status(500).json({ error: 'Failed to fetch product batch' });
