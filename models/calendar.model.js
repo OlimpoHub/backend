@@ -6,15 +6,17 @@ module.exports = class Calendar {
         idCapacitacion,
         idUsuario,
         nombreTaller,
+        horaEntrada, 
+        horaSalida,
         fecha,
-        horarioTaller
     ) {
         this.idTaller = idTaller;
         this.IdCapacitacion = idCapacitacion;
         this.idUsuario = idUsuario;
         this.nombreTaller = nombreTaller;
+        this.horaEntrada = horaEntrada;
+        this.horaSalida = horaSalida;
         this.fecha = fecha;
-        this.horarioTaller = horarioTaller;
     }
 
     static async fetchById(idUsuario) {
@@ -26,8 +28,9 @@ module.exports = class Calendar {
                 Taller.idCapacitacion, 
                 Taller.idUsuario, 
                 Taller.nombreTaller,
-                Taller.fecha, 
-                Taller.horarioTaller 
+                Taller.horaEntrada,
+                Taller.horaSalida,
+                Taller.Fecha 
             FROM Taller 
             INNER JOIN Usuarios 
                 ON Taller.idUsuario = Usuarios.idUsuario;

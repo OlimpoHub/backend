@@ -1,0 +1,112 @@
+@startuml ComponentDiagram
+package "presentation" {
+    package "commonPresentation" {
+        [ErrorView]
+        [LoadingShimmer]
+    }
+    package "navigation" {
+        [NavGraph]
+    }
+    package "screens" {
+        package "supply" {
+            package "SuppliesDetail" {
+                package "components" {
+                    [SupplieDetailRow]
+                    [SupplieDetailContent]
+                    [TextValue]
+                }
+                [SupplieDetailScreen]
+                [SupplieDetailViewModel]
+                [SupplieDetailUiState]
+            }
+            package "SupplyList" {
+            }
+        }
+    }
+    package "theme" {
+    }
+    package "ui" {
+        package "atoms" {
+            package "alerts"{
+                [DesicionDialog]
+                [Snackbar]
+            }
+        }
+    }
+    package "utils" {
+    }
+
+    [MainActivity]
+
+}
+
+package "domain" {
+    package "common" {
+        [AppError]
+        [Result]
+    }
+    package "model" {
+        package "suppliesModel" {
+            [Supply]
+            [SupplyBatchExt]
+        }
+    }
+    package "repositoryDomain" {
+        package "suppliesRepository" {
+            [SupplyRepository]
+        }
+        [PokemonRepository]
+    }
+    package "usecase" {
+        package "suppliesUseCase" {
+            [GetSupplyUseCase]
+            [DeleteOneSupplyUseCase]
+        }
+    }
+}
+
+package "data" {
+    package "local"{
+
+    }
+    package "mapper" {
+        package "suppliesMapper" {
+            [SupplyMapper]
+        }
+    }
+    package "remote" {
+        package "api" {
+            [ArcaApi]
+        }
+        package "dto" {
+            package "suppliesDto" {
+                [SupplyDto]
+            }
+        }
+    }
+    package "repositoryDataImpl" {
+        package "suppliesRepositoryImpl" {
+            [SupplyRepositoryImpl]
+        }
+    }
+    
+}
+
+package "di" {
+    [AppModule]
+}
+
+' Relaciones
+SupplieDetailScreen --> DesicionDialog
+DesicionDialog --> SupplieDetailViewModel
+SupplieDetailViewModel --> Snackbar
+Snackbar --> SupplieDetailViewModel
+SupplieDetailViewModel --> DeleteOneSupplyUseCase
+DeleteOneSupplyUseCase --> SupplyRepository
+SupplyRepositoryImpl ..|> SupplyRepository
+SupplyRepositoryImpl --> ArcaApi
+SupplyMapper --> SupplyDto
+SupplyMapper --> Supply
+AppModule --> ArcaApi
+AppModule --> SupplyRepositoryImpl
+@enduml

@@ -72,6 +72,7 @@ module.exports = class Products {
         }
     }
 
+    // Consult one product
     static async fetchOne(id) {
         try{
             const rows = await database.query
@@ -92,7 +93,35 @@ module.exports = class Products {
         }
     }
 
-                // DELETE PRODUCT
+    // Update a product
+    static async update(id, product) {
+        try {
+
+            const result = await database.query (
+                `UPDATE Productos 
+                 SET nombre = ?, imagen = ?, PrecioUnitario = ?, 
+                     idTaller = ?, idCategoria = ?, Disponible = ?, 
+                     Descripcion = ? 
+                 WHERE idProducto = ?`,
+                [
+                    product.Nombre,
+                    product.imagen,
+                    product.PrecioUnitario,
+                    product.idTaller,
+                    product.idCategoria,
+                    product.Disponible,
+                    product.Descripcion,
+                    id
+                ]
+            );
+            return result;
+        } catch (err) {
+            console.log("Error adding a new product", err);
+            throw err;
+        }
+    }
+
+  // DELETE PRODUCT
   static async remove(idProducto) {
     try {
       const result = await database.query(
@@ -259,5 +288,4 @@ module.exports = class Products {
       throw err;
     }
   }
-
 };

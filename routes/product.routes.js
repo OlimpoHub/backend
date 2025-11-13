@@ -4,6 +4,7 @@ const router = express.Router();
 const productController = require("../controllers/product.controller");
 
 // POST: Register a new product
+router.get("/add", productController.getRegisterProduct);
 router.post("/add", productController.postRegisterProduct);
 
 // GET: Search products
@@ -26,5 +27,10 @@ router.get("/:idProduct", productController.getOneProduct);
 
 // DELETE: Delete one product
 router.delete("/:idProduct", productController.deleteProduct);
+
+//GET: Modify product
+router.get("/:idProduct/update", productController.getOneProduct);
+router.put("/:idProduct/update", productController.updateProduct);
+
 
 module.exports = router;
