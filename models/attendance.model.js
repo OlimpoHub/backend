@@ -23,7 +23,6 @@ module.exports = class Attendance {
 
     static async addExitAttendance(idAttendance, readTime) {
         try {
-            // TODO: Esto le falta
             const result = await database.query(
                 `UPDATE Asistencia 
                 SET fechaFin = ?
