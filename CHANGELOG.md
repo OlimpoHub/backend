@@ -1,4 +1,4 @@
-## [0.1.0] - 12/11/2025
+## [0.1.0] - 13/11/2025
 
 ### Fixed
 - Beneficiary querys (update and fetch)
