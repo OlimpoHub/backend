@@ -9,6 +9,7 @@
   frontend
 - Fix the undefined request when the supply doesnt contain a supply batch in the 
   supply batch model
+- Fix the model and controller for a better connection with Front
 
 ### Added
 - Uploads/ directory to upload any file or image from the front
