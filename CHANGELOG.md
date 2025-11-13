@@ -2,6 +2,7 @@
 
 ### Fixed
 - Solved the issue that only returns one supply batch changed fixed to send more
+- Lowercase in controller registerProduct error.
 
 ## [0.1.0] - 12/11/2025
 

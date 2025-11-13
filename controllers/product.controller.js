@@ -35,7 +35,7 @@ exports.postRegisterProduct = async (request, response) => {
         );
 
         // Success
-        await Product.save();
+        await product.save();
         response.status(201).json({ message: "Product added successfully" });
     } catch (err) {
         // Error
