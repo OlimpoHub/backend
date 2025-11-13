@@ -53,14 +53,19 @@ exports.getFilterData = async (request, response) => {
 
 exports.addOneSupply = async (req, res) => {
     try {
-        console.log(req.body);
+        const idTaller = req.body.idTaller ?? req.body.idWorkshop;
+        const nombre = req.body.nombre ?? req.body.name;
+        const unidadMedida = req.body.unidadMedida ?? req.body.measureUnit;
+        const idCategoria = req.body.idCategoria ?? req.body.idCategory;
+        const imagenInsumo = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
+
         const supply = new Supplies(
-            req.body.idTaller,
-            req.body.nombre,
-            req.body.unidadMedida,
-            req.body.idCategoria,
-            req.body.imagenInsumo,
-            req.body.status
+            idTaller,
+            nombre,
+            unidadMedida,
+            idCategoria,
+            imagenInsumo,
+            req.body.status || 1
         );
 
         const result = await supply.save();
