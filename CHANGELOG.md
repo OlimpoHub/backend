@@ -1,3 +1,11 @@
+## [0.1.0] - 13/11/2025
+
+### Fixed
+- Fix the routes to match the frontend
+
+## [0.1.0] - 11/11/2025
+
+
 ## [0.1.0] - 12/11/2025
 
 ### Fixed
