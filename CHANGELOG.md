@@ -3,6 +3,7 @@
 ### Fixed
 - Fix the undefind response when the supply doesnt contain a supply batch in the 
   supply batch model
+- Fixed a problem with FetchAll ProductBatches
 
 ### Added
 - Implemented routes, controllers, and model for the Modify Supply Batch.

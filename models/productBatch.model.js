@@ -26,7 +26,7 @@ module.exports = class ProductBatch {
                 FROM Productos p
                 JOIN InventarioProductos inv
                     ON p.idProducto = inv.idProducto
-                GROUP BY p.idProducto, p.Nombre, p.imagen`
+                ORDER BY p.Nombre, inv.FechaRealizacion DESC`
             );
             return rows;
         } catch (err) {
@@ -59,23 +59,23 @@ module.exports = class ProductBatch {
     static async add(content) {
         try {
             const idInventario = content.idInventario || require('crypto').randomUUID();
-            const { 
-                idProducto, 
-                precioVenta, 
-                cantidadProducida, 
-                fechaCaducidad, 
-                fechaRealizacion 
+            const {
+                idProducto,
+                precioVenta,
+                cantidadProducida,
+                fechaCaducidad,
+                fechaRealizacion
             } = content;
             const result = await database.query(
                 `INSERT INTO InventarioProductos (idInventario, idProducto, PrecioVenta, CantidadProducida, FechaCaducidad, FechaRealizacion)
                 VALUES (?, ?, ?, ?, ?, ?)`, [
-                    idInventario, 
-                    idProducto, 
-                    precioVenta, 
-                    cantidadProducida, 
-                    fechaCaducidad || null, 
-                    fechaRealizacion || null
-                ]
+                idInventario,
+                idProducto,
+                precioVenta,
+                cantidadProducida,
+                fechaCaducidad || null,
+                fechaRealizacion || null
+            ]
             );
             return { idInventario, ...content };
         } catch (err) {
@@ -87,10 +87,10 @@ module.exports = class ProductBatch {
     static async update(id, content) {
         try {
             const allowed = [
-                'idProducto', 
-                'PrecioVenta', 
-                'CantidadProducida', 
-                'FechaCaducidad', 
+                'idProducto',
+                'PrecioVenta',
+                'CantidadProducida',
+                'FechaCaducidad',
                 'FechaRealizacion'
             ];
             // Safe keys filtering
@@ -114,7 +114,7 @@ module.exports = class ProductBatch {
     static async remove(id) {
         try {
             const result = await database.query(
-                `DELETE FROM InventarioProductos WHERE idInventario = ?`, 
+                `DELETE FROM InventarioProductos WHERE idInventario = ?`,
                 [
                     id
                 ]
@@ -137,7 +137,7 @@ module.exports = class ProductBatch {
                  JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
                  WHERE p.Nombre LIKE ? OR p.Descripcion LIKE ?`,
                 [
-                    `%${term}%`, 
+                    `%${term}%`,
                     `%${term}%`
                 ]
             );
@@ -151,10 +151,10 @@ module.exports = class ProductBatch {
     static async fetchAllWithOrder(orderBy = "p.Nombre", direction = "ASC") {
         try {
             const validColumns = [
-                "p.Nombre", 
-                "PrecioVenta", 
-                "CantidadProducida", 
-                "FechaCaducidad", 
+                "p.Nombre",
+                "PrecioVenta",
+                "CantidadProducida",
+                "FechaCaducidad",
                 "FechaRealizacion"
             ];
             if (!validColumns.includes(orderBy)) orderBy = "p.Nombre";
