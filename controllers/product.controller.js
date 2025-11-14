@@ -24,7 +24,7 @@ exports.getRegisterProduct = async (request, response) => {
 // POST /product: register a new product
 exports.postRegisterProduct = async (request, response) => {
     try {
-        const imagen = request.file ? request.file.path : request.body.imagen;
+        const imagen = request.file ? request.file.path : request.body.image;
 
         const product = new Product (
             request.body.idTaller,

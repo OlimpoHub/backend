@@ -13,7 +13,7 @@ const upload = multer({ storage });
 
 // POST: Register a new product
 router.get("/add", productController.getRegisterProduct);
-router.post("/add", upload.single("imagen"), productController.postRegisterProduct);
+router.post("/add", upload.single("image"), productController.postRegisterProduct);
 
 // GET: Search products
 router.get('/search', productController.searchP);
