@@ -3,10 +3,6 @@
 ### Fixed
 - Solved the issue that only returns one supply batch changed fixed to send more
 - Fix the search workshops in controllers.
-
-## [0.1.0] - 12/11/2025
-
-### Fixed
 - Beneficiary querys (update and fetch)
 - Deleted unused functionalities on beneficiary
 
