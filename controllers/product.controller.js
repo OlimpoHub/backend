@@ -24,13 +24,15 @@ exports.getRegisterProduct = async (request, response) => {
 // POST /product: register a new product
 exports.postRegisterProduct = async (request, response) => {
     try {
+        const imagen = request.file ? request.file.path : request.body.imagen;
+
         const product = new Product (
             request.body.idTaller,
             request.body.Nombre,
             request.body.PrecioUnitario,
             request.body.idCategoria,
             request.body.Descripcion,
-            request.body.imagen,
+            imagen,
             request.body.Disponible,
         );
 
@@ -39,6 +41,7 @@ exports.postRegisterProduct = async (request, response) => {
         response.status(201).json({ message: "Product added successfully" });
     } catch (err) {
         // Error
+        console.log(err);
         response.status(500).json({ message: "Failed to add a product", err });
     }
 }

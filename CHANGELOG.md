@@ -3,6 +3,7 @@
 ### Fixed
 - Solved the issue that only returns one supply batch changed fixed to send more
 - Lowercase in controller registerProduct error.
+- Image saved as a file in register product.
 
 ## [0.1.0] - 12/11/2025
 
