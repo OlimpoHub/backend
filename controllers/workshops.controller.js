@@ -147,21 +147,17 @@ exports.searchWorkshops = async (request, response) => {
     try {
         const { nameWorkshop } = request.query;
 
-        if (!nameWorkshop || nameWorkshop.trim() === "") {
-            return response.status(400).json({ message: "The name is required" });
-        }
-
         const workshops = await Workshops.findWorkshop(nameWorkshop);
 
-        if (workshops.length === 0) {
-            return response.status(404).json({ message: "No workshops found with that name." });
-        }
-        response.status(200).json(workshops);
+        return response.status(200).json(Array.isArray(workshops) ? workshops : []);
+        
     } catch (error) {
-
-        response.status(500).json({ message: "Error searching workshop", error: error.message });
+        return response.status(500).json({
+            error: error.message
+        });
     }
-}
+};
+
 
 /* Controller function to get all diferent results by date or entry hour*/
 exports.getWorkshopsCategories = async (request, response) => {
