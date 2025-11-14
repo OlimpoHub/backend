@@ -1,0 +1,25 @@
+@startuml Product Operations
+actor Client
+participant "Express\nRouter" as Router
+participant "Product\nController" as Controller
+participant "Product\nModel" as Model
+database "MariaDB" as DB
+
+' DELETE Product
+group Delete Product
+    Client -> Router: DELETE /product/:id
+    Router -> Controller: removeP(id)
+    Controller -> Model: remove(id)
+    Model -> DB: DELETE FROM Productos
+    DB --> Model: result
+    Model --> Controller: success/failure
+    alt Delete Successful
+        Controller --> Router: success
+        Router --> Client: 204 No Content
+    else Product Not Found
+        Controller --> Router: failure
+        Router --> Client: 404 Not Found
+    end
+end
+
+@enduml

@@ -45,7 +45,7 @@ module.exports = class SupplyBatch {
      */
     static async fetchOne(id) {
         try {
-            const [rows] = await database.query(
+            const rows = await database.query(
                 `SELECT 
                     i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
                     inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad, 
@@ -75,10 +75,16 @@ module.exports = class SupplyBatch {
     /**
      * Inserts a new supply batch record into the database.
      */
-    static async addSupply(supplyId, quantity, expirationDate, acquisitionId, boughtDate) {
+    static async addSupply(
+        supplyId,
+        quantity,
+        expirationDate,
+        acquisitionId,
+        boughtDate
+    ) {
         try {
-            const [dayC, monthC, yearC] = boughtDate.split('/');
-            const [dayE, monthE, yearE] = expirationDate.split('/');
+            const [dayC, monthC, yearC] = boughtDate.split("/");
+            const [dayE, monthE, yearE] = expirationDate.split("/");
 
             const fechaCompraSQL = `${yearC}-${monthC}-${dayC}`;
             const fechaCaducidadSQL = `${yearE}-${monthE}-${dayE}`;
@@ -86,7 +92,13 @@ module.exports = class SupplyBatch {
                 `INSERT INTO InventarioInsumos (
                     idInsumo, CantidadActual, FechaActualizacion, FechaCaducidad, idTipoAdquisicion
                 ) VALUES (?, ?, ?, ?, ?)`,
-                [supplyId, quantity, fechaCompraSQL, fechaCaducidadSQL, acquisitionId]
+                [
+                    supplyId,
+                    quantity,
+                    fechaCompraSQL,
+                    fechaCaducidadSQL,
+                    acquisitionId,
+                ]
             );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
@@ -126,7 +138,6 @@ module.exports = class SupplyBatch {
      * Filters supply batches either by expiration date or acquisition type.
      */
     static async filterOrder(body = {}) {
-
         const filters = body.filters || {};
 
         try {
@@ -144,14 +155,28 @@ module.exports = class SupplyBatch {
             const params = [];
 
             // Acquisition type
-            if (filters["Tipo de Adquisición"] && filters["Tipo de Adquisición"].length > 0) {
-                query += ` AND a.Descripcion IN (${filters["Tipo de Adquisición"].map(() => '?').join(', ')})`;
+            if (
+                filters["Tipo de Adquisición"] &&
+                filters["Tipo de Adquisición"].length > 0
+            ) {
+                query += ` AND a.Descripcion IN (${filters[
+                    "Tipo de Adquisición"
+                ]
+                    .map(() => "?")
+                    .join(", ")})`;
                 params.push(...filters["Tipo de Adquisición"]);
             }
 
             // Expiration date
-            if (filters["Fecha de caducidad"] && filters["Fecha de caducidad"].length > 0) {
-                query += ` AND ii.FechaCaducidad IN (${filters["Fecha de caducidad"].map(() => '?').join(', ')})`;
+            if (
+                filters["Fecha de caducidad"] &&
+                filters["Fecha de caducidad"].length > 0
+            ) {
+                query += ` AND ii.FechaCaducidad IN (${filters[
+                    "Fecha de caducidad"
+                ]
+                    .map(() => "?")
+                    .join(", ")})`;
                 params.push(...filters["Fecha de caducidad"]);
             }
 
@@ -168,7 +193,6 @@ module.exports = class SupplyBatch {
             console.log("Filtered Supply Batch Rows:", rows);
 
             return rows;
-
         } catch (err) {
             console.error("Error filtering supply batch: ", err);
             throw err;
@@ -191,16 +215,15 @@ module.exports = class SupplyBatch {
             console.log("ENTRO AL GET SUPPLY BATCH FILTERS DATA");
 
             return {
-                acquisitionTypes: acquisitionTypes.map(a => a.Descripcion),
-                expirationDates: expirationDates.map(f => f.FechaCaducidad)
-            }
-
+                acquisitionTypes: acquisitionTypes.map((a) => a.Descripcion),
+                expirationDates: expirationDates.map((f) => f.FechaCaducidad),
+            };
         } catch (err) {
             console.error("Error fetching supply batch filter data:", err);
             throw err;
         }
     }
-    
+
     /**
      * Gets all the Acquisition types available
      * @returns acquisitionTypes
@@ -218,9 +241,17 @@ module.exports = class SupplyBatch {
         }
     }
 
-    static async modifySupplyBatch(idSupplyBatch,supplyId,quantity,expirationDate,acquisition,boughtDate,) {
-        try{
-            const result = await database.query(`
+    static async modifySupplyBatch(
+        idSupplyBatch,
+        supplyId,
+        quantity,
+        expirationDate,
+        acquisition,
+        boughtDate
+    ) {
+        try {
+            const result = await database.query(
+                `
                 UPDATE InventarioInsumos
                 SET idInsumo = ?,
                     CantidadActual = ?, 
@@ -228,16 +259,25 @@ module.exports = class SupplyBatch {
                     FechaCaducidad = ?,
                     idTipoAdquisicion = ?
                 WHERE idInventario = ?
-            `, [supplyId, quantity, boughtDate, expirationDate, acquisition, idSupplyBatch] );
-            if (result && typeof result.insertId === 'bigint') {
+            `,
+                [
+                    supplyId,
+                    quantity,
+                    boughtDate,
+                    expirationDate,
+                    acquisition,
+                    idSupplyBatch,
+                ]
+            );
+            if (result && typeof result.insertId === "bigint") {
                 result.insertId = Number(result.insertId);
             }
-            
+
             console.log("SUPPLY BATCH MODIFIED: ", result);
-            return result
+            return result;
         } catch (error) {
-            console.error('Error modifySupplyBatch():', error);
+            console.error("Error modifySupplyBatch():", error);
             throw error;
         }
     }
-}
+};
