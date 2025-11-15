@@ -16,7 +16,7 @@ const qrRoutes = require('./qr.routes');
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
 router.use("/supplies", suppliesRoutes);
-router.use("/externalCollabs", externalCollabsRoutes);
+router.use("/user", externalCollabsRoutes);
 router.use("/supplyBatch", supplyBatchRouter);
 router.use("/workshop", workshopsRoutes);
 router.use("/productBatch", productBatchRouter);
