@@ -34,6 +34,15 @@ module.exports = class User {
        this.foto = _foto;
     }
 
+    static async fetchAllUser() {
+        const result = await database.query(
+            `SELECT *
+            FROM Usuarios
+            `
+        );
+        return result.length > 0 ? result : null;
+    }
+
     static async findByEmail(email) {
         const rows = await database.query(
             `SELECT u.*, r.nombreRol AS roleName

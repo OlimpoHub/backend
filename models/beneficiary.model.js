@@ -1,7 +1,7 @@
 const database = require('../utils/db.js');
 module.exports = class Beneficiary {
     constructor(beneficiaryId, firstName, paternalLastName, maternalLastName, dateOfBirth, emergencyPhoneNumber, emergencyContactName, emergencyContactRelationship, description, admissionDate, photo) {
-        this.beneficiaryId = beneficiaryId;
+        this.beneficiaryId = beneficiaryId || uuidv4();
         this.firstName = firstName; 
         this.paternalLastName = paternalLastName; 
         this.maternalLastName = maternalLastName; 
@@ -14,17 +14,6 @@ module.exports = class Beneficiary {
         this.photo = photo;
         // NOTA: La tabla tambien tiene 'estatus', pero no esta en este constructor
         // No hay problema para BEN-04 pero hay que tenerlo en cuenta para el 'create' o 'update'.
-    }
-
-    static async fetchAll() {
-        try {
-            const rows = await database.query("SELECT * FROM Beneficiarios");
-            console.log("ROWS:", rows);
-            return rows;
-        } catch (err) {
-            console.error("Error al obtener beneficiarios:", err);
-            throw err; 
-        }
     }
 
     // Revisar si el beneficiario existe BEN-001
@@ -62,11 +51,12 @@ module.exports = class Beneficiary {
             }
 
             const sql = `
-                INSERT INTO Beneficiarios 
+                INSERT INTO Beneficiarios
                 (nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia,
                 relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
+
 
             const params = [
                 data.nombre,
@@ -82,13 +72,29 @@ module.exports = class Beneficiary {
                 1
             ];
 
+            const sql2 = `
+                INSERT INTO BeneficiarioDiscapacidades (idDiscapacidad, idBeneficiario)
+                SELECT ?, idBeneficiario
+                FROM Beneficiarios
+                WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
+            `;
+
+
+            const params2 = [
+                data.idDiscapacidad,
+                data.nombre,
+                data.apellidoPaterno,
+                data.apellidoMaterno,
+                data.fechaNacimiento
+            ];
+
             const result = await database.query(sql, params);
+            const result2 = await database.query(sql2, params2);
             return {
                 success: true,
-                insertId: result.insertId,
+                insertId: result2.insertId,
                 message: "Creado con éxito"
             };
-
         } catch (error) {
             console.error("Error al registrar beneficiario:", error);
 
@@ -100,37 +106,13 @@ module.exports = class Beneficiary {
         }
     }
 
-
-    // Mock data for PokedexApp Lab.
-    // In production we will use DB data
-    static fetchAllPokemons() {
-        return new Promise((resolve) => {
-            const data = {
-                count: 1328,
-                next: "https://pokeapi.co/api/v2/pokemon?offset=10&limit=10",
-                previous: null,
-                results: [
-                    { name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" },
-                    { name: "ivysaur", url: "https://pokeapi.co/api/v2/pokemon/2/" },
-                    { name: "venusaur", url: "https://pokeapi.co/api/v2/pokemon/3/" },
-                    { name: "charmander", url: "https://pokeapi.co/api/v2/pokemon/4/" },
-                    { name: "charmeleon", url: "https://pokeapi.co/api/v2/pokemon/5/" },
-                    { name: "charizard", url: "https://pokeapi.co/api/v2/pokemon/6/" },
-                    { name: "squirtle", url: "https://pokeapi.co/api/v2/pokemon/7/" },
-                    { name: "wartortle", url: "https://pokeapi.co/api/v2/pokemon/8/" },
-                    { name: "blastoise", url: "https://pokeapi.co/api/v2/pokemon/9/" },
-                    { name: "caterpie", url: "https://pokeapi.co/api/v2/pokemon/10/" },
-                ]
-            };
-            resolve(data);
-        });
-    }
-
     static async fetchById(id) {
         try {
-            const rows = await database.query(`SELECT * 
-                                               FROM Beneficiarios 
-                                               WHERE idBeneficiario = ?`, [id]);
+            const rows = await database.query(`SELECT Ben.*, LD.nombre AS discapacidad
+                                               FROM Beneficiarios Ben
+                                               LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                                               LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                                               WHERE Ben.idBeneficiario = ?`, [id]);
             return rows[0];
         } catch (err) {
             console.error(`Error al obtener beneficiario con id ${id}:`, err);
@@ -171,7 +153,7 @@ module.exports = class Beneficiary {
     }
 
     // Model para BEN-003
-    static async update(beneficiaryId, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus) {
+    static async update(idBeneficiario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idDiscapacidad) {
         try {
             const query = `UPDATE Beneficiarios
                            SET nombre = ?,
@@ -187,11 +169,16 @@ module.exports = class Beneficiary {
                            estatus  = ?
                            WHERE idBeneficiario = ?`;
 
-                           const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, beneficiaryId];
+                           const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idBeneficiario];
+            const query2 = `UPDATE BeneficiarioDiscapacidades
+                            SET idDiscapacidad = ?
+                            WHERE idBeneficiario = ?`;
+                            const params2 = [idDiscapacidad, idBeneficiario]
                            const result = await database.execute(query, params);
-                           return result;
+                           const result2 = await database.execute(query2, params2);
+                           return (result && result2);
         } catch (err) {
-            console.error(`Error al actualizar beneficiario con id ${beneficiaryId}:`, err);
+            console.error(`Error al actualizar beneficiario con id ${idBeneficiario}:`, err);
             throw err;
         }
     }
@@ -248,7 +235,10 @@ module.exports = class Beneficiary {
     static async searchByName(searchTerm) {
         try {
             const query = `
-                SELECT * FROM Beneficiarios
+                SELECT Ben.*, LD.nombre AS discapacidad
+                FROM Beneficiarios Ben
+                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
                 WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
                 AND estatus = 1
             `;

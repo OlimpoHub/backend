@@ -12,18 +12,34 @@ async function getAllPb(req, res) {
 }
 
 // GET /productBatch/:id
-async function getPbById(req, res) {
+async function getOnePb(req, res) {
     try {
         const id = req.params.idProductBatch;
-        const productBatch = await ProductBatch.fetchById(id);
+        const productBatch = await ProductBatch.fetchByInventoryId(id);
         if (!productBatch || productBatch.length === 0) {
             res.status(404).json({ error: 'Product batch not found' });
+            return;
+        }
+        res.json(productBatch[0]);
+    } catch (err) {
+        console.error('Failure in getOnePb, error:', err);
+        res.status(500).json({ error: 'Failed to fetch product batch' });
+    }
+}
+
+// GET /productBatch/product/:id
+async function getPbById(req, res) {
+    try {
+        const id = req.params.idProduct;
+        const productBatch = await ProductBatch.fetchById(id);
+        if (!productBatch || productBatch.length === 0) {
+            res.status(404).json({ error: 'Product batches not found' });
             return;
         }
         res.json(productBatch);
     } catch (err) {
         console.error('Failure in getById, error:', err);
-        res.status(500).json({ error: 'Failed to fetch product batch' });
+        res.status(500).json({ error: 'Failed to fetch product batches' });
     }
 }
 
@@ -134,6 +150,7 @@ async function filterDatePb(req, res) {
 
 module.exports = {
     getAllPb,
+    getOnePb,
     getPbById,
     addPb,
     updatePb,

@@ -10,6 +10,8 @@ const supplyBatchRouter = require("./supplyBatch.routes")
 const productBatchRouter = require("./productBatch.routes")
 const productRoutes = require("./product.routes")
 const calendarRoutes = require('./calendar.routes');
+const qrRoutes = require('./qr.routes');
+
 
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
@@ -20,5 +22,7 @@ router.use("/workshop", workshopsRoutes);
 router.use("/productBatch", productBatchRouter);
 router.use("/product", productRoutes);
 router.use("/calendar", calendarRoutes);
+router.use("/qr", qrRoutes);
+
 
 module.exports = router;

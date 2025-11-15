@@ -267,3 +267,13 @@ exports.updatePassword = async (req, res) => {
         });
     }
 }
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.fetchAllUser();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+            
+    }
+}
