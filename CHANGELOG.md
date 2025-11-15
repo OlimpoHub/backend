@@ -1,6 +1,10 @@
 ## [0.1.0] - 13/11/2025
 
 ### Fixed
+- Fix the routes to match the frontend
+
+## [0.1.0] - 11/11/2025
+
 - Solved the issue that only returns one supply batch changed fixed to send more
 - Fix the search workshops in controllers.
 - Beneficiary querys (update and fetch)
