@@ -8,5 +8,6 @@ router.post("/refresh", user_controller.post_refresh);
 router.post('/recover-password', user_controller.recoverPassword);
 router.get('/verify-token', user_controller.verifyToken);
 router.post('/update-password', user_controller.updatePassword);
+router.get("/", user_controller.getAllUsers);
 
 module.exports = router;
