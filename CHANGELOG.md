@@ -1,6 +1,9 @@
 ## [0.1.0] - 16/11/2025
 - Disabilities List can now be fetched
 
+### Fixed
+ - Fix workshops fields for the new data base
+
 ## [0.1.0] - 13/11/2025
 
 ### Added
