@@ -1,3 +1,14 @@
+## [0.1.0] - 16/11/2025
+
+### Added
+- Disabilities List can now be fetched and access to
+
+## [0.1.0] - 13/11/2025
+
+### Added
+- DeleteWorkshop Backend Logic
+- DeleteWorkshop Back Sequence Diagram
+
 ## [0.1.0] - 13/11/2025
 
 ### Fixed
