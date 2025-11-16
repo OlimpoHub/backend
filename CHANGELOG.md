@@ -1,5 +1,11 @@
 ## [0.1.0] - 13/11/2025
 
+### Added
+- DeleteWorkshop Backend Logic
+- DeleteWorkshop Back Sequence Diagram
+
+## [0.1.0] - 13/11/2025
+
 ### Fixed
 - Lowercase in controller registerProduct error.
 - Image saved as a file in register product.
