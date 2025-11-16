@@ -98,18 +98,30 @@ module.exports = class Workshops {
         }
     }
 
-    static async changestatus(idTaller) {
+
+     // performs a soft delete by updating status = 0
+    static async delete(id) {
         try {
-            const query = `
-            UPDATE Taller
-            SET estatus = 0
-            WHERE idTaller = ?;
-            `;
-            const result = await db.execute(query, [idTaller]);
-            return result;
+
+        // run SQL query to set the workshop status to 0 
+        const result = await db.execute
+        (
+            `UPDATE Taller 
+            SET estatus = 0 
+            WHERE idTaller = ?`, 
+            [id]
+        );
+
+        // check if any row was affected (workshop found)
+        if (result.affectedRows === 0) return { success: false, message: "No workshop found with that ID." };
+
+        
+        return { success: true, message: "Workshop deleted successfully." };
         } catch (error) {
-            console.error("Error changestatus():", error);
-            throw error;
+        console.error("Error deleting workshop:", error);
+        
+        // rethrow the error to be handled by the controller
+        throw error;
         }
     }
     

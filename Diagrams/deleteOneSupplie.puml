@@ -11,11 +11,11 @@ deactivate Api
 
 activate supplies.routes
 
-supplies.routes -> supplies.controller :  deleteSupplie(request, response)
+supplies.routes -> supplies.controller :  deleteOneSupply(request, response)
 deactivate supplies.routes
 activate supplies.controller
 
-supplies.controller ->> supplies.model : deleteCollaborator(id)
+supplies.controller ->> supplies.model : delete(idInsumo)
 
 activate supplies.model
 
