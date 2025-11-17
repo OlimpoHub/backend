@@ -1,4 +1,10 @@
+// Load environment variables FIRST
+require('dotenv').config();
+
+// Then require your other modules
+const encryption = require('./utils/encryption');
 const express = require('express');
+
 const app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
