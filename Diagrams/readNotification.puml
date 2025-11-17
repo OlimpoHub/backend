@@ -1,0 +1,36 @@
+@startuml
+actor api
+boundary notifications.routes as routes
+control notifications.controller as controller
+entity notifications.model as model
+database elArca.sql as db
+
+activate api
+api -> routes: POST /notifications/read
+
+activate routes
+routes -> controller: readNotification(req, res)
+deactivate routes
+
+activate controller
+
+controller ->> model: readNotification(req.body.notificationID)
+activate model
+
+model ->> db: execute(\n"UPDATE NotificationesUsuario \n SET leido = TRUE, \n fechaLectura = ? \n WHERE idNotificacionesUsuario = ?"\n)
+
+activate db
+
+db -->> model: ok
+deactivate db
+
+model -->> controller: ok
+deactivate model
+
+controller -> api: response.status(202)
+
+deactivate controller
+
+deactivate api
+
+@enduml
