@@ -239,7 +239,7 @@ module.exports = class Beneficiary {
                 FROM Beneficiarios Ben
                 LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
                 LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-                WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
+                WHERE CONCAT(Ben.nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
                 AND estatus = 1
             `;
             const params = [`%${searchTerm}%`];
