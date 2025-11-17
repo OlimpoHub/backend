@@ -1,3 +1,9 @@
+## [0.1.0] - 17/11/2025
+
+### Added
+- Api endpoint supplies/update/:id created to modify one supply, the id is passed
+  through the route and the body by the front.
+
 ## [0.1.0] - 16/11/2025
 
 ### Updated
