@@ -4,7 +4,6 @@ exports.addWorkshops = async (request, response) => {
   try {
     const { 
       idTaller, 
-      idCapacitacion, 
       nombreTaller, 
       horaEntrada, 
       horaSalida, 
@@ -12,12 +11,12 @@ exports.addWorkshops = async (request, response) => {
       idUsuario,
       descripcion,
       fecha,
-      url
+      url,
+      videoCapacitacion
     } = request.body;
 
     const taller = new Workshops(
       idTaller || null,
-      idCapacitacion || null,
       nombreTaller || "",
       horaEntrada || "",
       horaSalida || "",
@@ -25,7 +24,8 @@ exports.addWorkshops = async (request, response) => {
       idUsuario || null,
       descripcion || "",
       fecha || "",
-      url || ""
+      url || "",
+      videoCapacitacion || ""
     );
 
     const result = await taller.save();
@@ -34,7 +34,6 @@ exports.addWorkshops = async (request, response) => {
       message: "Taller agregado correctamente",
       data: {
         idTaller: taller.idTaller,
-        idCapacitacion,
         nombreTaller,
         horaEntrada,
         horaSalida,
@@ -42,7 +41,8 @@ exports.addWorkshops = async (request, response) => {
         idUsuario,
         descripcion,
         fecha,
-        url
+        url,
+        videoCapacitacion
       }
     });
 
@@ -64,7 +64,8 @@ exports.modifyWorkshops = async (request, response) => {
       estatus, 
       descripcion, 
       fecha, 
-      url 
+      url,
+      videoCapacitacion
     } = request.body;
 
     const result = await Workshops.update(
@@ -75,7 +76,8 @@ exports.modifyWorkshops = async (request, response) => {
       estatus,
       descripcion,
       fecha,
-      url
+      url,
+      videoCapacitacion
     );
 
     response.status(200).json({
@@ -89,7 +91,8 @@ exports.modifyWorkshops = async (request, response) => {
           ...(estatus !== undefined && { estatus }),
           ...(descripcion && { descripcion }),
           ...(fecha && { fecha }),
-          ...(url && { url })
+          ...(url && { url }),
+          ...(videoCapacitacion && {videoCapacitacion})
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }
