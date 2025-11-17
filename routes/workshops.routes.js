@@ -11,7 +11,9 @@ router.get('/:idTaller', workshopsController.viewOneWorkshop);
 
 router.post('/modify/:idTaller', workshopsController.modifyWorkshops);
 
-router.put('/delete/:idTaller', workshopsController.deleteWorkshops);
+// Define a Post endpoint to delete a Workshop (US: Delete Workshop)
+router.post("/delete", workshopsController.deleteWorkshops);
+
 
 /* Get categories of workshops in horaEntrada*/
 router.get("/filter/data", workshopsController.getWorkshopsCategories);

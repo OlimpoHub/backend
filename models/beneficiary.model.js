@@ -184,33 +184,40 @@ module.exports = class Beneficiary {
     }
 
     // Filter beneficiaries by disability (list ordered by name)
-    static async filter(body = {}){
-        const filters = body.filter;
-        try{
-            let query = `
-            SELECT Ben.*, LD.nombre AS discapacidad
-            FROM Beneficiarios Ben
-            LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
-            LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-            WHERE estatus = 1
-            `;
-            const  params =[];
-            if (filters["disability"] && filters["disability"].length > 0) {
-                query += ` AND LD.nombre IN (${filters["disability"].map(() => '?').join(', ')})`;
-                params.push(...filters["disability"]);
-            }
+    static async filter(body = {}) {
+    console.log("Filter body:", body);
 
-            if (body.order){
-                query += ` ORDER BY Ben.nombre ${body.order}`;
-            }
-            const rows = await database.query(query, params);
-            return rows;
+    const filters = body.filters || {};  // <-- antes body.filter
+    const discapacidad = filters["Discapacidades"] || []; // <-- antes discapacidad
+
+    try {
+        let query = `
+        SELECT Ben.*, LD.nombre AS discapacidad
+        FROM Beneficiarios Ben
+        LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+        LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+        WHERE estatus = 1
+        `;
+
+        const params = [];
+
+        if (discapacidad.length > 0) {
+            query += ` AND LD.nombre IN (${discapacidad.map(() => '?').join(', ')})`;
+            params.push(...discapacidad);
         }
-        catch(error){
-            console.log("Error al obtener lista de beneficiarios", error);
-            throw error;
+
+        if (body.order) {
+            query += ` ORDER BY Ben.nombre ${body.order}`;
         }
+
+        const rows = await database.query(query, params);
+        return rows;
+    } catch (error) {
+        console.log("Error al obtener lista de beneficiarios", error);
+        throw error;
     }
+}
+
 
     // Get categories on the disabilities for filtering
     static async getCategories(){
@@ -219,8 +226,11 @@ module.exports = class Beneficiary {
                 `
                 SELECT DISTINCT nombre as discapacidad
                 FROM ListaDiscapacidades
+                ORDER BY nombre ASC
                 `
             );
+
+            console.log("Discapacidades:", discapacidad);
 
             return {
                     discapacidad: discapacidad.map(e => e.discapacidad),
@@ -239,7 +249,7 @@ module.exports = class Beneficiary {
                 FROM Beneficiarios Ben
                 LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
                 LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-                WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
+                WHERE CONCAT(Ben.nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
                 AND estatus = 1
             `;
             const params = [`%${searchTerm}%`];

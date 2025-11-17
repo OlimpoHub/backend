@@ -4,7 +4,6 @@ exports.addWorkshops = async (request, response) => {
   try {
     const { 
       idTaller, 
-      idCapacitacion, 
       nombreTaller, 
       horaEntrada, 
       horaSalida, 
@@ -12,12 +11,12 @@ exports.addWorkshops = async (request, response) => {
       idUsuario,
       descripcion,
       fecha,
-      url
+      url,
+      videoCapacitacion
     } = request.body;
 
     const taller = new Workshops(
       idTaller || null,
-      idCapacitacion || null,
       nombreTaller || "",
       horaEntrada || "",
       horaSalida || "",
@@ -25,7 +24,8 @@ exports.addWorkshops = async (request, response) => {
       idUsuario || null,
       descripcion || "",
       fecha || "",
-      url || ""
+      url || "",
+      videoCapacitacion || ""
     );
 
     const result = await taller.save();
@@ -34,7 +34,6 @@ exports.addWorkshops = async (request, response) => {
       message: "Taller agregado correctamente",
       data: {
         idTaller: taller.idTaller,
-        idCapacitacion,
         nombreTaller,
         horaEntrada,
         horaSalida,
@@ -42,7 +41,8 @@ exports.addWorkshops = async (request, response) => {
         idUsuario,
         descripcion,
         fecha,
-        url
+        url,
+        videoCapacitacion
       }
     });
 
@@ -64,7 +64,8 @@ exports.modifyWorkshops = async (request, response) => {
       estatus, 
       descripcion, 
       fecha, 
-      url 
+      url,
+      videoCapacitacion
     } = request.body;
 
     const result = await Workshops.update(
@@ -75,7 +76,8 @@ exports.modifyWorkshops = async (request, response) => {
       estatus,
       descripcion,
       fecha,
-      url
+      url,
+      videoCapacitacion
     );
 
     response.status(200).json({
@@ -89,7 +91,8 @@ exports.modifyWorkshops = async (request, response) => {
           ...(estatus !== undefined && { estatus }),
           ...(descripcion && { descripcion }),
           ...(fecha && { fecha }),
-          ...(url && { url })
+          ...(url && { url }),
+          ...(videoCapacitacion && {videoCapacitacion})
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }
@@ -103,23 +106,30 @@ exports.modifyWorkshops = async (request, response) => {
   }
 }
 
+
+// softdelete a Workshop (US: delete workshop)
 exports.deleteWorkshops = async (request, response) => {
-  try {
-    const { idTaller } = request.params;
-    const result = await Workshops.changestatus(idTaller);
+    try {
+        // get the workshop id from request body
+        const idTaller = request.body.id
 
-    if (!result || result.affectedRows === 0) {
-      return response.status(404).json({ message: "Taller no encontrado." });
+        // call the model method to delete the workshop
+        const result = await Workshops.delete(idTaller);
+
+        // send 200 if deleted, 404 if not found
+        response.status(result.success ? 200:404).json(result)
+    } catch (error) {
+        console.error()
+
+        // return 500 internal server error response
+        response.status(500).json({
+            succes: false,
+            message: "Failed to delete a workshop", 
+            error,
+        });
     }
-
-    return response.status(200).json({
-      affectedRows: result.affectedRows
-    });
-
-  } catch (error) {
-    return response.status(500).json({ message: "Error interno del servidor." });
-  }
 };
+
 
 exports.viewWorkshops = async (request, response) => {
     try{

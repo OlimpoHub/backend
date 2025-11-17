@@ -1,3 +1,19 @@
+## [0.1.0] - 16/11/2025
+
+### Updated
+- Updated query for filtering and ordering beneficiaries
+- Disabilities List can now be fetched
+
+### Fixed
+ - Fix workshops fields for the new data base
+ - Fixed model for search beneficiaries
+
+## [0.1.0] - 13/11/2025
+
+### Added
+- DeleteWorkshop Backend Logic
+- DeleteWorkshop Back Sequence Diagram
+
 ## [0.1.0] - 13/11/2025
 
 ### Fixed
