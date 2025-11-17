@@ -1,4 +1,7 @@
 ## [0.1.0] - 16/11/2025
+
+### Updated
+- Updated query for filtering and ordering beneficiaries
 - Disabilities List can now be fetched
 
 ### Fixed
