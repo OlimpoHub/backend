@@ -108,16 +108,20 @@ module.exports = class Supplies {
             // Get all unique categories
             const categories = await database.query(
                 `SELECT DISTINCT idCategoria, descripcion 
-                FROM Categoria`
+                FROM Categoria
+                ORDER BY descripcion ASC`
             );
             // Get all unique measures
             const measures = await database.query(
-                `SELECT DISTINCT unidadMedida FROM Insumo`
+                `SELECT DISTINCT unidadMedida 
+                FROM Insumo
+                ORDER BY unidadMedida ASC`
             );
             // Get all unique workshops
             const workshops = await database.query(
                 `SELECT DISTINCT idTaller, nombreTaller 
-                FROM Taller`
+                FROM Taller
+                ORDER BY nombreTaller ASC`
             );
             // Return simplified arrays with raw values
             console.log("ENTRO AL GET FILTERS DATA");

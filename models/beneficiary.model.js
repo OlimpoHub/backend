@@ -226,6 +226,7 @@ module.exports = class Beneficiary {
                 `
                 SELECT DISTINCT nombre as discapacidad
                 FROM ListaDiscapacidades
+                ORDER BY nombre ASC
                 `
             );
 

@@ -1,3 +1,8 @@
+## [0.1.0] - 16/11/2025
+
+### Updated
+- Updated query for filtering and ordering beneficiaries
+
 ## [0.1.0] - 13/11/2025
 
 ### Added
