@@ -76,16 +76,15 @@ exports.updateProduct = async (request, response) => {
     try {        
         const id = request.params.idProduct;
         
-        const idTaller = await Workshops.getId(request.body.nombreTaller); 
-        const idCategoria = await Category.getId(request.body.Categoria);
+        const imagen = request.file ? request.file.path : request.body.image;
         
         const productData = {
-            idTaller: idTaller,
+            idTaller: request.body.idTaller,
             Nombre: request.body.Nombre,
             PrecioUnitario: request.body.PrecioUnitario,
-            idCategoria: idCategoria,
+            idCategoria: request.body.idCategoria,
             Descripcion: request.body.Descripcion,
-            imagen: request.body.imagen,
+            imagen: imagen,
             Disponible: request.body.Disponible,
         };
 
