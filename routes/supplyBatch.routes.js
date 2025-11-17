@@ -26,10 +26,10 @@ router.get("/:idInsumo", supplyBatchController.getOneSupplyBatch);
 router.post("/addBatch", supplyBatchController.addSupply);
 
 /**
- * DELETE /:idInventario
- * Deletes a specific supply batch by its inventory ID.
+ * DELETE
+ * Deletes a specific supply batch by its expiration date.
  */
-router.delete("/:idInventario", supplyBatchController.deleteSupplyBatch);
+router.post("/delete", supplyBatchController.deleteSupplyBatch);
 
 // Define a GET endpoint to retrieve supply batches expiration date and acquisition type
 router.get("/filter/data", supplyBatchController.getFilterData);
