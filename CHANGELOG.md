@@ -4,6 +4,7 @@
 ### Fixed
  - Fix workshops fields for the new data base
  - Fixed model for search beneficiaries
+ - Fixewd model for viewWorkshops
 
 ## [0.1.0] - 13/11/2025
 
