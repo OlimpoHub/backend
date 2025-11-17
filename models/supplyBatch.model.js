@@ -109,24 +109,29 @@ module.exports = class SupplyBatch {
     }
 
     /**
-     * Deletes a supply batch by its inventory ID.
+     * Deletes all inventory records for a specific supply and expiration date (batch).
+     * @param {string} supplyId - The supply ID
+     * @param {string} expirationDate - The expiration date that identifies the batch
      */
-    static async delete(inventoryId) {
+    static async delete(supplyId, expirationDate) {
         try {
             const result = await database.execute(
-                `DELETE FROM InventarioInsumos WHERE idInventario = ?`,
-                [inventoryId]
+                `DELETE FROM InventarioInsumos 
+                WHERE idInsumo = ? AND FechaCaducidad = ?`,
+                [supplyId, expirationDate]
             );
 
-            if (result.affectedRows === 0)
+            if (result.affectedRows === 0) {
                 return {
                     success: false,
-                    message: "No supply batch found with that ID.",
+                    message: "No supply batch found with that supply ID and expiration date.",
                 };
+            }
 
             return {
                 success: true,
-                message: "Supply batch deleted successfully.",
+                message: `Supply batch deleted successfully. ${result.affectedRows} record(s) removed.`,
+                deletedCount: result.affectedRows
             };
         } catch (error) {
             console.error("Error deleting supply batch:", error);

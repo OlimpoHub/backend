@@ -225,4 +225,33 @@ module.exports = class Supplies {
             throw err;
         }
     }
+
+    // Updates one supply gives its id and the new supply data.
+    static async updateOneSupply(idSupply, supply) {
+        try {
+            const result = await database.query(
+                `UPDATE Insumo i
+                SET idTaller = ?,
+                    nombre = ?,
+                    unidadMedida = ?,
+                    idCategoria = ?,
+                    imagenInsumo = ?,
+                    status = ?
+                WHERE i.idInsumo = ?`,
+                [
+                    supply.idTaller,
+                    supply.nombre,
+                    supply.unidadMedida,
+                    supply.idCategoria,
+                    supply.imagenInsumo,
+                    supply.status,
+                    idSupply
+                ]);
+            return result;
+
+        } catch(err) {
+            console.error("Error updating supply:", err);
+            throw err;
+        }
+    }
 };

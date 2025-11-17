@@ -85,18 +85,17 @@ exports.addSupply = async (request, response) => {
 };
 
 /**
- * Deletes a specific supply batch record from the inventory.
+ * Deletes all supply batch records with a specific expiration date for a given supply.
  */
 exports.deleteSupplyBatch = async (request, response) => {
     try {
-        const idInventario = request.params.idInventario;
-        const result = await SupplyBatch.delete(idInventario);
+        const { idInsumo, fechaCaducidad } = request.body;
+        const result = await SupplyBatch.delete(idInsumo, fechaCaducidad);
         response.status(result.success ? 200 : 404).json(result);
     } catch (error) {
-        console.error("Error deleting supply batch: ", error);
         response.status(500).json({
             success: false,
-            message: "Failed to delete a supply batch",
+            message: "Failed to delete supply batch",
             error,
         });
     }
