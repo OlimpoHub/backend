@@ -28,6 +28,8 @@ router.post("/filter", suppliesController.filterOrderSupplies);
 // Define a GET enpoint to get workshop and supplies
 router.get("/workshop/category", suppliesController.getWorkshopAndSupplies)
 
+// Define a PUT endpoint to update one supply
+router.put("/update/:idSupply", upload.single("imagenInsumo"), suppliesController.updateOneSupply)
 
 // Export the router to be used in the main routes file
 module.exports = router;
