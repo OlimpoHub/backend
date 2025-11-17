@@ -14,7 +14,7 @@ deactivate routes
 
 activate controller
 
-controller ->> model: fetchNewNotifications(req.body.userID)
+controller ->> model: fetchNewNotifications(req.body.userId)
 activate model
 
 model ->> db: execute(\n"SELECT n.*, nu.* \n FROM NotificacionesUsuario nu \n INNER JOIN Notificaciones n ON n.idNotificacion = nu.idNotificacion \n WHERE nu.idUsuario = ? \n AND nu.leido = FALSE"\n)
