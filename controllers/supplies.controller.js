@@ -111,3 +111,32 @@ exports.getWorkshopAndSupplies = async (req, res) => {
             });
     }
 }
+
+// Gathers the idSupply from the route and the other parameters from the body
+// sent in the Front, and updates the information of the supply using its id.
+exports.updateOneSupply = async (req, res) => {
+    try {
+        const idSupply = req.params.idSupply;
+        const idWorkshop = req.body.idTaller ?? req.body.idWorkshop;
+        const name = req.body.nombre ?? req.body.name;
+        const measureUnit = req.body.unidadMedida ?? req.body.measureUnit;
+        const idCategory = req.body.idCategoria ?? req.body.idCategory;
+        const imageSupply = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
+        const status = req.body.status;
+
+        const supply = new Supplies(
+            idWorkshop,
+            name,
+            measureUnit,
+            idCategory,
+            imageSupply,
+            status
+        )
+        
+        const result = Supplies.updateOneSupply(idSupply, supply);
+        res.status(200).json({ message: "Supply updated successfully." });
+    } catch(err) {
+        console.log("Error updating a supply: ", err);
+        res.status(500).json({ message: "Failed to update a supply." });
+    }
+} 
