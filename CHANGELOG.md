@@ -3,6 +3,7 @@
 ### Added
 - Api endpoint supplies/update/:id created to modify one supply, the id is passed
   through the route and the body by the front.
+- Fixes for Beneficiary Registration View: variable wrong named, error not being called
 
 
 ### Updated

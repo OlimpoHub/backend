@@ -42,6 +42,7 @@ module.exports = class Beneficiary {
     // Function to create new beneficiary BEN-001
     static async registerBeneficiary(data) {
         try {
+            console.log(data);
 
             if (await this.exists(data)) {
                 return {
@@ -81,7 +82,7 @@ module.exports = class Beneficiary {
 
 
             const params2 = [
-                data.idDiscapacidad,
+                data.discapacidad,
                 data.nombre,
                 data.apellidoPaterno,
                 data.apellidoMaterno,
@@ -92,8 +93,7 @@ module.exports = class Beneficiary {
             const result2 = await database.query(sql2, params2);
             return {
                 success: true,
-                insertId: result2.insertId,
-                message: "Creado con éxito"
+                message: "Creado con éxito",
             };
         } catch (error) {
             console.error("Error al registrar beneficiario:", error);
@@ -101,7 +101,6 @@ module.exports = class Beneficiary {
             return {
                 success: false,
                 message: "Error interno del servidor",
-                error
             };
         }
     }
