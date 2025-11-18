@@ -1,3 +1,7 @@
+## [0.1.0] - 18/11/2025
+### Updated
+- Modify calendar.model.js to match the new database fields
+
 ## [0.1.0] - 17/11/2025
 
 ### Added
