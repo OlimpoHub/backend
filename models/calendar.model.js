@@ -30,8 +30,9 @@ module.exports = class Calendar {
                 Taller.Fecha 
             FROM Taller 
             INNER JOIN Usuarios 
-                ON Taller.idUsuario = Usuarios.idUsuario;
-            `);
+                ON Taller.idUsuario = Usuarios.idUsuario 
+            WHERE Usuarios.idUsuario = ?;
+            `,[idUsuario]);
             console.log("ROWS:", rows);
             return rows;
         } catch (err) {
