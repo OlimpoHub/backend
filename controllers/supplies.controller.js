@@ -59,6 +59,14 @@ exports.addOneSupply = async (req, res) => {
         const idCategoria = req.body.idCategoria ?? req.body.idCategory;
         const imagenInsumo = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
 
+        // Check if supply name already exists (case-insensitive)
+        const nameExists = await Supplies.checkSupplyNameExists(nombre);
+        if (nameExists) {
+            return res
+                .status(400)
+                .json({ message: "A supply with this name already exists." });
+        }
+
         const supply = new Supplies(
             idTaller,
             nombre,
@@ -123,6 +131,14 @@ exports.updateOneSupply = async (req, res) => {
         const idCategory = req.body.idCategoria ?? req.body.idCategory;
         const imageSupply = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
         const status = req.body.status;
+
+        // Check if supply name already exists (case-insensitive), excluding the current supply
+        const nameExists = await Supplies.checkSupplyNameExists(name, idSupply);
+        if (nameExists) {
+            return res
+                .status(400)
+                .json({ message: "A supply with this name already exists." });
+        }
 
         const supply = new Supplies(
             idWorkshop,
