@@ -226,6 +226,26 @@ module.exports = class Supplies {
         }
     }
 
+    // Check if a supply name already exists (case-insensitive)
+    static async checkSupplyNameExists(name) {
+        try {
+            let query = `
+                SELECT COUNT(*) 
+                    AS count 
+                FROM Insumo 
+                WHERE LOWER(nombre) = LOWER(?)`;
+            const params = [name];
+            
+            const result = await database.query(query, params);
+            
+            // Returns true if name exists, false otherwise
+            return result[0].count > 0; 
+        } catch(err) {
+            console.error("Error checking supply name:", err);
+            throw err;
+        }
+    }
+
     // Updates one supply gives its id and the new supply data.
     static async updateOneSupply(idSupply, supply) {
         try {

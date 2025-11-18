@@ -1,3 +1,9 @@
+## [0.1.0] - 18/11/2025
+
+### Fixed
+- AddOneSupply and UpdateOneSupply modified to not allow supplies that has a name 
+  already registered in the db
+
 ## [0.1.0] - 17/11/2025
 
 ### Added
