@@ -1,8 +1,3 @@
-// Load environment variables FIRST
-require('dotenv').config();
-
-// Then require your other modules
-const encryption = require('./utils/encryption');
 const express = require('express');
 
 const app = express();
