@@ -15,20 +15,18 @@ const pool = mariadb.createPool({
   acquireTimeout: 10000
 });
 
+// Probar conexión
+(async () => {
+  try {
+    const conn = await pool.getConnection();
+    console.log("✅ Conexión a la base de datos establecida");
+    conn.release();
+  } catch (err) {
+    console.error("❌ Error conectando a la base de datos:", err);
+  }
+})();
+
 // Exportar el pool para usarlo en otros archivos
 module.exports = pool;
 
-// // TEST DE CONEXIÓN (opcional)
-// (async () => {
-//   try {
-//     const conn = await pool.getConnection();
-//     console.log('✅ Conexión exitosa a la base de datos');
 
-//     const rows = await conn.query('SELECT * FROM Usuarios');
-//     console.log('Test:', rows);
-
-//     conn.release();
-//   } catch (err) {
-//     console.error('❌ Error al conectar a la base de datos:', err);
-//   }
-// })();
