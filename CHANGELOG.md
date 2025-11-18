@@ -1,3 +1,11 @@
+## [0.1.0] - 18/11/2025
+
+### Added
+- Sequence diagram for FRONT register product and modify product
+
+### Fixed
+- Change modify product controller
+
 ## [0.1.0] - 16/11/2025
 
 ### Updated
