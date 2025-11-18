@@ -6,6 +6,17 @@
 ### Fixed
 - Change modify product controller
 
+## [0.1.0] - 17/11/2025
+
+### Added
+- Api endpoint supplies/update/:id created to modify one supply, the id is passed
+  through the route and the body by the front.
+- Fixes for Beneficiary Registration View: variable wrong named, error not being called
+
+
+### Updated
+- Delete supply batch functionality
+
 ## [0.1.0] - 16/11/2025
 
 ### Updated
@@ -15,6 +26,7 @@
 ### Fixed
  - Fix workshops fields for the new data base
  - Fixed model for search beneficiaries
+ - Fixewd model for viewWorkshops
 
 ## [0.1.0] - 13/11/2025
 
