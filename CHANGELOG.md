@@ -8,6 +8,7 @@
 
 ### Fixed
  - Model for modify supply batch
+ - Calendar logic for daily recurrence
 
 ## [0.1.0] - 18/11/2025
 
