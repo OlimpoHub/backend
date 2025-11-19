@@ -47,7 +47,7 @@ module.exports = class Beneficiary {
             if (await this.exists(data)) {
                 return {
                 success: false,
-                message: "Beneficiario ya existente",
+                message: "El Beneficiario ya existe",
             };
             }
 

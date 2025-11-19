@@ -156,18 +156,28 @@ exports.viewOneWorkshop = async (request, response) => {
 
 exports.searchWorkshops = async (request, response) => {
     try {
-        const { nameWorkshop } = request.query;
+        let { nameWorkshop } = request.query;
+        if (nameWorkshop) {
+            nameWorkshop = nameWorkshop
+                .normalize("NFD")         
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
+        }
 
         const workshops = await Workshops.findWorkshop(nameWorkshop);
 
-        return response.status(200).json(Array.isArray(workshops) ? workshops : []);
-        
+        return response.status(200).json(
+            Array.isArray(workshops) ? workshops : []
+        );
+
     } catch (error) {
         return response.status(500).json({
             error: error.message
         });
     }
 };
+
 
 
 /* Controller function to get all diferent results by date or entry hour*/
