@@ -1,5 +1,6 @@
 const Notifications = require("../models/notifications.model.js");
 
+// GET: Returns a list of the user's notifications
 exports.fetchNotifications = async (req, res) => {
     let userId = req.query.userId;
 
@@ -8,6 +9,7 @@ exports.fetchNotifications = async (req, res) => {
     res.status(200).json(notifications);
 }
 
+// GET: Returns the amount of unread notifications
 exports.fetchNewNotifications = async (req, res) => {
     let userId = req.query.userId;
 
@@ -18,6 +20,7 @@ exports.fetchNewNotifications = async (req, res) => {
     });
 }
 
+// POST: Marks a notifiction as read
 exports.readNotification = async (req, res) => {
     let notificationId = req.body.notificationId;
 
