@@ -53,14 +53,27 @@ exports.getFilterData = async (request, response) => {
 
 exports.addOneSupply = async (req, res) => {
     try {
-        console.log(req.body);
+        const idTaller = req.body.idTaller ?? req.body.idWorkshop;
+        const nombre = req.body.nombre ?? req.body.name;
+        const unidadMedida = req.body.unidadMedida ?? req.body.measureUnit;
+        const idCategoria = req.body.idCategoria ?? req.body.idCategory;
+        const imagenInsumo = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
+
+        // Check if supply name already exists (case-insensitive)
+        const nameExists = await Supplies.checkSupplyNameExists(nombre);
+        if (nameExists) {
+            return res
+                .status(400)
+                .json({ message: "A supply with this name already exists." });
+        }
+
         const supply = new Supplies(
-            req.body.idTaller,
-            req.body.nombre,
-            req.body.unidadMedida,
-            req.body.idCategoria,
-            req.body.imagenInsumo,
-            req.body.status
+            idTaller,
+            nombre,
+            unidadMedida,
+            idCategoria,
+            imagenInsumo,
+            req.body.status || 1
         );
 
         const result = await supply.save();
@@ -106,3 +119,40 @@ exports.getWorkshopAndSupplies = async (req, res) => {
             });
     }
 }
+
+// Gathers the idSupply from the route and the other parameters from the body
+// sent in the Front, and updates the information of the supply using its id.
+exports.updateOneSupply = async (req, res) => {
+    try {
+        const idSupply = req.params.idSupply;
+        const idWorkshop = req.body.idTaller ?? req.body.idWorkshop;
+        const name = req.body.nombre ?? req.body.name;
+        const measureUnit = req.body.unidadMedida ?? req.body.measureUnit;
+        const idCategory = req.body.idCategoria ?? req.body.idCategory;
+        const imageSupply = req.file ? req.file.path : (req.body.imagenInsumo || req.body.image);
+        const status = req.body.status;
+
+        // Check if supply name already exists (case-insensitive), excluding the current supply
+        const nameExists = await Supplies.checkSupplyNameExists(name, idSupply);
+        if (nameExists) {
+            return res
+                .status(400)
+                .json({ message: "A supply with this name already exists." });
+        }
+
+        const supply = new Supplies(
+            idWorkshop,
+            name,
+            measureUnit,
+            idCategory,
+            imageSupply,
+            status
+        )
+        
+        const result = Supplies.updateOneSupply(idSupply, supply);
+        res.status(200).json({ message: "Supply updated successfully." });
+    } catch(err) {
+        console.log("Error updating a supply: ", err);
+        res.status(500).json({ message: "Failed to update a supply." });
+    }
+} 
