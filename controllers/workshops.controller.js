@@ -147,6 +147,7 @@ exports.viewOneWorkshop = async (request, response) => {
         const id = request.params.idTaller;
         const workshop = await Workshops.getOneWorkshop(id);
         response.status(200).json(workshop);
+        console.log(workshop);
     } catch(error) {
         console.error("Error fetching workshop: ", error);
         response.status(500).json({message: "Failed to fetch workshop"});
