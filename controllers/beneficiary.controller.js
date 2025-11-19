@@ -67,12 +67,18 @@ exports.beneficiariesList = async (req, res) => {
 
 exports.postBeneficiary = async (req, res) => {
     try {
-        const data = req.body
+        const data = req.body;
 
         const result = await Beneficiary.registerBeneficiary(data);
-        res.status(200).json(result.message);
-    } catch {
-        res.status(500).json({ message: 'Failed to fetch Beneficiary data. '});
+        
+        res.status(200).json(result);
+        
+    } catch (error) {
+        console.error("Error en postBeneficiary:", error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed to fetch Beneficiary data.'
+        });
     }
 };
 
