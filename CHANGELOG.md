@@ -1,3 +1,8 @@
+## [0.1.0] - 19/11/2025
+
+### Fixed
+- Fixed search bar issues in workshops.
+
 ## [0.1.0] - 18/11/2025
 
 ### Added

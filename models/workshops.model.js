@@ -208,10 +208,26 @@ module.exports = class Workshops {
                     t.URL,
                     t.videoCapacitacion
                 FROM Taller t
-                WHERE t.estatus = 1 AND t.nombreTaller LIKE ?;
+                WHERE t.estatus = 1 
+                AND LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[áàäâ]', 'a'),
+                    '[éèëê]', 'e')
+                ) LIKE LOWER(?)
+                OR LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[íìïî]', 'i'),
+                    '[óòöô]', 'o')
+                ) LIKE LOWER(?)
+                OR LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[úùüû]', 'u'),
+                    '[ñ]', 'n')
+                ) LIKE LOWER(?);
             `;
             
-            const [rows] = await db.execute(query, [`%${nameWorkshop}%`]);
+            const searchTerm = `%${nameWorkshop}%`;
+            const [rows] = await db.execute(query, [searchTerm, searchTerm, searchTerm]);
             return rows;
         } catch (error) {
             console.error("Error findWorkshop:", error);
