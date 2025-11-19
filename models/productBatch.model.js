@@ -265,4 +265,58 @@ module.exports = class ProductBatch {
         }
     }
 
+    static async filterMultiple(filters = {}, order = "ASC") {
+        try {
+            const conditions = [];
+            const values = [];
+
+            // Filtrar por nombre del producto
+            if (filters.nombre && Array.isArray(filters.nombre) && filters.nombre.length) {
+                conditions.push("p.Nombre IN (?)");
+                values.push(filters.nombre);
+            }
+
+            // Filtrar por precio de venta
+            if (filters.precioVenta && Array.isArray(filters.precioVenta) && filters.precioVenta.length) {
+                conditions.push("inv.PrecioVenta IN (?)");
+                values.push(filters.precioVenta.map(Number)); // asegurar números
+            }
+
+            // Filtrar por cantidad producida
+            if (filters.cantidadProducida && Array.isArray(filters.cantidadProducida) && filters.cantidadProducida.length) {
+                conditions.push("inv.CantidadProducida IN (?)");
+                values.push(filters.cantidadProducida.map(Number));
+            }
+
+            // Filtrar por fecha de creación
+            if (filters.fechaRealizacion && Array.isArray(filters.fechaRealizacion) && filters.fechaRealizacion.length) {
+                conditions.push("inv.FechaRealizacion IN (?)");
+                values.push(filters.fechaRealizacion);
+            }
+
+            // Construcción del WHERE
+            const whereClause = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
+
+            // Ordenamiento por nombre del producto
+            const dir = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+            const query = `
+                SELECT p.Nombre, p.imagen, p.PrecioUnitario,
+                    p.idProducto, p.Descripcion, p.Disponible,
+                    inv.idInventario, inv.CantidadProducida,
+                    inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
+                FROM Productos p
+                JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
+                ${whereClause}
+                ORDER BY p.Nombre ${dir}
+            `;
+
+            const rows = await database.query(query, values);
+            return rows;
+        } catch (err) {
+            console.error("Error filtering by multiple criteria", err);
+            throw err;
+        }
+    }
+
 }

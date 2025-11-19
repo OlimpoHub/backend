@@ -42,6 +42,7 @@ router.get("/filter/price", productBatchController.filterPricePb);
 router.get("/filter/disponible", productBatchController.filterDisponiblePb);
 router.get("/filter/date", productBatchController.filterDatePb);
 
+router.post("/filter", productBatchController.filterPb);
 
 /**
  * GET /productBatch/:idProductBatch

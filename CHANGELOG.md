@@ -1,12 +1,71 @@
-## [0.1.0] - 12/11/2025
-
-### Fixed
-- Fix the undefind response when the supply doesnt contain a supply batch in the 
-  supply batch model
+## [0.1.0] - 17/11/2025
 
 ### Added
+- Api endpoint supplies/update/:id created to modify one supply, the id is passed
+  through the route and the body by the front.
+- Fixes for Beneficiary Registration View: variable wrong named, error not being called
+- Added the function filterMultiple for a better method of filtration in the app
+
+
+### Updated
+- Delete supply batch functionality
+
+## [0.1.0] - 16/11/2025
+
+### Updated
+- Updated query for filtering and ordering beneficiaries
+- Disabilities List can now be fetched
+
+### Fixed
+ - Fix workshops fields for the new data base
+ - Fixed model for search beneficiaries
+ - Fixewd model for viewWorkshops
+
+## [0.1.0] - 13/11/2025
+
+### Added
+- DeleteWorkshop Backend Logic
+- DeleteWorkshop Back Sequence Diagram
+
+## [0.1.0] - 13/11/2025
+
+### Fixed
+- Lowercase in controller registerProduct error.
+- Image saved as a file in register product.
+- Fix the routes to match the frontend
+
+## [0.1.0] - 11/11/2025
+
+### Fixed
+- Solved the issue that only returns one supply batch changed fixed to send more
+- Fix the search workshops in controllers.
+- Beneficiary querys (update and fetch)
+- Deleted unused functionalities on beneficiary
+
+## [0.1.0] - 12/11/2025
+
+### Changed
+- .gitignore to ignore all the content from uploads/ however track the directory
+  anayway so there is no problems
+
+### Fixed
+- Fix the undefined request when the supply add information was received from the
+  frontend
+- Fix the undefined request when the supply doesnt contain a supply batch in the 
+  supply batch model
+- Fix the model and controller for a better connection with Front
+- Fixed a problem with FetchAll ProductBatches
+
+### Added
+- Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
+- Fetch all users
+- Implemented routes, controllers and model for the QR Code generation & validation.
+- Add funtion to search product
+- Add funtion to order product
+- Add funtion to remove product
+- Add funtion to filter product
 
 ## [0.1.0] - 11/11/2025
 
