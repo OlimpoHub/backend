@@ -5,9 +5,18 @@
 
 ### Fixed
 - Change modify product controller
+- Refactor the query for filter supply batch
+- AddOneSupply and UpdateOneSupply modified to not allow supplies that has a name 
+  already registered in the db
+- Deleted an extra parameter in update supply
+- Added an excluded ID in the function to check the name to be able to update a
+  supply
+- Do the checkSupplyNameExists case sensitive
 
 ## [0.1.0] - 17/11/2025
 
+### Fixed
+ - Fix product model
 ### Added
 - Api endpoint supplies/update/:id created to modify one supply, the id is passed
   through the route and the body by the front.
