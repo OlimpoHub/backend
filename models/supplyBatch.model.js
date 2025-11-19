@@ -255,6 +255,11 @@ module.exports = class SupplyBatch {
         boughtDate
     ) {
         try {
+            const [dayC, monthC, yearC] = boughtDate.split("/");
+            const [dayE, monthE, yearE] = expirationDate.split("/");
+
+            const fechaCompraSQL = `${yearC}-${monthC}-${dayC}`;
+            const fechaCaducidadSQL = `${yearE}-${monthE}-${dayE}`;
             const result = await database.query(
                 `
                 UPDATE InventarioInsumos
@@ -268,8 +273,8 @@ module.exports = class SupplyBatch {
                 [
                     supplyId,
                     quantity,
-                    boughtDate,
-                    expirationDate,
+                    fechaCompraSQL,
+                    fechaCaducidadSQL,
                     acquisition,
                     idSupplyBatch,
                 ]
@@ -283,6 +288,82 @@ module.exports = class SupplyBatch {
         } catch (error) {
             console.error("Error modifySupplyBatch():", error);
             throw error;
+        }
+    }
+
+    static async getSupplyBatchOne(idSupplyBatch) {
+        try {
+            // Only select the fields required by the ModifySupplyBatch screen.
+            const rows = await database.query(
+                `SELECT
+                    inv.idInventario,
+                    inv.idInsumo,
+                    inv.CantidadActual,
+                    inv.FechaActualizacion,
+                    inv.FechaCaducidad,
+                    inv.idTipoAdquisicion
+                FROM InventarioInsumos inv
+                WHERE inv.idInventario = ?`,
+                [idSupplyBatch]
+            );
+
+            if (Array.isArray(rows)) {
+                return rows.length > 0 ? rows[0] : null;
+            }
+            return rows || null;
+        } catch (err) {
+            console.error("Error getSupplyBatchOne():", err);
+            throw err;
+        }
+    }
+
+    static async getSupplyBatchDates(expirationDate, idInsumo) {
+        try {
+            // Normalize incoming expirationDate to SQL format yyyy-MM-dd
+            let fechaCaducidadSQL = expirationDate;
+
+            if (!fechaCaducidadSQL) {
+                throw new Error("expirationDate is required");
+            }
+
+            // Handle ISO datetime (2025-11-21T06:00:00.000Z) -> take date part
+            if (fechaCaducidadSQL.includes('T')) {
+                fechaCaducidadSQL = fechaCaducidadSQL.split('T')[0];
+            }
+
+            // If format is dd/MM/yyyy, convert to yyyy-MM-dd
+            if (fechaCaducidadSQL.includes('/')) {
+                const parts = fechaCaducidadSQL.split('/');
+                if (parts.length === 3) {
+                    const [d, m, y] = parts;
+                    fechaCaducidadSQL = `${y}-${m}-${d}`;
+                }
+            }
+
+            // If it's already in yyyy-MM-dd keep as is. Basic validation could be added.
+
+            // Select and normalize the fields returned so frontend DTO mapping is straightforward.
+            // Aliases: id, quantity, expirationDate (dd/MM/yyyy), adquisitionType, boughtDate (dd/MM/yyyy), measure
+            const rows = await database.query(
+                `SELECT
+                    inv.idInventario AS id,
+                    inv.CantidadActual AS quantity,
+                    DATE_FORMAT(inv.FechaCaducidad, '%d/%m/%Y') AS expirationDate,
+                    ta.Descripcion AS adquisitionType,
+                    DATE_FORMAT(inv.FechaActualizacion, '%d/%m/%Y') AS boughtDate,
+                    i.unidadMedida AS measure
+                FROM InventarioInsumos inv
+                LEFT JOIN Insumo i ON inv.idInsumo = i.idInsumo
+                LEFT JOIN TipoAdquisicion ta ON inv.idTipoAdquisicion = ta.idTipoAdquisicion
+                WHERE inv.FechaCaducidad = ?
+                AND inv.idInsumo = ?`,
+                [fechaCaducidadSQL, idInsumo]
+            );
+
+            return rows;
+        } catch (err) {
+            console.error("Error getSupplyBatchDates():", err);
+            throw err;
         }
     }
 };
