@@ -38,7 +38,7 @@ router.delete("/:idProduct", productController.deleteProduct);
 
 //GET: Modify product
 router.get("/:idProduct/update", productController.getOneProduct);
-router.put("/:idProduct/update", productController.updateProduct);
+router.put("/:idProduct/update", upload.single("image"), productController.updateProduct);
 
 
 module.exports = router;

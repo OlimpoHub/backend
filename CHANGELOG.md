@@ -1,6 +1,15 @@
-## [0.1.0] - 18/11/2025
+## [0.1.0] - 19/11/2025
 
 ### Fixed
+- Fixed search bar issues in workshops.
+
+## [0.1.0] - 18/11/2025
+
+### Added
+- Sequence diagram for FRONT register product and modify product
+
+### Fixed
+- Change modify product controller
 - Refactor the query for filter supply batch
 - AddOneSupply and UpdateOneSupply modified to not allow supplies that has a name 
   already registered in the db

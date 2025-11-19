@@ -85,7 +85,7 @@ module.exports = class Products {
         try{
             const rows = await database.query
             (
-                `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller, 
+                `SELECT p.idProducto, p.Nombre, p.PrecioUnitario, t.nombreTaller, 
                         c.Descripcion AS Categoria, p.Disponible, 
                         p.Descripcion, p.imagen 
                  FROM Productos as p, Taller as t, Categoria as c 
