@@ -277,7 +277,10 @@ module.exports = class ProductBatch {
                         inv.PrecioVenta, inv.FechaCaducidad, inv.FechaRealizacion
                 FROM Productos p
                 JOIN InventarioProductos inv ON p.idProducto = inv.idProducto
-                ${whereClause}`, values
+                ${whereClause}`,
+                [
+                    values
+                ]
             );
             return rows;
         } catch (err) {
