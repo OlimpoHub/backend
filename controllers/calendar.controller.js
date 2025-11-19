@@ -12,45 +12,50 @@ exports.getCalendar = async (req, res) => {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, tokenUtils.ACCESS_SECRET);
         const userId = decoded.id;
-        console.log("userId desde token:", userId);
 
         const rawData = await Calendar.fetchById(userId);
-
         const rows = Array.isArray(rawData[0]) ? rawData[0] : rawData;
-        console.log("Talleres base recibidos:", rows.length);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // ventana móvil: hoy → hoy + 3 meses
+        const windowEnd = new Date(today);
+        windowEnd.setMonth(windowEnd.getMonth() + 3);
+        windowEnd.setHours(0, 0, 0, 0);
 
         const expanded = [];
 
         for (const row of rows) {
-            const start = new Date(row.Fecha);
-            if (isNaN(start)) {
-                console.warn("Fecha inválida en fila:", row);
+            const tallerStart = new Date(row.Fecha);
+            tallerStart.setHours(0, 0, 0, 0);
+
+            // Si hoy es ANTES de la fecha del taller → no mostrar nada aún
+            if (today < tallerStart) {
                 continue;
             }
 
-            // Start + 3 months
-            const end = new Date(start);
-            end.setMonth(end.getMonth() + 3);
-
-            let current = new Date(start);
+            // inicio real para generar: el mayor entre (inicio taller) y (hoy)
+            let current = new Date(Math.max(today, tallerStart));
             current.setHours(0, 0, 0, 0);
-            end.setHours(0, 0, 0, 0);
 
-            // Monday to Friday
-            while (current <= end) {
-                const dow = current.getDay();
+            // generar ocurrencias hasta ventanaEnd
+            while (current <= windowEnd) {
+                const dow = current.getDay(); // 0 domingo, 6 sábado
+
                 if (dow !== 0 && dow !== 6) {
                     expanded.push({
                         ...row,
                         Fecha: current.toISOString(),
                     });
                 }
+
                 current.setDate(current.getDate() + 1);
             }
         }
 
-        console.log("Ocurrencias generadas (L–V, 3 meses):", expanded.length);
         return res.status(200).json(expanded);
+
     } catch (err) {
         console.error("Error en getCalendar:", err);
         return res.status(500).json({ message: 'Failed to fetch calendar Info.' });
