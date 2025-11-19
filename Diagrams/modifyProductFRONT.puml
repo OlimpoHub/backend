@@ -1,0 +1,77 @@
+@startuml INV-003 Modify Product FRONT
+
+actor user
+participant UpdateProductScreen as screen
+participant UpdateProductViewModel as vm
+participant GetWCUC as wcus
+participant UpdateProductUseCase as us
+participant UpdateProductRepositoryImpl as repo
+participant AcaApi as api
+
+autonumber
+user -> screen: modify product
+
+activate screen
+screen ->> vm: getInfoProduct()
+
+activate vm
+vm ->> wcus: invoke()
+
+activate wcus
+wcus ->> repo: getInfoProduct()
+
+activate repo
+repo ->> api: getInfoProduct()
+
+activate api
+api ->> api: GET \n/product/:idProduct/update
+
+api -->> repo: ProductDto
+deactivate api
+
+repo -->> wcus: Product
+deactivate repo
+
+wcus -->> vm: Product
+deactivate wcus
+
+vm -->> screen: Product
+deactivate vm
+
+screen ->> user: Display update \nproduct screen
+deactivate screen
+
+|||
+user -> screen: update info
+activate screen
+
+screen ->> vm: updateProduct()
+activate vm
+
+vm ->> us: updateProduct(ProdutDto)
+activate us
+
+us ->> repo: updateProduct(ProdutDto)
+activate repo
+
+repo ->> api: updateProduct(ProdutDto)
+activate api
+
+api ->> api: PUT \n/product/:idProduct/update
+
+api -->> repo: Result
+deactivate api
+
+repo -->> us: Result
+deactivate repo
+
+us -->> vm: Result
+deactivate us
+
+vm -->> screen: Result
+deactivate vm
+
+screen -->> user: message(Result)
+deactivate screen
+
+@enduml
