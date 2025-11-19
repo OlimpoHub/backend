@@ -1,7 +1,7 @@
 const Notifications = require("../models/notifications.model.js");
 
 exports.fetchNotifications = async (req, res) => {
-    let userId = req.body.userId;
+    let userId = req.query.userId;
 
     let notifications = await Notifications.fetchNotifications(userId);
 
@@ -9,7 +9,7 @@ exports.fetchNotifications = async (req, res) => {
 }
 
 exports.fetchNewNotifications = async (req, res) => {
-    let userId = req.body.userId;
+    let userId = req.query.userId;
 
     let notifications = await Notifications.fetchNewNotifications(userId);
 
