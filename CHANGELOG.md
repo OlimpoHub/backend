@@ -11,6 +11,8 @@
 
 ## [0.1.0] - 17/11/2025
 
+### Fixed
+ - Fix product model
 ### Added
 - Api endpoint supplies/update/:id created to modify one supply, the id is passed
   through the route and the body by the front.
