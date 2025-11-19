@@ -1,5 +1,8 @@
 ## [0.1.0] - 19/11/2025
 
+### Updated
+- Modified the model to retrive idUser 
+
 ### Added
 - Route and model for supply batches based on date with ID
 
