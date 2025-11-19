@@ -227,7 +227,7 @@ module.exports = class Supplies {
     }
 
     // Check if a supply name already exists (case-insensitive)
-    static async checkSupplyNameExists(name) {
+    static async checkSupplyNameExists(name, excludeId = null) {
         try {
             let query = `
                 SELECT COUNT(*) 
@@ -235,7 +235,10 @@ module.exports = class Supplies {
                 FROM Insumo 
                 WHERE LOWER(nombre) = LOWER(?)`;
             const params = [name];
-            
+            if (excludeId) {
+                query += ` AND idInsumo != ?`;
+                params.push(excludeId);
+            }
             const result = await database.query(query, params);
             
             // Returns true if name exists, false otherwise
