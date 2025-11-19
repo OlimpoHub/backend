@@ -8,6 +8,7 @@
 - Added an excluded ID in the function to check the name to be able to update a
   supply
 - Do the checkSupplyNameExists case sensitive
+- Modify calendar.model.js to match the new database fields
 
 ## [0.1.0] - 17/11/2025
 
