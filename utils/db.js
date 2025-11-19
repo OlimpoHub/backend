@@ -32,3 +32,5 @@ module.exports = pool;
 //     console.error('❌ Error al conectar a la base de datos:', err);
 //   }
 // })();
+
+

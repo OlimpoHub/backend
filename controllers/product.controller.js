@@ -73,19 +73,18 @@ exports.getOneProduct = async (request, response) => {
 
 // PUT: modify an excisting product
 exports.updateProduct = async (request, response) => {
-    try {        
+    try { 
         const id = request.params.idProduct;
         
-        const idTaller = await Workshops.getId(request.body.nombreTaller); 
-        const idCategoria = await Category.getId(request.body.Categoria);
+        const imagen = request.file ? request.file.path : request.body.image;
         
         const productData = {
-            idTaller: idTaller,
+            idTaller: request.body.idTaller,
             Nombre: request.body.Nombre,
             PrecioUnitario: request.body.PrecioUnitario,
-            idCategoria: idCategoria,
+            idCategoria: request.body.idCategoria,
             Descripcion: request.body.Descripcion,
-            imagen: request.body.imagen,
+            imagen: imagen,
             Disponible: request.body.Disponible,
         };
 
@@ -95,6 +94,7 @@ exports.updateProduct = async (request, response) => {
         response.status(200).json({ message: "Product modified successfully" }); 
     } catch (err) {
         // Error
+        console.log(err);
         response.status(500).json({ message: "Failed to modify a product", err });
     }
 }

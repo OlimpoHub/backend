@@ -233,7 +233,7 @@ module.exports = class Supplies {
                 SELECT COUNT(*) 
                     AS count 
                 FROM Insumo 
-                WHERE LOWER(nombre) = LOWER(?)`;
+                WHERE nombre LIKE ?`;
             const params = [name];
             if (excludeId) {
                 query += ` AND idInsumo != ?`;
