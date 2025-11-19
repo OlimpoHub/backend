@@ -8,6 +8,8 @@
 - Added an excluded ID in the function to check the name to be able to update a
   supply
 - Do the checkSupplyNameExists case sensitive
+- Modify calendar.model.js to match the new database fields
+
 
 ## [0.1.0] - 17/11/2025
 
@@ -17,7 +19,6 @@
 - Api endpoint supplies/update/:id created to modify one supply, the id is passed
   through the route and the body by the front.
 - Fixes for Beneficiary Registration View: variable wrong named, error not being called
-
 
 ### Updated
 - Delete supply batch functionality
