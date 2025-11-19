@@ -133,7 +133,7 @@ exports.updateOneSupply = async (req, res) => {
         const status = req.body.status;
 
         // Check if supply name already exists (case-insensitive), excluding the current supply
-        const nameExists = await Supplies.checkSupplyNameExists(name, idSupply);
+        const nameExists = await Supplies.checkSupplyNameExists(name);
         if (nameExists) {
             return res
                 .status(400)
