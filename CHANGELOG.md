@@ -1,5 +1,13 @@
 ## [0.1.0] - 18/11/2025
 
+### Added
+- Route and model for supply batches based on date with ID
+
+### Fixed
+ - Model for modify supply batch
+
+## [0.1.0] - 18/11/2025
+
 ### Fixed
 - Refactor the query for filter supply batch
 - AddOneSupply and UpdateOneSupply modified to not allow supplies that has a name 
