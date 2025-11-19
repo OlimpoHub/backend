@@ -2,6 +2,7 @@
 
 ### Added
 - Route and model for supply batches based on date with ID
+- Controller, model and routes for notification reading and fetching
 
 ### Fixed
  - Model for modify supply batch
