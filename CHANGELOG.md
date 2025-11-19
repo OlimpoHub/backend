@@ -1,3 +1,8 @@
+## [0.1.0] - 19/11/2025
+
+### Updated
+- Modified the model to retrive idUser 
+
 ## [0.1.0] - 18/11/2025
 
 ### Added
