@@ -3,7 +3,6 @@ const database = require('../utils/db');
 module.exports = class Calendar {
     constructor(
         idTaller,
-        idCapacitacion,
         idUsuario,
         nombreTaller,
         horaEntrada, 
@@ -11,7 +10,6 @@ module.exports = class Calendar {
         fecha,
     ) {
         this.idTaller = idTaller;
-        this.IdCapacitacion = idCapacitacion;
         this.idUsuario = idUsuario;
         this.nombreTaller = nombreTaller;
         this.horaEntrada = horaEntrada;
@@ -25,7 +23,6 @@ module.exports = class Calendar {
             (`
             SELECT 
                 Taller.idTaller, 
-                Taller.idCapacitacion, 
                 Taller.idUsuario, 
                 Taller.nombreTaller,
                 Taller.horaEntrada,
@@ -33,8 +30,9 @@ module.exports = class Calendar {
                 Taller.Fecha 
             FROM Taller 
             INNER JOIN Usuarios 
-                ON Taller.idUsuario = Usuarios.idUsuario;
-            `);
+                ON Taller.idUsuario = Usuarios.idUsuario 
+            WHERE Usuarios.idUsuario = ?;
+            `,[idUsuario]);
             console.log("ROWS:", rows);
             return rows;
         } catch (err) {

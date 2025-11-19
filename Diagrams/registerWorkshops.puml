@@ -1,0 +1,52 @@
+@startuml
+title Registrar Nuevos Talleres - Flujo Principal y Alternos\nAplicación Cliente (MVVM)
+
+actor User
+
+participant ViewRegistrarTalleres
+participant TalleresViewModel
+participant RepositorioModel
+participant WorkshopsModel
+database Database
+
+== Inicio ==
+User -> ViewRegistrarTalleres : 1. Click en botón "+" para agregar taller
+
+alt 3.1 Usuario cancela el formulario
+    ViewRegistrarTalleres -> ViewRegistrarTalleres : Redirigir a lista de talleres
+else Continuar con registro
+    ViewRegistrarTalleres -> TalleresViewModel : onAddTallerButtonClicked(tallerData)
+
+    alt 5.1 Campos obligatorios vacíos
+        TalleresViewModel -> ViewRegistrarTalleres : Mostrar mensaje ("Campos requeridos vacíos")
+    else Campos completos
+
+        alt 5.1.1 Nombre de taller duplicado
+            TalleresViewModel -> ViewRegistrarTalleres : Mostrar mensaje ("El nombre del taller ya existe")
+        else Nombre válido
+            TalleresViewModel -> RepositorioModel : registrarTaller(tallerData)
+            RepositorioModel -> WorkshopsModel : new Workshop(tallerData)
+            WorkshopsModel -> Database : INSERT INTO Taller VALUES(...)
+
+            alt 8.1 Error al registrar en BD
+                Database -> WorkshopsModel : Error SQL
+                WorkshopsModel -> RepositorioModel : Lanzar excepción
+                RepositorioModel -> TalleresViewModel : Result.Error("Error al registrar en BD")
+                TalleresViewModel -> ViewRegistrarTalleres : Mostrar mensaje ("No se pudo registrar el taller")
+            else Registro exitoso
+                Database --> WorkshopsModel : Resultado INSERT OK
+                WorkshopsModel --> RepositorioModel : Taller registrado correctamente
+                RepositorioModel --> TalleresViewModel : Result.Success
+                TalleresViewModel -> ViewRegistrarTalleres : StateFlow = UIState.Success
+                ViewRegistrarTalleres -> User : Mostrar mensaje ("Taller registrado correctamente")
+            end
+        end
+    end
+end
+
+== Error al obtener datos ==
+alt 2.1 Error al obtener datos
+    ViewRegistrarTalleres -> User : Mostrar mensaje de error ("No se pudieron cargar los datos")
+end
+
+@enduml
