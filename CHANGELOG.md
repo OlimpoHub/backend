@@ -1,5 +1,13 @@
 ## [0.1.0] - 19/11/2025
 
+### Added
+- Route and model for supply batches based on date with ID
+
+### Fixed
+ - Model for modify supply batch
+
+## [0.1.0] - 18/11/2025
+
 ### Fixed
 - Fixed search bar issues in workshops.
 - Fixed error messajes in register beneficiary
