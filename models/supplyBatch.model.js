@@ -143,21 +143,27 @@ module.exports = class SupplyBatch {
      * Filters supply batches either by expiration date or acquisition type.
      */
     static async filterOrder(body = {}) {
+
+        console.log("ENTRO AL FILTER BATCH POST", body);
+
         const filters = body.filters || {};
+        const idInsumo = body.idSupply
+
+        const params = [idInsumo];
 
         try {
             let query = `
                 SELECT 
+                    ii.idInventario,
+                    ii.idInsumo,
                     a.Descripcion AS TipoAdquisicion,
                     ii.FechaCaducidad,
                     SUM(ii.CantidadActual) AS TotalCantidad
                 FROM InventarioInsumos AS ii
-                INNER JOIN TipoAdquisicion AS a 
+                LEFT JOIN TipoAdquisicion AS a 
                     ON ii.idTipoAdquisicion = a.idTipoAdquisicion
-                WHERE 1 = 1
+                WHERE ii.idInsumo = ?
             `;
-
-            const params = [];
 
             // Acquisition type
             if (
@@ -172,21 +178,8 @@ module.exports = class SupplyBatch {
                 params.push(...filters["Tipo de Adquisición"]);
             }
 
-            // Expiration date
-            if (
-                filters["Fecha de caducidad"] &&
-                filters["Fecha de caducidad"].length > 0
-            ) {
-                query += ` AND ii.FechaCaducidad IN (${filters[
-                    "Fecha de caducidad"
-                ]
-                    .map(() => "?")
-                    .join(", ")})`;
-                params.push(...filters["Fecha de caducidad"]);
-            }
-
             query += `
-                GROUP BY a.Descripcion, ii.FechaCaducidad
+                GROUP BY ii.idInventario
             `;
 
             // Order
@@ -211,17 +204,11 @@ module.exports = class SupplyBatch {
                 SELECT DISTINCT Descripcion 
                 FROM TipoAdquisicion
             `);
-            // Get all unique expiration dates
-            const expirationDates = await database.query(`
-                SELECT DISTINCT FechaCaducidad 
-                FROM InventarioInsumos
-            `);
-            // Return simplified arrays with raw values
+
             console.log("ENTRO AL GET SUPPLY BATCH FILTERS DATA");
 
             return {
                 acquisitionTypes: acquisitionTypes.map((a) => a.Descripcion),
-                expirationDates: expirationDates.map((f) => f.FechaCaducidad),
             };
         } catch (err) {
             console.error("Error fetching supply batch filter data:", err);
