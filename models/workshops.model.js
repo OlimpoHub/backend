@@ -74,7 +74,7 @@ module.exports = class Workshops {
         }
     }
 
-    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion) {
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario) {
         try {
             const query = `
                 UPDATE Taller 
@@ -85,11 +85,12 @@ module.exports = class Workshops {
                     Descripcion = ?,
                     Fecha = ?,
                     URL = ?,
-                    videoCapacitacion = ?
+                    videoCapacitacion = ?,
+                    idUsuario = ?
                 WHERE idTaller = ?
             `;
             
-            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idTaller];
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario, idTaller];
             const result = await db.execute(query, params);
             return result;
             
@@ -153,7 +154,7 @@ module.exports = class Workshops {
             const rows = await db.query(
                 `SELECT 
 	                t.nombreTaller, t.horaEntrada, t.horaSalida, t.Descripcion,
-                    t.URL, t.Fecha, t.videoCapacitacion,
+                    t.URL, t.Fecha, t.videoCapacitacion, t.idUsuario,
                     u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
                 JOIN Usuarios u
