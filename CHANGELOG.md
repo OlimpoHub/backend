@@ -5,10 +5,13 @@
 
 ### Added
 - Route and model for supply batches based on date with ID
+- Controller, model and routes for notification reading and fetching
 
 ### Fixed
  - Model for modify supply batch
  - Calendar logic for daily recurrence
+ - Qr routes for generating qr code from get to post
+
 
 ## [0.1.0] - 18/11/2025
 
