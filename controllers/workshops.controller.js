@@ -1,8 +1,22 @@
 const Workshops = require("../models/workshops.model");
 
+function convertirFechaSQL(fechaStr) {
+  if (!fechaStr) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) {
+    return fechaStr;
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr)) {
+    const [dia, mes, anio] = fechaStr.split("/");
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  return null;
+}
+
+
 exports.addWorkshops = async (request, response) => {
   try {
-    const { 
+    let { 
       idTaller, 
       nombreTaller, 
       horaEntrada, 
@@ -11,9 +25,22 @@ exports.addWorkshops = async (request, response) => {
       idUsuario,
       descripcion,
       fecha,
+      Fecha,
       url,
+      URL,
       videoCapacitacion
     } = request.body;
+
+    fecha = fecha || Fecha || null;
+    url = url || URL || null;
+
+    const fechaSQL = convertirFechaSQL(fecha);
+
+    if (!fechaSQL) {
+      return response.status(400).json({
+        error: "Formato de fecha inválido. Usa dd/mm/yyyy o yyyy-mm-dd."
+      });
+    }
 
     const taller = new Workshops(
       idTaller || null,
@@ -23,8 +50,8 @@ exports.addWorkshops = async (request, response) => {
       estatus || "1",
       idUsuario || null,
       descripcion || "",
-      fecha || null,
-      url || null,
+      fechaSQL, 
+      url,
       videoCapacitacion || null
     );
 
@@ -33,14 +60,14 @@ exports.addWorkshops = async (request, response) => {
     response.status(201).json({
       message: "Taller agregado correctamente",
       data: {
-        idTaller: taller.idTaller,
+        idTaller,
         nombreTaller,
         horaEntrada,
         horaSalida,
         estatus,
         idUsuario,
         descripcion,
-        fecha,
+        fecha: fechaSQL,
         url,
         videoCapacitacion
       }
@@ -48,9 +75,7 @@ exports.addWorkshops = async (request, response) => {
 
   } catch (error) {
     console.error("Error en addWorkshops():", error);
-    response.status(500).json({
-      error: error.message
-    });
+    response.status(500).json({ error: error.message });
   }
 };
 
