@@ -153,7 +153,7 @@ module.exports = class Workshops {
             const rows = await db.query(
                 `SELECT 
 	                t.nombreTaller, t.horaEntrada, t.horaSalida, t.Descripcion,
-                    t.URL, t.fecha, t.videoCapacitacion, t.idUsuario,
+                    t.URL, t.Fecha, t.videoCapacitacion,
                     u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
                 JOIN Usuarios u
