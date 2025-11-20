@@ -1,0 +1,36 @@
+@startuml
+actor api
+boundary notifications.routes as routes
+control notifications.controller as controller
+entity notifications.model as model
+database elArca.sql as db
+
+activate api
+api -> routes: GET /notifications/fetch/new
+
+activate routes
+routes -> controller: fetchNewNotifitations(req, res)
+deactivate routes
+
+activate controller
+
+controller ->> model: fetchNewNotifications(req.body.userId)
+activate model
+
+model ->> db: execute(\n"SELECT n.*, nu.* \n FROM NotificacionesUsuario nu \n INNER JOIN Notificaciones n ON n.idNotificacion = nu.idNotificacion \n WHERE nu.idUsuario = ? \n AND nu.leido = FALSE"\n)
+
+activate db
+
+db -->> model: notifications
+deactivate db
+
+model -->> controller: notifications
+deactivate model
+
+controller -> api: response.status(200)
+
+deactivate controller
+
+deactivate api
+
+@enduml
