@@ -8,6 +8,7 @@
 
 ### Fixed
  - Model for modify supply batch
+ - Qr routes for generating qr code from get to post
 
 ## [0.1.0] - 18/11/2025
 
