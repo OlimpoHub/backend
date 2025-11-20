@@ -1,3 +1,8 @@
+## [0.1.0] - 20/11/2025
+
+### Fixed
+- Fix workshop controller
+
 ## [0.1.0] - 19/11/2025
 
 ### Updated
