@@ -18,14 +18,14 @@ exports.addWorkshops = async (request, response) => {
     const taller = new Workshops(
       idTaller || null,
       nombreTaller || "",
-      horaEntrada || "",
-      horaSalida || "",
+      horaEntrada || null,
+      horaSalida || null,
       estatus || "1",
       idUsuario || null,
       descripcion || "",
-      fecha || "",
-      url || "",
-      videoCapacitacion || ""
+      fecha || null,
+      url || null,
+      videoCapacitacion || null
     );
 
     const result = await taller.save();
