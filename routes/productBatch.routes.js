@@ -50,7 +50,7 @@ router.post("/filter", productBatchController.filterPb);
  * @param {string} idProductBatch - ID del producto a consultar
  * @returns {Object|Array} Detalles del lote o lotes del producto
  */
-router.get("/:idProductBatch", productBatchController.getPbById);
+router.get("/:idProductBatch", productBatchController.getOnePb);
 
 /**
  * POST /productBatch
