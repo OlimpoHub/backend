@@ -119,7 +119,7 @@ exports.updateBeneficiary = async (req, response) => {
             fechaIngreso,
             foto,
             estatus,
-            idDiscapacidad
+            discapacidad
         } = req.body;
 
         const result = await Beneficiary.update(
@@ -135,7 +135,7 @@ exports.updateBeneficiary = async (req, response) => {
             fechaIngreso !== undefined ? fechaIngreso : existingData.fechaIngreso,
             foto !== undefined ? foto : existingData.foto,
             estatus !== undefined ? estatus : existingData.estatus,
-            idDiscapacidad !== undefined ? idDiscapacidad : existingData.idDiscapacidad,
+            discapacidad !== undefined ? discapacidad : existingData.discapacidad,
         );
         
         response.status(200).json({
@@ -154,7 +154,7 @@ exports.updateBeneficiary = async (req, response) => {
             ...(fechaIngreso && { fechaIngreso }),
             ...(foto && { foto }),
             ...(estatus !== undefined && { estatus }),
-            ...(idDiscapacidad !== undefined && { idDiscapacidad })
+            ...(discapacidad !== undefined && { discapacidad })
             },
             affectedRows: result[0]?.affectedRows || result.affectedRows
         }
