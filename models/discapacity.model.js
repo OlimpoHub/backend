@@ -12,7 +12,7 @@ module.exports = class Discapacity {
     // Save a new disability into the database
     async save() {
         const query = `
-            INSERT INTO Discapacidades 
+            INSERT INTO ListaDiscapacidades 
             (idDiscapacidad, nombre, descripcion)
             VALUES (?, ?, ?)
         `;
@@ -30,8 +30,8 @@ module.exports = class Discapacity {
     // Update an existing disability
     static async update(idDiscapacidad, nombre, descripcion) {
         const query = `
-            UPDATE Discapacidades
-            SET nombre = ?, descripcion = ?
+            UPDATE ListaDiscapacidades
+            SET nombre = ?, caracteristicas = ?
             WHERE idDiscapacidad = ?
         `;
 
@@ -44,7 +44,7 @@ module.exports = class Discapacity {
     // Delete a disability by ID
     static async delete(idDiscapacidad) {
         const query = `
-            DELETE FROM Discapacidades
+            DELETE FROM ListaDiscapacidades
             WHERE idDiscapacidad = ?
         `;
 
@@ -55,21 +55,21 @@ module.exports = class Discapacity {
     // Get all disabilities
     static async getDiscapacities() {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
+            FROM ListaDiscapacidades
             ORDER BY nombre ASC
         `;
 
         // Execute SELECT query
-        const [rows] = await db.execute(query);
+        const rows = await db.execute(query);
         return rows;
     }
 
     // Get a single disability by ID
     static async getOneDiscapacity(id) {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
+            FROM ListaDiscapacidades
             WHERE idDiscapacidad = ?
         `;
 
@@ -81,8 +81,8 @@ module.exports = class Discapacity {
     // Search disabilities by name (partial match)
     static async findByName(nombre) {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
+            FROM ListaDiscapacidades
             WHERE nombre LIKE ?
         `;
 
