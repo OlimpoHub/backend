@@ -45,7 +45,7 @@ module.exports = class SupplyBatch {
      */
     static async fetchOne(id) {
         try {
-            const [rows] = await database.query(
+            const rows = await database.query(
                 `SELECT 
                     i.idInsumo, i.nombre, i.unidadMedida, i.imagenInsumo,
                     inv.FechaCaducidad, SUM(inv.CantidadActual) AS cantidad, 
@@ -75,10 +75,16 @@ module.exports = class SupplyBatch {
     /**
      * Inserts a new supply batch record into the database.
      */
-    static async addSupply(supplyId, quantity, expirationDate, acquisitionId, boughtDate) {
+    static async addSupply(
+        supplyId,
+        quantity,
+        expirationDate,
+        acquisitionId,
+        boughtDate
+    ) {
         try {
-            const [dayC, monthC, yearC] = boughtDate.split('/');
-            const [dayE, monthE, yearE] = expirationDate.split('/');
+            const [dayC, monthC, yearC] = boughtDate.split("/");
+            const [dayE, monthE, yearE] = expirationDate.split("/");
 
             const fechaCompraSQL = `${yearC}-${monthC}-${dayC}`;
             const fechaCaducidadSQL = `${yearE}-${monthE}-${dayE}`;
@@ -86,7 +92,13 @@ module.exports = class SupplyBatch {
                 `INSERT INTO InventarioInsumos (
                     idInsumo, CantidadActual, FechaActualizacion, FechaCaducidad, idTipoAdquisicion
                 ) VALUES (?, ?, ?, ?, ?)`,
-                [supplyId, quantity, fechaCompraSQL, fechaCaducidadSQL, acquisitionId]
+                [
+                    supplyId,
+                    quantity,
+                    fechaCompraSQL,
+                    fechaCaducidadSQL,
+                    acquisitionId,
+                ]
             );
             console.log("NEW SUPPLY ADDED: ", result);
             return result;
@@ -97,24 +109,29 @@ module.exports = class SupplyBatch {
     }
 
     /**
-     * Deletes a supply batch by its inventory ID.
+     * Deletes all inventory records for a specific supply and expiration date (batch).
+     * @param {string} supplyId - The supply ID
+     * @param {string} expirationDate - The expiration date that identifies the batch
      */
-    static async delete(inventoryId) {
+    static async delete(supplyId, expirationDate) {
         try {
             const result = await database.execute(
-                `DELETE FROM InventarioInsumos WHERE idInventario = ?`,
-                [inventoryId]
+                `DELETE FROM InventarioInsumos 
+                WHERE idInsumo = ? AND FechaCaducidad = ?`,
+                [supplyId, expirationDate]
             );
 
-            if (result.affectedRows === 0)
+            if (result.affectedRows === 0) {
                 return {
                     success: false,
-                    message: "No supply batch found with that ID.",
+                    message: "No supply batch found with that supply ID and expiration date.",
                 };
+            }
 
             return {
                 success: true,
-                message: "Supply batch deleted successfully.",
+                message: `Supply batch deleted successfully. ${result.affectedRows} record(s) removed.`,
+                deletedCount: result.affectedRows
             };
         } catch (error) {
             console.error("Error deleting supply batch:", error);
@@ -127,36 +144,42 @@ module.exports = class SupplyBatch {
      */
     static async filterOrder(body = {}) {
 
+        console.log("ENTRO AL FILTER BATCH POST", body);
+
         const filters = body.filters || {};
+        const idInsumo = body.idSupply
+
+        const params = [idInsumo];
 
         try {
             let query = `
                 SELECT 
+                    ii.idInventario,
+                    ii.idInsumo,
                     a.Descripcion AS TipoAdquisicion,
                     ii.FechaCaducidad,
                     SUM(ii.CantidadActual) AS TotalCantidad
                 FROM InventarioInsumos AS ii
-                INNER JOIN TipoAdquisicion AS a 
+                LEFT JOIN TipoAdquisicion AS a 
                     ON ii.idTipoAdquisicion = a.idTipoAdquisicion
-                WHERE 1 = 1
+                WHERE ii.idInsumo = ?
             `;
 
-            const params = [];
-
             // Acquisition type
-            if (filters["Tipo de Adquisición"] && filters["Tipo de Adquisición"].length > 0) {
-                query += ` AND a.Descripcion IN (${filters["Tipo de Adquisición"].map(() => '?').join(', ')})`;
+            if (
+                filters["Tipo de Adquisición"] &&
+                filters["Tipo de Adquisición"].length > 0
+            ) {
+                query += ` AND a.Descripcion IN (${filters[
+                    "Tipo de Adquisición"
+                ]
+                    .map(() => "?")
+                    .join(", ")})`;
                 params.push(...filters["Tipo de Adquisición"]);
             }
 
-            // Expiration date
-            if (filters["Fecha de caducidad"] && filters["Fecha de caducidad"].length > 0) {
-                query += ` AND ii.FechaCaducidad IN (${filters["Fecha de caducidad"].map(() => '?').join(', ')})`;
-                params.push(...filters["Fecha de caducidad"]);
-            }
-
             query += `
-                GROUP BY a.Descripcion, ii.FechaCaducidad
+                GROUP BY ii.idInventario
             `;
 
             // Order
@@ -168,7 +191,6 @@ module.exports = class SupplyBatch {
             console.log("Filtered Supply Batch Rows:", rows);
 
             return rows;
-
         } catch (err) {
             console.error("Error filtering supply batch: ", err);
             throw err;
@@ -182,25 +204,18 @@ module.exports = class SupplyBatch {
                 SELECT DISTINCT Descripcion 
                 FROM TipoAdquisicion
             `);
-            // Get all unique expiration dates
-            const expirationDates = await database.query(`
-                SELECT DISTINCT FechaCaducidad 
-                FROM InventarioInsumos
-            `);
-            // Return simplified arrays with raw values
+
             console.log("ENTRO AL GET SUPPLY BATCH FILTERS DATA");
 
             return {
-                acquisitionTypes: acquisitionTypes.map(a => a.Descripcion),
-                expirationDates: expirationDates.map(f => f.FechaCaducidad)
-            }
-
+                acquisitionTypes: acquisitionTypes.map((a) => a.Descripcion),
+            };
         } catch (err) {
             console.error("Error fetching supply batch filter data:", err);
             throw err;
         }
     }
-    
+
     /**
      * Gets all the Acquisition types available
      * @returns acquisitionTypes
@@ -218,9 +233,22 @@ module.exports = class SupplyBatch {
         }
     }
 
-    static async modifySupplyBatch(idSupplyBatch,supplyId,quantity,expirationDate,acquisition,boughtDate,) {
-        try{
-            const result = await database.query(`
+    static async modifySupplyBatch(
+        idSupplyBatch,
+        supplyId,
+        quantity,
+        expirationDate,
+        acquisition,
+        boughtDate
+    ) {
+        try {
+            const [dayC, monthC, yearC] = boughtDate.split("/");
+            const [dayE, monthE, yearE] = expirationDate.split("/");
+
+            const fechaCompraSQL = `${yearC}-${monthC}-${dayC}`;
+            const fechaCaducidadSQL = `${yearE}-${monthE}-${dayE}`;
+            const result = await database.query(
+                `
                 UPDATE InventarioInsumos
                 SET idInsumo = ?,
                     CantidadActual = ?, 
@@ -228,16 +256,101 @@ module.exports = class SupplyBatch {
                     FechaCaducidad = ?,
                     idTipoAdquisicion = ?
                 WHERE idInventario = ?
-            `, [supplyId, quantity, boughtDate, expirationDate, acquisition, idSupplyBatch] );
-            if (result && typeof result.insertId === 'bigint') {
+            `,
+                [
+                    supplyId,
+                    quantity,
+                    fechaCompraSQL,
+                    fechaCaducidadSQL,
+                    acquisition,
+                    idSupplyBatch,
+                ]
+            );
+            if (result && typeof result.insertId === "bigint") {
                 result.insertId = Number(result.insertId);
             }
-            
+
             console.log("SUPPLY BATCH MODIFIED: ", result);
-            return result
+            return result;
         } catch (error) {
-            console.error('Error modifySupplyBatch():', error);
+            console.error("Error modifySupplyBatch():", error);
             throw error;
         }
     }
-}
+
+    static async getSupplyBatchOne(idSupplyBatch) {
+        try {
+            // Only select the fields required by the ModifySupplyBatch screen.
+            const rows = await database.query(
+                `SELECT
+                    inv.idInventario,
+                    inv.idInsumo,
+                    inv.CantidadActual,
+                    inv.FechaActualizacion,
+                    inv.FechaCaducidad,
+                    inv.idTipoAdquisicion
+                FROM InventarioInsumos inv
+                WHERE inv.idInventario = ?`,
+                [idSupplyBatch]
+            );
+
+            if (Array.isArray(rows)) {
+                return rows.length > 0 ? rows[0] : null;
+            }
+            return rows || null;
+        } catch (err) {
+            console.error("Error getSupplyBatchOne():", err);
+            throw err;
+        }
+    }
+
+    static async getSupplyBatchDates(expirationDate, idInsumo) {
+        try {
+            // Normalize incoming expirationDate to SQL format yyyy-MM-dd
+            let fechaCaducidadSQL = expirationDate;
+
+            if (!fechaCaducidadSQL) {
+                throw new Error("expirationDate is required");
+            }
+
+            // Handle ISO datetime (2025-11-21T06:00:00.000Z) -> take date part
+            if (fechaCaducidadSQL.includes('T')) {
+                fechaCaducidadSQL = fechaCaducidadSQL.split('T')[0];
+            }
+
+            // If format is dd/MM/yyyy, convert to yyyy-MM-dd
+            if (fechaCaducidadSQL.includes('/')) {
+                const parts = fechaCaducidadSQL.split('/');
+                if (parts.length === 3) {
+                    const [d, m, y] = parts;
+                    fechaCaducidadSQL = `${y}-${m}-${d}`;
+                }
+            }
+
+            // If it's already in yyyy-MM-dd keep as is. Basic validation could be added.
+
+            // Select and normalize the fields returned so frontend DTO mapping is straightforward.
+            // Aliases: id, quantity, expirationDate (dd/MM/yyyy), adquisitionType, boughtDate (dd/MM/yyyy), measure
+            const rows = await database.query(
+                `SELECT
+                    inv.idInventario AS id,
+                    inv.CantidadActual AS quantity,
+                    DATE_FORMAT(inv.FechaCaducidad, '%d/%m/%Y') AS expirationDate,
+                    ta.Descripcion AS adquisitionType,
+                    DATE_FORMAT(inv.FechaActualizacion, '%d/%m/%Y') AS boughtDate,
+                    i.unidadMedida AS measure
+                FROM InventarioInsumos inv
+                LEFT JOIN Insumo i ON inv.idInsumo = i.idInsumo
+                LEFT JOIN TipoAdquisicion ta ON inv.idTipoAdquisicion = ta.idTipoAdquisicion
+                WHERE inv.FechaCaducidad = ?
+                AND inv.idInsumo = ?`,
+                [fechaCaducidadSQL, idInsumo]
+            );
+
+            return rows;
+        } catch (err) {
+            console.error("Error getSupplyBatchDates():", err);
+            throw err;
+        }
+    }
+};

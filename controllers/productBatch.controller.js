@@ -148,6 +148,23 @@ async function filterDatePb(req, res) {
     }
 }
 
+async function filterPb(req, res) {
+  try {
+    // Espera un body con { filters: {...}, order: "ASC" | "DESC" }
+    const { filters = {}, order = "ASC" } = req.body;
+
+    // Validación simple de order
+    const dir = (order || "ASC").toUpperCase();
+    const safeOrder = dir === "DESC" ? "DESC" : "ASC";
+
+    const result = await ProductBatch.filterMultiple(filters, safeOrder);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("Failure in filterPb:", err);
+    res.status(500).json({ error: "Failed to filter product batches" });
+  }
+}
+
 module.exports = {
     getAllPb,
     getOnePb,
@@ -159,5 +176,6 @@ module.exports = {
     getOrderedPb,
     filterPricePb,
     filterDisponiblePb,
-    filterDatePb
+    filterDatePb,
+    filterPb,
 };

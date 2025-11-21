@@ -1,6 +1,91 @@
-## [0.1.0] - 12/11/2025
+## [0.1.0] - 20/11/2025
 
 ### Fixed
+- Fix workshop controller
+- Fix workshop controller for update
+
+## [0.1.0] - 19/11/2025
+
+### Updated
+- Modified the model to retrive idUser 
+
+### Added
+- Route and model for supply batches based on date with ID
+- Controller, model and routes for notification reading and fetching
+
+### Fixed
+ - Model for modify supply batch
+ - Calendar logic for daily recurrence
+ - Qr routes for generating qr code from get to post
+
+
+## [0.1.0] - 18/11/2025
+
+### Fixed
+- Fixed search bar issues in workshops.
+- Fixed issues in register workshops
+- Fixed error messajes in register beneficiary
+
+## [0.1.0] - 18/11/2025
+
+### Added
+- Sequence diagram for FRONT register product and modify product
+
+### Fixed
+- Change modify product controller
+- Refactor the query for filter supply batch
+- AddOneSupply and UpdateOneSupply modified to not allow supplies that has a name 
+  already registered in the db
+- Deleted an extra parameter in update supply
+- Added an excluded ID in the function to check the name to be able to update a
+  supply
+- Do the checkSupplyNameExists case sensitive
+- Modify calendar.model.js to match the new database fields
+
+## [0.1.0] - 17/11/2025
+
+### Fixed
+ - Fix product model
+
+### Added
+- Api endpoint supplies/update/:id created to modify one supply, the id is passed
+  through the route and the body by the front.
+- Fixes for Beneficiary Registration View: variable wrong named, error not being called
+- Added the function filterMultiple for a better method of filtration in the app
+
+
+### Updated
+- Delete supply batch functionality
+
+## [0.1.0] - 16/11/2025
+
+### Updated
+- Updated query for filtering and ordering beneficiaries
+- Disabilities List can now be fetched
+
+### Fixed
+ - Fix workshops fields for the new data base
+ - Fixed model for search beneficiaries
+ - Fixewd model for viewWorkshops
+
+## [0.1.0] - 13/11/2025
+
+### Added
+- DeleteWorkshop Backend Logic
+- DeleteWorkshop Back Sequence Diagram
+
+## [0.1.0] - 13/11/2025
+
+### Fixed
+- Lowercase in controller registerProduct error.
+- Image saved as a file in register product.
+- Fix the routes to match the frontend
+
+## [0.1.0] - 11/11/2025
+
+### Fixed
+- Solved the issue that only returns one supply batch changed fixed to send more
+- Fix the search workshops in controllers.
 - Beneficiary querys (update and fetch)
 - Deleted unused functionalities on beneficiary
 
@@ -22,6 +107,7 @@
 - Uploads/ directory to upload any file or image from the front
 - Implemented routes, controllers, and model for the Modify Supply Batch.
 - Deployment diagram updated with the Mail API
+- Fetch all users
 - Implemented routes, controllers and model for the QR Code generation & validation.
 - Add funtion to search product
 - Add funtion to order product

@@ -2,9 +2,8 @@ const db = require('../utils/db.js');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Workshops {
-    constructor(idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url) {
+    constructor(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url, videoCapacitacion) {
         this.idTaller = idTaller || uuidv4();
-        this.idCapacitacion = idCapacitacion;
         this.nombreTaller = nombreTaller;
         this.horaEntrada = horaEntrada;
         this.horaSalida = horaSalida;
@@ -13,19 +12,19 @@ module.exports = class Workshops {
         this.descripcion = descripcion;
         this.fecha = fecha;
         this.url = url;
+        this.videoCapacitacion = videoCapacitacion;
     }
 
     async save() {
         try {
             const query = `
                 INSERT INTO Taller 
-                (idTaller, idCapacitacion, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, Descripcion, Fecha, URL) 
+                (idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, Descripcion, Fecha, URL, videoCapacitacion) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             
             const values = [
                 this.idTaller,
-                this.idCapacitacion,
                 this.nombreTaller,
                 this.horaEntrada,
                 this.horaSalida,
@@ -33,7 +32,8 @@ module.exports = class Workshops {
                 this.idUsuario,
                 this.descripcion,
                 this.fecha,
-                this.url
+                this.url,
+                this.videoCapacitacion
             ];
 
             const result = await db.execute(query, values);
@@ -49,7 +49,6 @@ module.exports = class Workshops {
         try {
             const camposValidos = [
                 'idTaller',
-                'idCapacitacion',
                 'nombreTaller',
                 'horaEntrada',
                 'horaSalida',
@@ -57,7 +56,8 @@ module.exports = class Workshops {
                 'idUsuario',
                 'Descripcion',
                 'Fecha',
-                'URL'
+                'URL',
+                'videoCapacitacion'
             ];
 
             const campos = Object.keys(tallerData).filter(key => camposValidos.includes(key));
@@ -74,7 +74,7 @@ module.exports = class Workshops {
         }
     }
 
-    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url) {
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario) {
         try {
             const query = `
                 UPDATE Taller 
@@ -84,11 +84,13 @@ module.exports = class Workshops {
                     estatus = ?,
                     Descripcion = ?,
                     Fecha = ?,
-                    URL = ?
+                    URL = ?,
+                    videoCapacitacion = ?,
+                    idUsuario = ?
                 WHERE idTaller = ?
             `;
             
-            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, idTaller];
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario, idTaller];
             const result = await db.execute(query, params);
             return result;
             
@@ -98,18 +100,30 @@ module.exports = class Workshops {
         }
     }
 
-    static async changestatus(idTaller) {
+
+     // performs a soft delete by updating status = 0
+    static async delete(id) {
         try {
-            const query = `
-            UPDATE Taller
-            SET estatus = 0
-            WHERE idTaller = ?;
-            `;
-            const result = await db.execute(query, [idTaller]);
-            return result;
+
+        // run SQL query to set the workshop status to 0 
+        const result = await db.execute
+        (
+            `UPDATE Taller 
+            SET estatus = 0 
+            WHERE idTaller = ?`, 
+            [id]
+        );
+
+        // check if any row was affected (workshop found)
+        if (result.affectedRows === 0) return { success: false, message: "No workshop found with that ID." };
+
+        
+        return { success: true, message: "Workshop deleted successfully." };
         } catch (error) {
-            console.error("Error changestatus():", error);
-            throw error;
+        console.error("Error deleting workshop:", error);
+        
+        // rethrow the error to be handled by the controller
+        throw error;
         }
     }
     
@@ -123,7 +137,8 @@ module.exports = class Workshops {
                 t.horaSalida,
                 t.Descripcion,
                 t.Fecha,
-                t.URL
+                t.URL,
+                t.videoCapacitacion
                 FROM Taller t 
                 WHERE t.estatus = ?`, [1]
             );
@@ -138,11 +153,10 @@ module.exports = class Workshops {
         try{
             const rows = await db.query(
                 `SELECT 
-	                t.nombreTaller, t.horaEntrada, t.horaSalida, c.nombreCapacitacion, 
-                    t.URL, t.fecha, u.nombre, u.apellidoPaterno, u.apellidoMaterno
+	                t.nombreTaller, t.horaEntrada, t.horaSalida, t.Descripcion,
+                    t.URL, t.Fecha, t.videoCapacitacion, t.idUsuario,
+                    u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
-                JOIN Capacitaciones c
-	                ON t.idCapacitacion = c.idCapacitacion
                 JOIN Usuarios u
                     ON t.idUsuario = u.idUsuario
                 WHERE t.estatus = ? AND t.idTaller = ?
@@ -192,12 +206,29 @@ module.exports = class Workshops {
                     t.horaSalida,
                     t.Descripcion,
                     t.Fecha,
-                    t.URL
+                    t.URL,
+                    t.videoCapacitacion
                 FROM Taller t
-                WHERE t.estatus = 1 AND t.nombreTaller LIKE ?;
+                WHERE t.estatus = 1 
+                AND LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[áàäâ]', 'a'),
+                    '[éèëê]', 'e')
+                ) LIKE LOWER(?)
+                OR LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[íìïî]', 'i'),
+                    '[óòöô]', 'o')
+                ) LIKE LOWER(?)
+                OR LOWER(
+                    REGEXP_REPLACE(
+                        REGEXP_REPLACE(t.nombreTaller, '[úùüû]', 'u'),
+                    '[ñ]', 'n')
+                ) LIKE LOWER(?);
             `;
             
-            const [rows] = await db.execute(query, [`%${nameWorkshop}%`]);
+            const searchTerm = `%${nameWorkshop}%`;
+            const [rows] = await db.execute(query, [searchTerm, searchTerm, searchTerm]);
             return rows;
         } catch (error) {
             console.error("Error findWorkshop:", error);
@@ -217,7 +248,8 @@ module.exports = class Workshops {
                 t.horaSalida,
                 t.Descripcion,
                 t.Fecha,
-                t.URL
+                t.URL,
+                t.videoCapacitacion
                 FROM Taller t
                 WHERE t.estatus = 1
                 `;

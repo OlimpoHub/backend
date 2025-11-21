@@ -1,10 +1,23 @@
 const Workshops = require("../models/workshops.model");
 
+function convertirFechaSQL(fechaStr) {
+  if (!fechaStr) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) {
+    return fechaStr;
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr)) {
+    const [dia, mes, anio] = fechaStr.split("/");
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  return null;
+}
+
+
 exports.addWorkshops = async (request, response) => {
   try {
-    const { 
+    let { 
       idTaller, 
-      idCapacitacion, 
       nombreTaller, 
       horaEntrada, 
       horaSalida, 
@@ -12,20 +25,34 @@ exports.addWorkshops = async (request, response) => {
       idUsuario,
       descripcion,
       fecha,
-      url
+      Fecha,
+      url,
+      URL,
+      videoCapacitacion
     } = request.body;
+
+    fecha = fecha || Fecha || null;
+    url = url || URL || null;
+
+    const fechaSQL = convertirFechaSQL(fecha);
+
+    if (!fechaSQL) {
+      return response.status(400).json({
+        error: "Formato de fecha inválido. Usa dd/mm/yyyy o yyyy-mm-dd."
+      });
+    }
 
     const taller = new Workshops(
       idTaller || null,
-      idCapacitacion || null,
       nombreTaller || "",
-      horaEntrada || "",
-      horaSalida || "",
+      horaEntrada || null,
+      horaSalida || null,
       estatus || "1",
       idUsuario || null,
       descripcion || "",
-      fecha || "",
-      url || ""
+      fechaSQL, 
+      url,
+      videoCapacitacion || null
     );
 
     const result = await taller.save();
@@ -33,39 +60,51 @@ exports.addWorkshops = async (request, response) => {
     response.status(201).json({
       message: "Taller agregado correctamente",
       data: {
-        idTaller: taller.idTaller,
-        idCapacitacion,
+        idTaller,
         nombreTaller,
         horaEntrada,
         horaSalida,
         estatus,
         idUsuario,
         descripcion,
-        fecha,
-        url
+        fecha: fechaSQL,
+        url,
+        videoCapacitacion
       }
     });
 
   } catch (error) {
     console.error("Error en addWorkshops():", error);
-    response.status(500).json({
-      error: error.message
-    });
+    response.status(500).json({ error: error.message });
   }
 };
 
 exports.modifyWorkshops = async (request, response) => {
   try {
     const { idTaller } = request.params;
-    const { 
+    let { 
       nombreTaller, 
       horaEntrada, 
       horaSalida, 
       estatus, 
       descripcion, 
-      fecha, 
-      url 
+      Fecha, 
+      URL,
+      videoCapacitacion,
+      idUsuario
     } = request.body;
+    console.log(request.body)
+
+    Fecha = Fecha || Fecha || null;
+    URL = URL || URL || null;
+
+    const fechaSQL = convertirFechaSQL(Fecha);
+
+    if (!fechaSQL) {
+      return response.status(400).json({
+        error: "Formato de fecha inválido. Usa dd/mm/yyyy o yyyy-mm-dd."
+      });
+    }
 
     const result = await Workshops.update(
       idTaller,
@@ -74,9 +113,12 @@ exports.modifyWorkshops = async (request, response) => {
       horaSalida,
       estatus,
       descripcion,
-      fecha,
-      url
+      fechaSQL,
+      URL,
+      videoCapacitacion,
+      idUsuario
     );
+    console.log("USER ID:", idUsuario)
 
     response.status(200).json({
       message: "Taller modificado correctamente",
@@ -88,8 +130,10 @@ exports.modifyWorkshops = async (request, response) => {
           ...(horaSalida && { horaSalida }),
           ...(estatus !== undefined && { estatus }),
           ...(descripcion && { descripcion }),
-          ...(fecha && { fecha }),
-          ...(url && { url })
+          ...(Fecha && { Fecha }),
+          ...(URL && { URL }),
+          ...(videoCapacitacion && {videoCapacitacion}),
+          ...(idUsuario && { idUsuario})
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }
@@ -103,23 +147,30 @@ exports.modifyWorkshops = async (request, response) => {
   }
 }
 
+
+// softdelete a Workshop (US: delete workshop)
 exports.deleteWorkshops = async (request, response) => {
-  try {
-    const { idTaller } = request.params;
-    const result = await Workshops.changestatus(idTaller);
+    try {
+        // get the workshop id from request body
+        const idTaller = request.body.id
 
-    if (!result || result.affectedRows === 0) {
-      return response.status(404).json({ message: "Taller no encontrado." });
+        // call the model method to delete the workshop
+        const result = await Workshops.delete(idTaller);
+
+        // send 200 if deleted, 404 if not found
+        response.status(result.success ? 200:404).json(result)
+    } catch (error) {
+        console.error()
+
+        // return 500 internal server error response
+        response.status(500).json({
+            succes: false,
+            message: "Failed to delete a workshop", 
+            error,
+        });
     }
-
-    return response.status(200).json({
-      affectedRows: result.affectedRows
-    });
-
-  } catch (error) {
-    return response.status(500).json({ message: "Error interno del servidor." });
-  }
 };
+
 
 exports.viewWorkshops = async (request, response) => {
     try{
@@ -137,6 +188,7 @@ exports.viewOneWorkshop = async (request, response) => {
         const id = request.params.idTaller;
         const workshop = await Workshops.getOneWorkshop(id);
         response.status(200).json(workshop);
+        console.log(workshop);
     } catch(error) {
         console.error("Error fetching workshop: ", error);
         response.status(500).json({message: "Failed to fetch workshop"});
@@ -145,23 +197,29 @@ exports.viewOneWorkshop = async (request, response) => {
 
 exports.searchWorkshops = async (request, response) => {
     try {
-        const { nameWorkshop } = request.query;
-
-        if (!nameWorkshop || nameWorkshop.trim() === "") {
-            return response.status(400).json({ message: "The name is required" });
+        let { nameWorkshop } = request.query;
+        if (nameWorkshop) {
+            nameWorkshop = nameWorkshop
+                .normalize("NFD")         
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
         }
 
         const workshops = await Workshops.findWorkshop(nameWorkshop);
 
-        if (workshops.length === 0) {
-            return response.status(404).json({ message: "No workshops found with that name." });
-        }
-        response.status(200).json(workshops);
-    } catch (error) {
+        return response.status(200).json(
+            Array.isArray(workshops) ? workshops : []
+        );
 
-        response.status(500).json({ message: "Error searching workshop", error: error.message });
+    } catch (error) {
+        return response.status(500).json({
+            error: error.message
+        });
     }
-}
+};
+
+
 
 /* Controller function to get all diferent results by date or entry hour*/
 exports.getWorkshopsCategories = async (request, response) => {

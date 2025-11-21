@@ -57,27 +57,35 @@ module.exports = class Products {
 
     // Consult all products
     static async fetchAll() {
-        try {
-            const rows = await database.query
-            (
-                `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller 
-                 FROM Productos as p, Taller as t 
-                 WHERE p.idTaller = t.idTaller`
-            );
-            console.log("ROWS:", rows);
-            return rows; // Return the result 
-        } catch (err) {
-            console.error("Error fetching products:", err);
-            throw err;
-        }
+    try {
+        const rows = await database.query(
+            `SELECT 
+                p.idProducto,
+                p.idTaller,
+                p.Nombre, 
+                p.PrecioUnitario,
+                p.idCategoria,
+                p.Descripcion,
+                p.imagen,
+                p.Disponible,
+                t.nombreTaller 
+             FROM Productos as p
+             INNER JOIN Taller as t ON p.idTaller = t.idTaller`
+        );
+        console.log("ROWS:", rows);
+        return rows;
+    } catch (err) {
+        console.error("Error fetching products:", err);
+        throw err;
     }
+}
 
     // Consult one product
     static async fetchOne(id) {
         try{
             const rows = await database.query
             (
-                `SELECT p.Nombre, p.PrecioUnitario, t.nombreTaller, 
+                `SELECT p.idProducto, p.Nombre, p.PrecioUnitario, t.nombreTaller, 
                         c.Descripcion AS Categoria, p.Disponible, 
                         p.Descripcion, p.imagen 
                  FROM Productos as p, Taller as t, Categoria as c 

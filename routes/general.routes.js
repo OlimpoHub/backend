@@ -12,11 +12,14 @@ const productRoutes = require("./product.routes")
 const calendarRoutes = require('./calendar.routes');
 const qrRoutes = require('./qr.routes');
 const discapacityRoutes = require("./discapacity.routes");
+const disabilitiesRoutes = require('./disabilities.routes');
+const notificationsRoutes = require('./notifications.routes');
+
 
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
 router.use("/supplies", suppliesRoutes);
-router.use("/externalCollabs", externalCollabsRoutes);
+router.use("/user", externalCollabsRoutes);
 router.use("/supplyBatch", supplyBatchRouter);
 router.use("/workshop", workshopsRoutes);
 router.use("/productBatch", productBatchRouter);
@@ -24,6 +27,8 @@ router.use("/product", productRoutes);
 router.use("/calendar", calendarRoutes);
 router.use("/qr", qrRoutes);
 router.use("/discapacity", discapacityRoutes);
+router.use("/disabilities", disabilitiesRoutes);
+router.use("/notifications", notificationsRoutes);
 
 
 module.exports = router;

@@ -108,16 +108,20 @@ module.exports = class Supplies {
             // Get all unique categories
             const categories = await database.query(
                 `SELECT DISTINCT idCategoria, descripcion 
-                FROM Categoria`
+                FROM Categoria
+                ORDER BY descripcion ASC`
             );
             // Get all unique measures
             const measures = await database.query(
-                `SELECT DISTINCT unidadMedida FROM Insumo`
+                `SELECT DISTINCT unidadMedida 
+                FROM Insumo
+                ORDER BY unidadMedida ASC`
             );
             // Get all unique workshops
             const workshops = await database.query(
                 `SELECT DISTINCT idTaller, nombreTaller 
-                FROM Taller`
+                FROM Taller
+                ORDER BY nombreTaller ASC`
             );
             // Return simplified arrays with raw values
             console.log("ENTRO AL GET FILTERS DATA");
@@ -218,6 +222,58 @@ module.exports = class Supplies {
 
         } catch(err) {
             console.error("Error fetching workshop and supplies:", err);
+            throw err;
+        }
+    }
+
+    // Check if a supply name already exists (case-insensitive)
+    static async checkSupplyNameExists(name, excludeId = null) {
+        try {
+            let query = `
+                SELECT COUNT(*) 
+                    AS count 
+                FROM Insumo 
+                WHERE nombre LIKE ?`;
+            const params = [name];
+            if (excludeId) {
+                query += ` AND idInsumo != ?`;
+                params.push(excludeId);
+            }
+            const result = await database.query(query, params);
+            
+            // Returns true if name exists, false otherwise
+            return result[0].count > 0; 
+        } catch(err) {
+            console.error("Error checking supply name:", err);
+            throw err;
+        }
+    }
+
+    // Updates one supply gives its id and the new supply data.
+    static async updateOneSupply(idSupply, supply) {
+        try {
+            const result = await database.query(
+                `UPDATE Insumo i
+                SET idTaller = ?,
+                    nombre = ?,
+                    unidadMedida = ?,
+                    idCategoria = ?,
+                    imagenInsumo = ?,
+                    status = ?
+                WHERE i.idInsumo = ?`,
+                [
+                    supply.idTaller,
+                    supply.nombre,
+                    supply.unidadMedida,
+                    supply.idCategoria,
+                    supply.imagenInsumo,
+                    supply.status,
+                    idSupply
+                ]);
+            return result;
+
+        } catch(err) {
+            console.error("Error updating supply:", err);
             throw err;
         }
     }

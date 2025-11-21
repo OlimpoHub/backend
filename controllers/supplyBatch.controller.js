@@ -85,18 +85,17 @@ exports.addSupply = async (request, response) => {
 };
 
 /**
- * Deletes a specific supply batch record from the inventory.
+ * Deletes all supply batch records with a specific expiration date for a given supply.
  */
 exports.deleteSupplyBatch = async (request, response) => {
     try {
-        const idInventario = request.params.idInventario;
-        const result = await SupplyBatch.delete(idInventario);
+        const { idInsumo, fechaCaducidad } = request.body;
+        const result = await SupplyBatch.delete(idInsumo, fechaCaducidad);
         response.status(result.success ? 200 : 404).json(result);
     } catch (error) {
-        console.error("Error deleting supply batch: ", error);
         response.status(500).json({
             success: false,
-            message: "Failed to delete a supply batch",
+            message: "Failed to delete supply batch",
             error,
         });
     }
@@ -155,22 +154,22 @@ exports.modifySupplyBatch = async (request, response) => {
         }
         console.log(idSupplyBatch);
         const { 
-            supplyId, 
-            quantity, 
-            expirationDate, 
-            acquisition, 
-            boughtDate
+            adquisicion,
+            FechaCompra,
+            FechaCaducidad,
+            cantidad,
+            idInsumo
         } = request.body;
         const result = await SupplyBatch.modifySupplyBatch(
             idSupplyBatch,
-            supplyId,
-            quantity,
-            expirationDate,
-            acquisition,
-            boughtDate,
+            idInsumo,
+            cantidad,
+            FechaCaducidad,
+            adquisicion,
+            FechaCompra
         )
 
-        response.status(200).json(result);
+        response.status(200).json({ message: "Supply modified successfully" });
     } catch (error) {
         console.error("Error en modifySupplyBatch():", error);
         response.status(500).json({
@@ -178,3 +177,41 @@ exports.modifySupplyBatch = async (request, response) => {
         });
     }
 };
+
+exports.getSupplyBatchOne = async (request, response) => {
+    try {
+        let { idSupplyBatch } = request.params; 
+        if (idSupplyBatch && idSupplyBatch.startsWith(':')) {
+            idSupplyBatch = idSupplyBatch.replace(':', '');
+        }
+
+        const result = await SupplyBatch.getSupplyBatchOne(
+            idSupplyBatch,
+        )
+        response.status(200).json(result);
+    } catch (error) {
+        console.error("Error en getSupplyBatchOne():", error);
+        response.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+exports.getSupplyBatchDates = async (request, response) => {
+    try {
+        let { date, idInsumo } = request.params;
+        if (date && date.startsWith(':')) date = date.replace(':', '');
+        if (idInsumo && idInsumo.startsWith(':')) idInsumo = idInsumo.replace(':', '');
+
+        const result = await SupplyBatch.getSupplyBatchDates(
+            date,
+            idInsumo,
+        )
+        response.status(200).json(result);
+    } catch (error) {
+        console.error("Error en getSupplyBatchDates():", error);
+        response.status(500).json({
+            error: error.message
+        });
+    }
+}
