@@ -28,10 +28,7 @@ module.exports = class Calendar {
                 Taller.horaEntrada,
                 Taller.horaSalida,
                 Taller.Fecha 
-            FROM Taller 
-            INNER JOIN Usuarios 
-                ON Taller.idUsuario = Usuarios.idUsuario 
-            WHERE Usuarios.idUsuario = ?;
+            FROM Taller;
             `,[idUsuario]);
             console.log("ROWS:", rows);
             return rows;

@@ -28,7 +28,7 @@ exports.post_login = async (req, res) => {
 
         const safeUser = {
             id: user.idUsuario,
-            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`,
+            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno ?? ''}`,
             role: user.roleName
         };
 
