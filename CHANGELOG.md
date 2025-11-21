@@ -1,3 +1,8 @@
+## [0.1.0] - 21/11/2025
+
+### Fixed
+- Fix update beneficiary
+
 ## [0.1.0] - 20/11/2025
 
 ### Added
