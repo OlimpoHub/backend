@@ -1,0 +1,61 @@
+@startuml Products – Filter Operations
+title Product Filters (Disponible, Category, Price, Workshop)
+
+actor Client
+participant "Express\nRouter (/product)" as Router
+participant "Product\nController" as Controller
+participant "Product\nModel" as Model
+database "MariaDB" as DB
+
+' ========= FILTER: Disponible =========
+group Filter by Disponible  (/product/disponible?disponible=1)
+  Client -> Router: GET /disponible?disponible=1
+  Router -> Controller: filterDisponibleP(req, res)
+  Controller -> Model: filterDisponible({ disponible })
+  Model -> DB: SELECT ... FROM Productos p\nWHERE p.Disponible = ?
+  DB --> Model: rows[]
+  Model --> Controller: productos[]
+  Controller --> Router: res.status(200).json(productos)
+  Router --> Client: 200 OK + JSON
+end
+
+' ========= FILTER: Category =========
+group Filter by Category  (/product/category?idCategoria=CAT-01)
+  Client -> Router: GET /category?idCategoria=CAT-01
+  Router -> Controller: filterCategoriaP(req, res)
+  Controller -> Model: filterByCategory({ idCategoria })
+  Model -> DB: SELECT ... FROM Productos p\nWHERE p.idCategoria = ?
+  DB --> Model: rows[]
+  Model --> Controller: productos[]
+  Controller --> Router: res.status(200).json(productos)
+  Router --> Client: 200 OK + JSON
+end
+
+' ========= FILTER: Price =========
+group Filter by Price  (/product/price?minPrecio=5&maxPrecio=50)
+  Client -> Router: GET /price?minPrecio=5&maxPrecio=50
+  Router -> Controller: filterPriceP(req, res)
+  Controller -> Model: filterPrice({ minPrecio, maxPrecio })
+  note right of Controller
+    Normaliza a Number y valida NaN
+  end note
+  Model -> DB: SELECT ... FROM Productos p\nWHERE (p.PrecioUnitario >= ?)\nAND (p.PrecioUnitario <= ?)\nORDER BY p.PrecioUnitario ASC, p.Nombre ASC
+  DB --> Model: rows[]
+  Model --> Controller: productos[]
+  Controller --> Router: res.status(200).json(productos)
+  Router --> Client: 200 OK + JSON
+end
+
+' ========= FILTER: Workshop =========
+group Filter by Workshop  (/product/workshop?idTaller=T-01)
+  Client -> Router: GET /workshop?idTaller=T-01
+  Router -> Controller: filterTallerP(req, res)
+  Controller -> Model: filterByWorkshop({ idTaller })
+  Model -> DB: SELECT ... FROM Productos p\nWHERE p.idTaller = ?
+  DB --> Model: rows[]
+  Model --> Controller: productos[]
+  Controller --> Router: res.status(200).json(productos)
+  Router --> Client: 200 OK + JSON
+end
+
+@enduml

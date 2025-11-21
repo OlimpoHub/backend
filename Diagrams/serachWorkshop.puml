@@ -1,0 +1,42 @@
+@startuml
+title Buscar Talleres - Flujo Principal y Alternos\nAplicación Cliente (MVVM)
+
+actor User
+
+participant ViewBuscarTalleres
+participant TalleresViewModel
+participant RepositorioModel
+participant WorkshopsModel
+database Database
+
+== Búsqueda de talleres ==
+
+User -> ViewBuscarTalleres : 1. Selecciona barra de búsqueda
+User -> ViewBuscarTalleres : 2. Escribe nombre del taller
+
+ViewBuscarTalleres -> TalleresViewModel : onSearchTaller(nombre)
+
+TalleresViewModel -> RepositorioModel : buscarTaller(nombre)
+RepositorioModel -> WorkshopsModel : findByName(nombre)
+WorkshopsModel -> Database : SELECT * FROM Taller WHERE nombre LIKE '%nombre%'
+
+alt 3.1 Error al enviar la información (Error servidor)
+    Database -> WorkshopsModel : Error SQL
+    WorkshopsModel -> RepositorioModel : Lanzar excepción
+    RepositorioModel -> TalleresViewModel : Result.Error("Error en el servidor")
+    TalleresViewModel -> ViewBuscarTalleres : Mostrar error ("No se pudo procesar la búsqueda")
+else Instrucción válida
+    Database --> WorkshopsModel : Lista de coincidencias
+
+    alt 2.1 No se encontró ninguna coincidencia
+        WorkshopsModel --> RepositorioModel : Lista vacía
+        RepositorioModel --> TalleresViewModel : Result.Success([])
+        TalleresViewModel -> ViewBuscarTalleres : Mostrar mensaje ("No se encontraron coincidencias")
+    else Coincidencias encontradas
+        WorkshopsModel --> RepositorioModel : Lista de talleres
+        RepositorioModel --> TalleresViewModel : Result.Success(lista)
+        TalleresViewModel -> ViewBuscarTalleres : 5. Desplegar información de la búsqueda
+    end
+end
+
+@enduml

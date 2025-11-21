@@ -1,0 +1,62 @@
+@startuml
+title Diagrama de Secuencia: BEN-007 Buscar Beneficiarios
+
+actor Coordinador
+participant Frontend
+participant Backend
+database "Base de Datos" as BD
+
+skinparam sequence {
+    ActorBorderColor black
+    ActorBackgroundColor #E0E0E0
+    
+    ParticipantBorderColor black
+    ParticipantBackgroundColor #ADD8E6
+    
+    DatabaseBorderColor black
+    DatabaseBackgroundColor #F0E68C
+}
+
+Coordinador -> Frontend: 1. Selecciona barra de búsqueda
+Coordinador -> Frontend: 2. Escribe el nombre del beneficiario
+Coordinador -> Frontend: Activa la búsqueda (ej. presiona Enter)
+activate Frontend
+
+Frontend -> Backend: 3. buscarCoincidencias(nombre)
+activate Backend
+
+Backend -> BD: 4. Verificar y consultar(nombre)
+activate BD
+
+alt Flujo Exitoso (Paso 5)
+    BD --> Backend: [Lista de coincidencias]
+    deactivate BD
+    
+    Backend --> Frontend: 5. [Datos de beneficiarios encontrados]
+    deactivate Backend
+    
+    Frontend --> Coordinador: Despliega la información de lo buscado
+    deactivate Frontend
+
+else Flujo Alterno 3.1
+    BD --> Backend: [Respuesta vacía]
+    deactivate BD
+    
+    Backend --> Frontend: 3.1 Mensaje: "No se encontró ninguna coincidencia"
+    deactivate Backend
+    
+    Frontend --> Coordinador: Muestra mensaje "No se encontró"
+    deactivate Frontend
+
+else Flujo Alterno 4.1
+    BD --> Backend: [Error de conexión o consulta]
+    deactivate BD
+    
+    Backend --> Frontend: 4.1 Error: "Error en el servidor"
+    deactivate Backend
+    
+    Frontend --> Coordinador: Muestra mensaje "Error en el servidor"
+    deactivate Frontend
+end
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+
+actor api
+boundary supplies.routes as routes
+control supplies.controller as controller
+entity supplies.model as model
+database db
+
+
+activate api
+api -> routes: PUT /supplies/update/:idSupply
+
+activate routes
+routes -> controller: updateSupply(req, res)
+deactivate routes
+
+activate controller
+controller ->> model: updateOneSupply(idSupply, supply)
+
+activate model
+model ->> db: db.execute(`UPDATE Insumo i \n\tSET idTaller = ?, \n\t\tnombre = ?, \n\t\tunidadMedida = ?, \n\t\tidCategoria = ?, \n\t\timagenInsumo = ?, \n\t\tstatus = ? \n\tWHERE idInsumo = ? \n\t[supply.idTaller, \n\tsupply.nombre, \n\tsupply.unidadMedida, \n\tsupply.idCategoria, \n\tsupply.imagenInsumo, \n\tsupply.status, \n\t idSupply]  `)
+
+activate db
+db -->> model: query Ok
+deactivate db
+
+model -->> controller: Promesa
+deactivate model
+
+controller -->> routes: res.status(200)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+@enduml

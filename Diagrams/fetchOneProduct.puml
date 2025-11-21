@@ -1,0 +1,37 @@
+@startuml INV-002 Consult one product
+
+participant api
+boundary product.routes as routes
+control product.controller as controller
+entity product.model as model  
+database db
+
+autonumber
+activate api
+api -> routes: GET /product/:idProduct
+
+activate routes
+routes -> controller: getOneProduct(request, response)
+deactivate routes
+
+activate controller
+controller ->> model: fetchOne(id: string)
+
+activate model
+model ->> db: db.execute(`SELECT p.Nombre, p.PrecioUnitario, \n\t\t\t\tt.nombreTaller, c.Descripcion AS Categoria, \n\t\t\t\tp.Disponible, p.Descripcion, p.imagen \n\t\t  FROM Productos as p, Taller as t, Categoria as c \n\t\t  WHERE p.idTaller = t.idTaller \n\t\t\t and p.idCategoria = c.idCategoria \n\t\t\t and p.idProducto = ?`)
+
+activate db 
+db -->> model: rows
+deactivate db
+
+model -->> controller: product
+deactivate model
+
+controller -->> routes: product
+deactivate controller
+
+activate routes
+routes -> api: response.status(200) + \nproduct
+deactivate routes
+deactivate api
+@enduml

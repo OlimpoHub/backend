@@ -1,0 +1,35 @@
+@startuml
+
+actor api
+boundary product.routes as routes
+control product.controller as controller
+
+activate api
+api -> routes: GET /product/order?orderBy=PrecioVenta&direction=ASC
+
+activate routes
+routes -> controller: orderP(req, res)
+deactivate routes
+
+activate controller
+create entity ProductBatch as p
+controller -> p: ProductBatch.fetchAllWithOrder(orderBy, direction)
+
+database db
+
+activate p
+p ->> db: SELECT ... ORDER BY PrecioVenta ASC
+activate db
+db -->> p: resultados ordenados
+p -->> controller: Array de productos
+deactivate p
+
+controller -->> routes: res.status(200).json(result)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+
+@enduml

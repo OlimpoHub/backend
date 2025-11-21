@@ -1,0 +1,46 @@
+@startuml
+participant Api
+boundary externalCollabs.routes 
+control externalCollabs.controller
+entity externalCollabs.model
+database elArca
+
+activate Api
+Api -> externalCollabs.routes : POST /externalCollabs/register
+deactivate Api
+
+activate externalCollabs.routes
+
+externalCollabs.routes -> externalCollabs.controller : registerExternalCollabs (request, response)
+deactivate externalCollabs.routes
+activate externalCollabs.controller
+
+externalCollabs.controller ->> externalCollabs.model : save(firstPassword,photo);
+
+activate externalCollabs.model
+
+externalCollabs.model ->> elArca : .execute( \n `INSERT INTO Usuarios ( \n idRol,\n nombre,\n apellidoPaterno,\n apellidoMaterno,\n fechaNacimiento,\n carrera,\n correoElectronico,\n contrasena,\n telefono,\n estatus,\n reglamentoInterno,\n copiaINE,\n avisoConfidencialidad,\n foto\n )\n VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+activate elArca
+
+elArca -->> externalCollabs.model : promise
+
+deactivate elArca
+
+externalCollabs.model -->> externalCollabs.controller : promise
+
+deactivate externalCollabs.model
+
+externalCollabs.controller -->> externalCollabs.routes : responseJSON(result)
+deactivate externalCollabs.controller
+
+activate externalCollabs.routes
+
+externalCollabs.routes -->> Api : responseJSON(result)
+
+deactivate externalCollabs.routes
+activate Api
+
+deactivate Api
+
+@enduml

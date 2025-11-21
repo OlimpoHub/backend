@@ -1,0 +1,39 @@
+@startuml
+
+actor user
+participant externalColabsScreen as screen
+participant externalColabsListViewModel as vm
+participant externalColabsSearchUseCase as us
+participant externalColabsRepositoryImpl as repo
+participant Api as api
+
+activate user
+user ->> screen: types the name of a colaborator
+
+activate screen
+screen ->> vm: sends the name to search it
+
+activate vm
+vm ->> us: invoke()
+
+activate us
+us ->> repo: searchExternalColabsList(key: String)
+
+activate repo
+repo ->> api: searchExternalColabList(key: String)
+
+activate api
+api -->> repo: ExternalColabsListDto
+deactivate api
+
+repo -->> us: List<ExternalColabs>
+deactivate repo
+
+us -->> vm: Flow<Result<List<ExternalColabs>>>
+deactivate us
+
+vm -->> screen: StateFlow<ExternalColabsUiState>
+
+screen ->> user: Displays the colab(s) \nthat match with the name
+
+@enduml

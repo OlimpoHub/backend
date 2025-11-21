@@ -1,7 +1,7 @@
-const database = require('../utils/db');
+const database = require('../utils/db.js');
 module.exports = class Beneficiary {
     constructor(beneficiaryId, firstName, paternalLastName, maternalLastName, dateOfBirth, emergencyPhoneNumber, emergencyContactName, emergencyContactRelationship, description, admissionDate, photo) {
-        this.beneficiaryId = beneficiaryId;
+        this.beneficiaryId = beneficiaryId || uuidv4();
         this.firstName = firstName; 
         this.paternalLastName = paternalLastName; 
         this.maternalLastName = maternalLastName; 
@@ -12,11 +12,139 @@ module.exports = class Beneficiary {
         this.description = description;
         this.admissionDate = admissionDate;
         this.photo = photo;
+        // NOTA: La tabla tambien tiene 'estatus', pero no esta en este constructor
+        // No hay problema para BEN-04 pero hay que tenerlo en cuenta para el 'create' o 'update'.
     }
 
-    static async fetchAll() {
+    // Revisar si el beneficiario existe BEN-001
+    static async exists(data) {
+        const sql = `
+            SELECT * FROM Beneficiarios
+            WHERE nombre = ?
+            AND apellidoPaterno = ?
+            AND apellidoMaterno = ?
+            AND fechaNacimiento = ?
+        `;
+
+        const params = [
+            data.nombre,
+            data.apellidoPaterno,
+            data.apellidoMaterno,
+            data.fechaNacimiento
+        ];
+
+        const rows = await database.query(sql, params);
+        return rows.length > 0;
+    }
+
+
+
+    // Function to create new beneficiary BEN-001
+    static async registerBeneficiary(data) {
         try {
-            const rows = await database.query("SELECT * FROM Beneficiarios");
+            console.log(data);
+
+            if (await this.exists(data)) {
+                return {
+                success: false,
+                message: "El Beneficiario ya existe",
+            };
+            }
+
+            const sql = `
+                INSERT INTO Beneficiarios
+                (nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia,
+                relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+
+            const params = [
+                data.nombre,
+                data.apellidoPaterno,
+                data.apellidoMaterno,
+                data.fechaNacimiento,
+                data.numeroEmergencia,
+                data.nombreContactoEmergencia,
+                data.relacionContactoEmergencia,
+                data.descripcion,
+                data.fechaIngreso,
+                data.foto,
+                1
+            ];
+
+            const sql2 = `
+                INSERT INTO BeneficiarioDiscapacidades (idDiscapacidad, idBeneficiario)
+                SELECT ?, idBeneficiario
+                FROM Beneficiarios
+                WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
+            `;
+
+
+            const params2 = [
+                data.discapacidad,
+                data.nombre,
+                data.apellidoPaterno,
+                data.apellidoMaterno,
+                data.fechaNacimiento
+            ];
+
+            const result = await database.query(sql, params);
+            const result2 = await database.query(sql2, params2);
+
+            console.log("POST");
+            return {
+                success: true,
+                message: "Creado con éxito",
+            };
+        } catch (error) {
+            console.error("Error al registrar beneficiario:", error);
+
+            return {
+                success: false,
+                message: "Error interno del servidor",
+            };
+        }
+    }
+
+    static async fetchById(id) {
+        try {
+            const rows = await database.query(`SELECT Ben.*, LD.nombre AS discapacidad
+                                               FROM Beneficiarios Ben
+                                               LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                                               LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                                               WHERE Ben.idBeneficiario = ?`, [id]);
+            return rows[0];
+        } catch (err) {
+            console.error(`Error al obtener beneficiario con id ${id}:`, err);
+            throw err;
+        }
+    }
+
+    // Nueva Funcion
+    static async deactivate(id) {
+        try {
+            const result = await database.query(`UPDATE Beneficiarios 
+                                                 SET estatus = 0 
+                                                 WHERE idBeneficiario = ?`, [id]);
+            return result;
+        } catch (err) {
+            console.error(`Error al desactivar a beneficiario con id ${id}:`, err);
+            throw err;
+        }
+    }
+
+    // Model para BEN-02:
+    // Lista de beneficiarios + discapacidad ordenado por nombre de beneficiario
+    static async beneficiariesList() {
+        try {
+            const rows = await database.query(
+                `SELECT Ben.*, LD.nombre AS discapacidad
+                FROM Beneficiarios Ben
+                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                WHERE estatus = 1
+                ORDER BY Ben.nombre`);
             console.log("ROWS:", rows);
             return rows;
         } catch (err) {
@@ -25,122 +153,114 @@ module.exports = class Beneficiary {
         }
     }
 
-    // Mock data for PokedexApp Lab.
-    // In production we will use DB data
-    static fetchAllPokemons() {
-        return new Promise((resolve) => {
-            const data = {
-                count: 1328,
-                next: "https://pokeapi.co/api/v2/pokemon?offset=10&limit=10",
-                previous: null,
-                results: [
-                    { name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" },
-                    { name: "ivysaur", url: "https://pokeapi.co/api/v2/pokemon/2/" },
-                    { name: "venusaur", url: "https://pokeapi.co/api/v2/pokemon/3/" },
-                    { name: "charmander", url: "https://pokeapi.co/api/v2/pokemon/4/" },
-                    { name: "charmeleon", url: "https://pokeapi.co/api/v2/pokemon/5/" },
-                    { name: "charizard", url: "https://pokeapi.co/api/v2/pokemon/6/" },
-                    { name: "squirtle", url: "https://pokeapi.co/api/v2/pokemon/7/" },
-                    { name: "wartortle", url: "https://pokeapi.co/api/v2/pokemon/8/" },
-                    { name: "blastoise", url: "https://pokeapi.co/api/v2/pokemon/9/" },
-                    { name: "caterpie", url: "https://pokeapi.co/api/v2/pokemon/10/" },
-                ]
-            };
-            resolve(data);
-        });
+    // Model para BEN-003
+    static async update(idBeneficiario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idDiscapacidad) {
+        try {
+            const query = `UPDATE Beneficiarios
+                           SET nombre = ?,
+                           apellidoPaterno = ?,
+                           apellidoMaterno = ?,
+                           fechaNacimiento = ?,
+                           numeroEmergencia = ?,
+                           nombreContactoEmergencia = ?,
+                           relacionContactoEmergencia = ?,
+                           descripcion = ?,
+                           fechaIngreso = ?,
+                           foto = ?,
+                           estatus  = ?
+                           WHERE idBeneficiario = ?`;
+
+                           const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idBeneficiario];
+            const query2 = `UPDATE BeneficiarioDiscapacidades
+                            SET idDiscapacidad = ?
+                            WHERE idBeneficiario = ?`;
+                            const params2 = [idDiscapacidad, idBeneficiario]
+                           const result = await database.execute(query, params);
+                           const result2 = await database.execute(query2, params2);
+                           return (result && result2);
+        } catch (err) {
+            console.error(`Error al actualizar beneficiario con id ${idBeneficiario}:`, err);
+            throw err;
+        }
     }
 
-    static fetchById(id) {
-        return new Promise((resolve, reject) => {
-            const mockPokemons = {
-                1: {
-                    id: 1,
-                    name: "bulbasaur",
-                    height: 7,
-                    weight: 69,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                2: {
-                    id: 2,
-                    name: "ivysaur",
-                    height: 10,
-                    weight: 130,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                3: {
-                    id: 3,
-                    name: "venusaur",
-                    height: 20,
-                    weight: 1000,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png" },
-                    types: [{ type: { name: "grass" } }, { type: { name: "poison" } }]
-                },
-                4: {
-                    id: 4,
-                    name: "charmander",
-                    height: 6,
-                    weight: 85,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" },
-                    types: [{ type: { name: "fire" } }]
-                },
-                5: {
-                    id: 5,
-                    name: "charmeleon",
-                    height: 11,
-                    weight: 190,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png" },
-                    types: [{ type: { name: "fire" } }]
-                },
-                6: {
-                    id: 6,
-                    name: "charizard",
-                    height: 17,
-                    weight: 905,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" },
-                    types: [{ type: { name: "fire" } }, { type: { name: "flying" } }]
-                },
-                7: {
-                    id: 7,
-                    name: "squirtle",
-                    height: 5,
-                    weight: 90,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                8: {
-                    id: 8,
-                    name: "wartortle",
-                    height: 10,
-                    weight: 225,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                9: {
-                    id: 9,
-                    name: "blastoise",
-                    height: 16,
-                    weight: 855,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png" },
-                    types: [{ type: { name: "water" } }]
-                },
-                10: {
-                    id: 10,
-                    name: "caterpie",
-                    height: 3,
-                    weight: 29,
-                    sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png" },
-                    types: [{ type: { name: "bug" } }]
-                },
-            };
+    // Filter beneficiaries by disability (list ordered by name)
+    static async filter(body = {}) {
+    console.log("Filter body:", body);
 
-            const pokemon = mockPokemons[id];
-            if (pokemon) {
-                resolve(pokemon);
-            } else {
-                reject(new Error("Pokémon no encontrado"));
-            }
-        });
+    const filters = body.filters || {};  // <-- antes body.filter
+    const discapacidad = filters["Discapacidades"] || []; // <-- antes discapacidad
+
+    try {
+        let query = `
+        SELECT Ben.*, LD.nombre AS discapacidad
+        FROM Beneficiarios Ben
+        LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+        LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+        WHERE estatus = 1
+        `;
+
+        const params = [];
+
+        if (discapacidad.length > 0) {
+            query += ` AND LD.nombre IN (${discapacidad.map(() => '?').join(', ')})`;
+            params.push(...discapacidad);
+        }
+
+        if (body.order) {
+            query += ` ORDER BY Ben.nombre ${body.order}`;
+        }
+
+        const rows = await database.query(query, params);
+        return rows;
+    } catch (error) {
+        console.log("Error al obtener lista de beneficiarios", error);
+        throw error;
+    }
+}
+
+
+    // Get categories on the disabilities for filtering
+    static async getCategories(){
+        try{
+            const discapacidad = await database.query(
+                `
+                SELECT DISTINCT nombre as discapacidad
+                FROM ListaDiscapacidades
+                ORDER BY nombre ASC
+                `
+            );
+
+            console.log("Discapacidades:", discapacidad);
+
+            return {
+                    discapacidad: discapacidad.map(e => e.discapacidad),
+                };
+        } catch(error){
+            console.error("Error al obtener datos de filtrado:", error);
+            throw error;
+        }
+    }
+
+    // --- Nuevo para BEN-007
+    static async searchByName(searchTerm) {
+        try {
+            const query = `
+                SELECT Ben.*, LD.nombre AS discapacidad
+                FROM Beneficiarios Ben
+                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                WHERE CONCAT(Ben.nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
+                AND estatus = 1
+            `;
+            const params = [`%${searchTerm}%`];
+
+            const rows = await database.query(query, params);
+
+            return rows;
+        } catch (err) {
+            console.error(`Error al buscar beneficiarios con termino "${searchTerm}":`, err);
+            throw err;
+        }
     }
 }

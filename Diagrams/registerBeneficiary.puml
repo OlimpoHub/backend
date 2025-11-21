@@ -1,0 +1,58 @@
+@startuml Diagrama de Secuencia: Registro de beneficiario (MVVM)
+
+title Diagrama de Secuencia: Registro de beneficiario (MVVM)
+skinparam participantPadding 10
+skinparam boxPadding 10
+
+Actor Usuario
+
+box "Aplicación Cliente (MVVM)"
+    participant Vista as "Vista (View)\n(Beneficiario Cards Register)"
+    participant ViewModel as "ViewModel\n(BeneficiarioCardsRegisterViewModel)"
+    participant Repositorio as "Repositorio/Servicio\n(Model)"
+end box
+
+autonumber "<b>0.</b>"
+
+Usuario -> Vista: Click en "Registar"
+activate Vista
+
+
+Vista -> Usuario: Formulario del nuevo beneficiario
+activate Usuario
+
+Usuario -> Vista: Petición POST
+deactivate Usuario
+
+Vista -> ViewModel: exports.registerBeneficiary(beneficiary)
+activate ViewModel
+
+ViewModel -> Repositorio: CHECK if exists
+activate Repositorio
+
+alt Beneficiario Existente (Flujo alterno 5.1)
+    Repositorio -> ViewModel: Exists!
+
+    ViewModel -> Vista: Exists!
+
+    Vista -> Usuario: PopUp
+end
+
+ViewModel -> Repositorio: POST
+
+alt Datos incorrectos (Flujo alterno 6.1)
+    Repositorio -> ViewModel: catch
+
+    ViewModel -> Vista: catch
+
+    ViewModel -> Usuario: PopUp
+end
+
+Repositorio -> ViewModel: Success!
+deactivate Repositorio
+
+ViewModel -> Vista: Success!
+deactivate ViewModel
+
+Vista -> Usuario: PopUp
+deactivate Vista
