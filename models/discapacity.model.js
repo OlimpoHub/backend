@@ -3,15 +3,17 @@ const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Discapacity {
     constructor(idDiscapacidad, nombre, descripcion) {
+        // Generate UUID if no ID is provided
         this.idDiscapacidad = idDiscapacidad || uuidv4();
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
+    // Save a new disability into the database
     async save() {
         const query = `
-            INSERT INTO ListaDiscapacidades 
-            (idDiscapacidad, nombre, caracteristicas)
+            INSERT INTO Discapacidades 
+            (idDiscapacidad, nombre, descripcion)
             VALUES (?, ?, ?)
         `;
 
@@ -21,61 +23,71 @@ module.exports = class Discapacity {
             this.descripcion
         ];
 
+        // Execute INSERT query
         return await db.execute(query, values);
     }
 
+    // Update an existing disability
     static async update(idDiscapacidad, nombre, descripcion) {
         const query = `
-            UPDATE ListaDiscapacidades
-            SET nombre = ?, caracteristicas = ?
+            UPDATE Discapacidades
+            SET nombre = ?, descripcion = ?
             WHERE idDiscapacidad = ?
         `;
 
         const params = [nombre, descripcion, idDiscapacidad];
+
+        // Execute UPDATE query
         return await db.execute(query, params);
     }
 
+    // Delete a disability by ID
     static async delete(idDiscapacidad) {
         const query = `
-            DELETE FROM ListaDiscapacidades
+            DELETE FROM Discapacidades
             WHERE idDiscapacidad = ?
         `;
 
+        // Execute DELETE query
         return await db.execute(query, [idDiscapacidad]);
     }
 
+    // Get all disabilities
     static async getDiscapacities() {
         const query = `
-            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
-            FROM ListaDiscapacidades
+            SELECT idDiscapacidad, nombre, descripcion
+            FROM Discapacidades
             ORDER BY nombre ASC
         `;
 
-        const rows = await db.execute(query);
+        // Execute SELECT query
+        const [rows] = await db.execute(query);
         return rows;
     }
 
+    // Get a single disability by ID
     static async getOneDiscapacity(id) {
         const query = `
-            SELECT idDiscapacidad, nombre, caracteristicas
-            FROM ListaDiscapacidades
+            SELECT idDiscapacidad, nombre, descripcion
+            FROM Discapacidades
             WHERE idDiscapacidad = ?
         `;
 
+        // Execute SELECT query
         const [rows] = await db.execute(query, [id]);
         return rows.length > 0 ? rows[0] : null;
     }
 
+    // Search disabilities by name (partial match)
     static async findByName(nombre) {
         const query = `
-            SELECT idDiscapacidad, nombre, caracteristicas
-            FROM ListaDiscapacidades
+            SELECT idDiscapacidad, nombre, descripcion
+            FROM Discapacidades
             WHERE nombre LIKE ?
         `;
 
+        // Execute SELECT query with wildcard search
         const [rows] = await db.execute(query, [`%${nombre}%`]);
         return rows;
     }
 };
-
-
