@@ -75,6 +75,7 @@ exports.viewDiscapacities = async (req, res) => {
   try {
     const list = await Discapacity.getDiscapacities();
     res.status(200).json(list);
+    console.log(list);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch discapacities list." });
   }

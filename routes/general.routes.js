@@ -11,7 +11,7 @@ const productBatchRouter = require("./productBatch.routes")
 const productRoutes = require("./product.routes")
 const calendarRoutes = require('./calendar.routes');
 const qrRoutes = require('./qr.routes');
-const discapacityRoutes = requiere("./discapacity.routes");
+const discapacityRoutes = require("./discapacity.routes");
 
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes

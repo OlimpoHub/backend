@@ -10,8 +10,8 @@ module.exports = class Discapacity {
 
     async save() {
         const query = `
-            INSERT INTO Discapacidades 
-            (idDiscapacidad, nombre, descripcion)
+            INSERT INTO ListaDiscapacidades 
+            (idDiscapacidad, nombre, caracteristicas)
             VALUES (?, ?, ?)
         `;
 
@@ -26,8 +26,8 @@ module.exports = class Discapacity {
 
     static async update(idDiscapacidad, nombre, descripcion) {
         const query = `
-            UPDATE Discapacidades
-            SET nombre = ?, descripcion = ?
+            UPDATE ListaDiscapacidades
+            SET nombre = ?, caracteristicas = ?
             WHERE idDiscapacidad = ?
         `;
 
@@ -37,7 +37,7 @@ module.exports = class Discapacity {
 
     static async delete(idDiscapacidad) {
         const query = `
-            DELETE FROM Discapacidades
+            DELETE FROM ListaDiscapacidades
             WHERE idDiscapacidad = ?
         `;
 
@@ -46,19 +46,19 @@ module.exports = class Discapacity {
 
     static async getDiscapacities() {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
+            FROM ListaDiscapacidades
             ORDER BY nombre ASC
         `;
 
-        const [rows] = await db.execute(query);
+        const rows = await db.execute(query);
         return rows;
     }
 
     static async getOneDiscapacity(id) {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre, caracteristicas
+            FROM ListaDiscapacidades
             WHERE idDiscapacidad = ?
         `;
 
@@ -68,8 +68,8 @@ module.exports = class Discapacity {
 
     static async findByName(nombre) {
         const query = `
-            SELECT idDiscapacidad, nombre, descripcion
-            FROM Discapacidades
+            SELECT idDiscapacidad, nombre, caracteristicas
+            FROM ListaDiscapacidades
             WHERE nombre LIKE ?
         `;
 
