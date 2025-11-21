@@ -1,0 +1,46 @@
+@startuml
+participant Api
+boundary workshops.routes 
+control workshops.controller
+entity workshops.model
+database elArca
+
+activate Api
+Api -> workshops.routes : POST /workshops/delete
+deactivate Api
+
+activate workshops.routes
+
+workshops.routes -> workshops.controller :  deleteWorkshop(request, response)
+deactivate workshops.routes
+activate workshops.controller
+
+workshops.controller ->> workshops.model : delete(idTaller)
+
+activate workshops.model
+
+workshops.model ->> elArca : execute("UPDATE Taller SET estatus = 0 WHERE idTaller = ?")
+
+activate elArca
+
+elArca -->> workshops.model : result
+
+deactivate elArca
+
+workshops.model -->> workshops.controller : result
+
+deactivate workshops.model
+
+workshops.controller -->> workshops.routes : responseJSON(result)
+deactivate workshops.controller
+
+activate workshops.routes
+
+workshops.routes -->> Api : responseJSON(result)
+
+deactivate workshops.routes
+activate Api
+
+deactivate Api
+
+@enduml

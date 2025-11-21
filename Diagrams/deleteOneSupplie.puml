@@ -1,0 +1,46 @@
+@startuml
+participant Api
+boundary supplies.routes 
+control supplies.controller
+entity supplies.model
+database elArca
+
+activate Api
+Api -> supplies.routes : POST /supplies/delete
+deactivate Api
+
+activate supplies.routes
+
+supplies.routes -> supplies.controller :  deleteOneSupply(request, response)
+deactivate supplies.routes
+activate supplies.controller
+
+supplies.controller ->> supplies.model : delete(idInsumo)
+
+activate supplies.model
+
+supplies.model ->> elArca : execute("UPDATE Insumo SET status = 0 WHERE idInsumo = ?")
+
+activate elArca
+
+elArca -->> supplies.model : result
+
+deactivate elArca
+
+supplies.model -->> supplies.controller : result
+
+deactivate supplies.model
+
+supplies.controller -->> supplies.routes : responseJSON(result)
+deactivate supplies.controller
+
+activate supplies.routes
+
+supplies.routes -->> Api : responseJSON(result)
+
+deactivate supplies.routes
+activate Api
+
+deactivate Api
+
+@enduml

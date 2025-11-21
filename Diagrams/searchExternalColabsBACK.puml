@@ -1,0 +1,37 @@
+@startuml
+
+actor api
+boundary externalColabs.routes as routes
+control externalColabs.controller as controller
+entity externalColabs.model as model
+database db
+
+activate api
+api -> routes: POST /externalColabs/search
+
+activate routes
+routes -> controller: searchExternalColabs(req, res)
+deactivate routes
+
+activate controller
+controller ->> model: searchExternalColabs\n(\n\tkey: String\n)
+
+activate model
+model ->> db: db.execute(\n\t`SELECT u.idUsuario, u.nombre, u.estatus,\n\t\tu.apellidoPaterno, u.apellidoMaterno \n\tFROM Usuarios u \n\tJOIN Roles r \n\t\tON r.idRol = u.idRol \n\tWHERE CONCAT_WS(' ', u.nombre, u.apellidoPaterno, u.apellidoMaterno) \n\t\tLIKE CONCAT('%', ?, '%' ) \n\tOR u.nombre LIKE CONCAT('%', ?, '%' ) \n\tOR u.apellidoPaterno LIKE CONCAT('%', ?, '%' ) \n\tOR u.apellidoMaterno LIKE CONCAT('%', ?, '%' )\n\tORDER BY r.nombreRol ASC`)
+
+activate db
+db -->> model: rows
+deactivate db
+
+model -->> controller: externalColabsList
+deactivate model
+
+controller -->> routes: res.json(externalColabsList)
+deactivate controller
+
+activate routes
+routes -> api: res.status(201)\n\t.json(externalColabsList)
+deactivate routes
+deactivate api
+
+@enduml

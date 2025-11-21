@@ -1,0 +1,45 @@
+﻿@startuml
+
+
+actor api
+boundary supplyBatch.routes as routes
+control supplyBatch.controller as controller
+entity supplyBatch.model as model
+database db
+
+
+activate api
+api -> routes: GET /supplyBatch/
+
+
+activate routes
+routes -> controller: getSupplyBatch(request, response)
+deactivate routes
+
+
+activate controller
+controller ->> model: fetchAll()
+
+
+activate model
+model ->> db: db.execute(`SELECT i.nombre, i.imagenInsumo, \n\t\ti.unidadMedida, i.idInsumo, inv.cantidadActual, \n\t\tinv.fechaCaducidad\n\tFROM insumos i \n\tJOIN inventarioInsumos inv \n\t\tON i.idInsumo = inv.idInsumo \n\tGROUP BY i.idInsumo, i.nombre, i.imagenInsumo`)
+
+
+activate db 
+db -->> model: supplyBatchList
+deactivate db
+
+
+model -->> controller: supplyBatchList
+deactivate model
+
+
+controller -->> routes: supplyBatchJSON
+deactivate controller
+
+
+activate routes
+routes -> api: response.status(200) + \nsupplyBatchJSON
+deactivate routes
+deactivate api
+@enduml

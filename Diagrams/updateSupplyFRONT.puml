@@ -1,0 +1,68 @@
+@startuml
+actor user
+participant SupplyUpdateScreen as screen
+participant SupplyUpdateViewModel as vm
+participant SupplyUpdateUseCase as us1
+participant GetWorkshopCategoryUseCase as us2
+participant SupplyRepositoryImpl as repo
+participant Api as api
+
+user ->> screen: view update screen
+
+activate screen
+screen ->> vm: click a la pestaña de modificar
+
+activate vm
+vm ->> us2: getWorkshopCategoryList()
+
+activate us2
+us2 ->> repo: getWorkshopCategoryList()
+
+activate repo
+repo ->> api: getWorkshopCategoryList()
+
+activate api
+api -->> repo: WorkshopCategoryListDto
+deactivate api
+
+repo -->> us2: WorkshopCategoryList
+deactivate repo
+
+us2 -->> vm: Flow<Result<WorkshopCategoryList>>
+deactivate us2
+
+vm -->> screen: StateFlow<SupplyFormState>
+deactivate vm
+
+screen -->> user: shows the screen of modify
+
+user ->> screen: enters new info of the Supply
+
+screen ->> vm: Created
+
+activate vm
+vm ->> us1: updateSupply(supply: Supply)
+
+activate us1
+us1 ->> repo: updateSupply(supply: Supply)
+
+activate repo 
+repo ->> api: updateSupply(supply, image)
+
+activate api
+api -->> repo: SupplyDto
+deactivate api
+
+repo -->> us1: Supply
+deactivate repo
+
+us1 -->> vm: Flow<Result<Supply>>
+deactivate us1
+
+vm -->> screen: StateFlow<SupplyUpdateState>
+deactivate vm
+
+screen -->> user: muestra confirmación \nde modificar el insumo
+deactivate screen
+
+@enduml

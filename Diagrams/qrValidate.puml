@@ -1,0 +1,78 @@
+@startuml
+actor api
+boundary qr.routes as routes
+control qr.controller as controller
+entity user.model as model
+entity attendance.model as attendanceModel
+database elArca.sql as db
+
+activate api
+api -> routes: POST /qr/validate
+
+activate routes
+routes -> controller: validateQR(req, res)
+deactivate routes
+
+activate controller
+
+alt Decrypted read time out of limits
+    controller -> api: response.status(406)
+else Decrypted read time is inside the limits
+
+    controller ->> model: findByID(decryptedCreator)
+    activate model
+
+    model ->> db: execute(\n"SELECT u.*, r.nombreRol AS roleName \n FROM Usuarios u \n INNER JOIN Roles r ON u.idRol = r.idRol \n WHERE u.idUsuario = ? \n LIMIT 1"\n)
+
+    activate db
+
+    db -->> model: user
+    deactivate db
+
+    model -->> controller: user
+    deactivate model
+
+    alt User is a collaborator
+        controller -> api: response.status(406)
+    else User is a coordinator
+    
+        controller ->> attendanceModel: getCurrentAttendance(userID, readTime)
+        activate attendanceModel
+        attendanceModel ->> db: execute(...)
+        activate db
+        db -->> attendanceModel: currentAttendance
+        deactivate db
+        attendanceModel -->> controller
+        deactivate attendanceModel
+        
+        alt User has no attendance on that day
+            create entity attendance
+            controller -> attendance: New attendance(readerID, workshopID, readTimeStr)
+            activate attendance
+            controller ->> attendance: save()
+            attendance ->> db: execute(...)
+            activate db
+            db -->> attendance: response
+            deactivate db
+            attendance -->> controller: response
+            deactivate attendance
+            controller -> api: response.status(201)
+        else User has a full attendance
+            controller -> api: response.status()
+        else User has only entrance attendanceModel
+            controller ->> attendanceModel: addExitAttendance(currentAttendance[0].idAsistencia, readTime)
+            activate attendanceModel
+            attendanceModel ->> db: execute(...)
+            activate db
+            db -->> attendanceModel: response
+            deactivate db
+            attendanceModel -->> controller
+            deactivate attendanceModel
+            controller -> api: response.status(201)
+            deactivate controller
+        end
+    end
+end
+deactivate api
+
+@enduml

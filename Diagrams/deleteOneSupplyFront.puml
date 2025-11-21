@@ -1,0 +1,51 @@
+@startuml MVVM_Flow
+actor User
+participant SuppliesDetail
+participant SuppliesDetailViewModel
+participant DesicionDialog
+participant Snackbar
+participant DeleteOneSupplyUseCase
+participant SupplyRepository
+participant ArcaApi
+
+
+
+User -> SuppliesDetail: View Screen
+activate SuppliesDetail
+
+SuppliesDetail -> DesicionDialog: Onclick Delete Button
+activate DesicionDialog
+
+DesicionDialog -> SuppliesDetailViewModel: Confirmation Onclick
+deactivate DesicionDialog
+
+activate SuppliesDetailViewModel
+
+SuppliesDetailViewModel -> DeleteOneSupplyUseCase: invoke()
+activate DeleteOneSupplyUseCase
+
+DeleteOneSupplyUseCase -> SupplyRepository: PostDeleteOneSupply(id)
+activate SupplyRepository
+
+SupplyRepository -> ArcaApi: PostDeleteOneSupply(id)
+activate ArcaApi
+
+ArcaApi --> SupplyRepository: Result<true|false>
+deactivate ArcaApi
+
+SupplyRepository --> DeleteOneSupplyUseCase: Result<true|false>
+deactivate SupplyRepository
+
+DeleteOneSupplyUseCase --> SuppliesDetailViewModel: Flow<Result<true|false>>
+deactivate DeleteOneSupplyUseCase
+
+SuppliesDetailViewModel -> Snackbar: Show "Delete Successful" or "Delete Failed"
+deactivate SuppliesDetailViewModel
+activate Snackbar
+
+Snackbar --> SuppliesDetail: StateFlow<Show Snackbar Message> o seria el SupplyUiState?
+deactivate Snackbar
+
+SuppliesDetail --> User: Display Snackbar Message 
+
+@enduml

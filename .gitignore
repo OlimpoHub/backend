@@ -7,3 +7,8 @@ package-lock.json
 
 
 .env
+
+
+# Keep `uploads/` directory but ignore its contents; allow a tracked `.gitkeep`
+uploads/*
+!uploads/.gitkeep

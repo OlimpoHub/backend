@@ -1,0 +1,55 @@
+@startuml View Supplies (Asynchronous Clean Architecture Flow)
+header View Supplies (Asynchronous Clean Architecture Flow)
+autonumber
+
+actor User
+participant SuppliesScreen
+participant SuppliesListViewModel
+participant SuppliesListUseCase
+participant SuppliesRepository
+participant SuppliesRepositoryImpl
+participant SuppliesApi
+
+' --- Flujo desde la vista ---
+activate User
+User -> SuppliesScreen: Opens supplies screen
+deactivate User
+
+activate SuppliesScreen
+SuppliesScreen -> SuppliesListViewModel: loadSupplies()
+deactivate SuppliesScreen
+
+activate SuppliesListViewModel
+SuppliesListViewModel ->> SuppliesListUseCase: invoke()
+
+activate SuppliesListUseCase
+SuppliesListUseCase ->> SuppliesRepository: getSuppliesList()
+
+activate SuppliesRepository
+SuppliesRepository ->> SuppliesRepositoryImpl: getSuppliesList()
+
+activate SuppliesRepositoryImpl
+SuppliesRepositoryImpl ->> SuppliesApi: GET /supplies
+
+activate SuppliesApi
+SuppliesApi --> SuppliesRepositoryImpl: response.results.map
+deactivate SuppliesApi
+
+SuppliesRepositoryImpl --> SuppliesRepository: List<Supply>
+deactivate SuppliesRepositoryImpl
+
+SuppliesRepository --> SuppliesListUseCase: List<Supply>
+deactivate SuppliesRepository
+
+SuppliesListUseCase --> SuppliesListViewModel: Flow<Result<List<Supply>>>
+deactivate SuppliesListUseCase
+
+SuppliesListViewModel --> SuppliesScreen: StateFlow<SuppliesUiState>
+deactivate SuppliesListViewModel
+
+activate SuppliesScreen
+SuppliesScreen --> User: Supplies list displayed
+deactivate SuppliesScreen
+
+@enduml
+

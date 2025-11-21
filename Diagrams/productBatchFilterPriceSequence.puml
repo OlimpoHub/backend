@@ -1,0 +1,35 @@
+@startuml
+
+actor api
+boundary productBatch.routes as routes
+control productBatch.controller as controller
+
+activate api
+api -> routes: GET /productBatch/filter/price?minPrecio=5&maxPrecio=50
+
+activate routes
+routes -> controller: filterPricePb(req, res)
+deactivate routes
+
+activate controller
+create entity ProductBatch as pb
+controller -> pb: ProductBatch.filterPrice(minPrecio, maxPrecio)
+
+database db
+
+activate pb
+pb ->> db: SELECT ... WHERE PrecioVenta BETWEEN ? AND ?
+activate db
+db -->> pb: lotes filtrados
+pb -->> controller: Array de lotes
+deactivate pb
+
+controller -->> routes: res.status(200).json(result)
+deactivate controller
+
+activate routes
+routes -> api: response.status(200)
+deactivate routes
+deactivate api
+
+@enduml
