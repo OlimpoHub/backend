@@ -1,5 +1,8 @@
 ## [0.1.0] - 20/11/2025
 
+### Added
+- Backend for disabilities in capacitations
+
 ### Fixed
 - Fix workshop controller
 - Fix workshop controller for update
