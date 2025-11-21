@@ -1,5 +1,18 @@
 const Beneficiary = require('../models/beneficiary.model');
 
+function convertirFechaSQL(fechaStr) {
+  if (!fechaStr) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) {
+    return fechaStr;
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr)) {
+    const [dia, mes, anio] = fechaStr.split("/");
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  return null;
+}
+
 // Nueva función para BEN-04
 exports.deleteBeneficiary = async (req, res) => {
     // 1. (Pendiente) Autenticación
@@ -68,6 +81,9 @@ exports.beneficiariesList = async (req, res) => {
 exports.postBeneficiary = async (req, res) => {
     try {
         const data = req.body;
+
+        data.fechaNacimiento = convertirFechaSQL(data.fechaNacimiento);
+        data.fechaIngreso = convertirFechaSQL(data.fechaIngreso);
 
         const result = await Beneficiary.registerBeneficiary(data);
         
