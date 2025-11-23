@@ -1,3 +1,8 @@
+## [0.1.0] - 23/11/2025
+
+### Added
+- Implemented endpoint to update disabilities including route, controller, and model logic
+
 ## [0.1.0] - 20/11/2025
 
 ### Fixed
