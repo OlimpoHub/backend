@@ -13,6 +13,7 @@ const calendarRoutes = require('./calendar.routes');
 const qrRoutes = require('./qr.routes');
 const disabilitiesRoutes = require('./disabilities.routes');
 const notificationsRoutes = require('./notifications.routes');
+const attendanceRoutes = require('./attendance.routes');
 
 
 router.use("/beneficiary", beneficiary_routes);
@@ -27,6 +28,7 @@ router.use("/calendar", calendarRoutes);
 router.use("/qr", qrRoutes);
 router.use("/disabilities", disabilitiesRoutes);
 router.use("/notifications", notificationsRoutes);
+router.use("/attendance", attendanceRoutes);
 
 
 module.exports = router;

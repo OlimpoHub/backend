@@ -178,6 +178,11 @@
 ### Changed
 - viewOneWorkshop now returns URL, date and teh user in charge
 
+## [0.1.0] - 24/11/2025
+
+### Added
+- Endpoint to fetch all attendance for a user.
+
 ## [0.1.0] - 08/11/2025
 
 ### Added 

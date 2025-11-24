@@ -50,4 +50,16 @@ module.exports = class Attendance {
             throw err;
         }
     }
+
+    static async fetchAttendancesByUser(userID) {
+        const rows = await database.query(
+            `SELECT idAsistencia, idUsuario, idTaller, fechaInicio, fechaFin
+             FROM Asistencia
+             WHERE idUsuario = ?
+             ORDER BY fechaInicio DESC`,
+            [userID]
+        );
+        return rows;
+    }
+
 }   
