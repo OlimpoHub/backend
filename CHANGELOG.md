@@ -1,3 +1,8 @@
+## [0.1.0] - 25/11/2025
+
+### Added
+- Controller, model and routes for consulting attendances
+
 ## [0.1.0] - 20/11/2025
 
 ### Fixed
