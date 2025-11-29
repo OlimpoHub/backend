@@ -1,4 +1,3 @@
-
 const express = require('express');
 
 const app = express();
@@ -7,12 +6,15 @@ const bodyParser = require('body-parser');
 
 const user_routes = require("./routes/user.routes");
 const general_routes = require("./routes/general.routes");
+const upload_routes = require("./routes/upload.routes");
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/uploads', express.static('uploads'));
+
 app.use("/user", user_routes);
+app.use("/upload", upload_routes);
 app.use("/", general_routes);
 
 app.listen(
