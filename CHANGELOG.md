@@ -2,6 +2,7 @@
 
 ### Changed
 - Change beneficiary model for disabilities
+- Change now beneficiaries register with multiple disabilities
 
 ## [0.1.0] - 20/11/2025
 

@@ -73,6 +73,16 @@ module.exports = class Beneficiary {
                 1
             ];
 
+            try {
+                const result = await database.query(sql, params);
+            } catch (error) {
+                console.error("Error al registar beneficiario:", error);
+                return {
+                    success: false,
+                    message: "Error al registar beneficiario, intente más tarde",
+                };
+            }
+
             const sql2 = `
                 INSERT INTO BeneficiarioDiscapacidades (idDiscapacidad, idBeneficiario)
                 SELECT ?, idBeneficiario
@@ -80,23 +90,30 @@ module.exports = class Beneficiary {
                 WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
             `;
 
-
-            const params2 = [
-                data.discapacidad,
-                data.nombre,
-                data.apellidoPaterno,
-                data.apellidoMaterno,
-                data.fechaNacimiento
-            ];
-
-            const result = await database.query(sql, params);
-            const result2 = await database.query(sql2, params2);
+            for (const item of data.discapacidades) {
+                const params2 = [
+                    item.id,
+                    data.nombre,
+                    data.apellidoPaterno,
+                    data.apellidoMaterno,
+                    data.fechaNacimiento
+                ];
+                try {
+                    const result2 = await database.query(sql2, params2);
+                } catch (error) {
+                    console.error("Error al registar beneficiario:", error);
+                    return {
+                        success: false,
+                        message: "Error al registar discapacidades, intente más tarde",
+                    };
+                }
+            }
 
             console.log("POST");
-            return {
-                success: true,
-                message: "Creado con éxito",
-            };
+                return {
+                    success: true,
+                    message: "Creado con éxito",
+                };
         } catch (error) {
             console.error("Error al registrar beneficiario:", error);
 
