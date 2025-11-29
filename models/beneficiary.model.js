@@ -91,6 +91,8 @@ module.exports = class Beneficiary {
 
             const result = await database.query(sql, params);
             const result2 = await database.query(sql2, params2);
+
+            console.log("POST");
             return {
                 success: true,
                 message: "Creado con éxito",

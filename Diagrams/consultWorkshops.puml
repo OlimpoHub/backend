@@ -1,0 +1,37 @@
+@startuml
+
+actor api
+boundary workshops.routes as routes
+control workshops.controller as controller
+entity workshops.model as model
+database db
+
+activate api
+api -> routes: GET /workshop/
+deactivate api
+
+activate routes
+routes -> controller: viewWorkshops(req, res)
+deactivate routes
+
+activate controller
+controller -> model: getWorkshops()
+activate model
+
+model ->> db: db.query(\n\t`\n\t SELECT t.idTaller,\n\t t.nombreTaller, \n\t`\n\t);
+
+activate db
+
+db -->> model: rows
+deactivate db
+
+
+model -> controller: rows
+deactivate model
+
+
+controller -> api: rows
+deactivate controller
+activate api
+
+@enduml
