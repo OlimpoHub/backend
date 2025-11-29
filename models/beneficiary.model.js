@@ -107,17 +107,34 @@ module.exports = class Beneficiary {
 
     static async fetchById(id) {
         try {
-            const rows = await database.query(`SELECT Ben.*, LD.nombre AS discapacidad
-                                               FROM Beneficiarios Ben
-                                               LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
-                                               LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-                                               WHERE Ben.idBeneficiario = ?`, [id]);
-            return rows[0];
+            const rows = await database.query(
+                `SELECT 
+                    Ben.*, 
+                    GROUP_CONCAT(LD.nombre) AS discapacidades
+                FROM Beneficiarios Ben
+                LEFT JOIN BeneficiarioDiscapacidades BD 
+                    ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD 
+                    ON LD.idDiscapacidad = BD.idDiscapacidad
+                WHERE Ben.idBeneficiario = ?
+                GROUP BY Ben.idBeneficiario`,
+                [id]
+            );
+
+            if (!rows[0]) return null;
+            return {
+                ...rows[0],
+                discapacidades: rows[0].discapacidades
+                    ? rows[0].discapacidades.split(",")
+                    : []
+            };
+
         } catch (err) {
             console.error(`Error al obtener beneficiario con id ${id}:`, err);
             throw err;
         }
     }
+
 
     // Nueva Funcion
     static async deactivate(id) {
@@ -133,21 +150,45 @@ module.exports = class Beneficiary {
     }
 
     // Model para BEN-02:
-    // Lista de beneficiarios + discapacidad ordenado por nombre de beneficiario
     static async beneficiariesList() {
         try {
-            const rows = await database.query(
-                `SELECT Ben.*, LD.nombre AS discapacidad
+            const rows = await database.query(`
+                SELECT Ben.*, LD.nombre AS discapacidad
                 FROM Beneficiarios Ben
-                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
-                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
+                LEFT JOIN BeneficiarioDiscapacidades BD 
+                    ON Ben.idBeneficiario = BD.idBeneficiario
+                LEFT JOIN ListaDiscapacidades LD 
+                    ON LD.idDiscapacidad = BD.idDiscapacidad
                 WHERE estatus = 1
-                ORDER BY Ben.nombre`);
-            console.log("ROWS:", rows);
-            return rows;
+                ORDER BY Ben.nombre
+            `);
+
+            const map = new Map();
+
+            rows.forEach(row => {
+                const id = row.idBeneficiario;
+
+                if (!map.has(id)) {
+                    const newRow = { 
+                        ...row,
+                        discapacidades: row.discapacidad ? [row.discapacidad] : []
+                    };
+                    delete newRow.discapacidad; 
+                    map.set(id, newRow);
+                } else {
+                    if (row.discapacidad) {
+                        map.get(id).discapacidades.push(row.discapacidad);
+                    }
+                }
+            });
+
+            const result = Array.from(map.values());
+            console.log("Beneficiarios agrupados:", result);
+            return result;
+
         } catch (err) {
             console.error("Error al obtener beneficiarios:", err);
-            throw err; 
+            throw err;
         }
     }
 
