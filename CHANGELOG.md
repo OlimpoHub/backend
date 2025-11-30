@@ -1,4 +1,6 @@
 ## [0.1.0] - 29/11/2025
+### Added
+- Authentication middleware before protected enpoints
 
 ### Changed
 - Change beneficiary model for disabilities
