@@ -90,9 +90,9 @@ module.exports = class Beneficiary {
                 WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
             `;
 
-            for (const item of data.discapacidades) {
+            for (const discapacidadId of data.discapacidades) {
                 const params2 = [
-                    item.id,
+                    discapacidadId,
                     data.nombre,
                     data.apellidoPaterno,
                     data.apellidoMaterno,
