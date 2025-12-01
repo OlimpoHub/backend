@@ -3,6 +3,9 @@
 ### Changed
 - update password email form
 
+### Fixed
+- fix column name on discapacity
+
 ## [0.1.0] - 29/11/2025
 ### Added
 - Authentication middleware before protected enpoints
