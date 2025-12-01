@@ -1,3 +1,8 @@
+## [0.1.0] - 30/11/2025
+
+### Changed
+- update password email form
+
 ## [0.1.0] - 29/11/2025
 
 ### Changed
