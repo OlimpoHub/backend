@@ -14,7 +14,9 @@ const qrRoutes = require('./qr.routes');
 const discapacityRoutes = require("./discapacity.routes");
 const disabilitiesRoutes = require('./disabilities.routes');
 const notificationsRoutes = require('./notifications.routes');
+const {authenticateToken} = require("../utils/auth.middleware");
 
+router.use(authenticateToken);
 
 router.use("/beneficiary", beneficiary_routes);
 // Supplies routes
