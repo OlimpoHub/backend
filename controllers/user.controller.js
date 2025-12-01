@@ -28,7 +28,7 @@ exports.post_login = async (req, res) => {
 
         const safeUser = {
             id: user.idUsuario,
-            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`,
+            username: `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno ?? ''}`,
             role: user.roleName
         };
 
@@ -105,15 +105,15 @@ exports.recoverPassword = async (req, res) => {
         host: 'smtp.mailgun.org',
         port: 587,
         auth: {
-            user: process.env.MAILGUN_USER,
-            pass: process.env.MAILGUN_PASSWORD
+            user: process.env.MAILSENDER_USER,
+            pass: process.env.MAILSENDER_PASSWORD
         }
     });
 
-    const link = `${process.env.BASE_URL}/user/verify-token?token=${token}`
+    const link = `${process.env.APP_URL_SCHEME}/user/update-password?token=${token}`
 
     await transporter.sendMail({
-        from: `"El arca" <${process.env.MAILGUN_USER}>`,
+        from: `"El arca" <${process.env.MAILSENDER_USER}>`,
         to: `${email}`,
         subject: 'Recuperar Contraseña',
         text: 'Dale click al siguiente link para recuperar contraseña',

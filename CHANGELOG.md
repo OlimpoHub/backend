@@ -1,12 +1,48 @@
+## [0.1.0] - 1/12/2025
+
+### Changed
+- update email link
+
+## [0.1.0] - 30/11/2025
+
+### Changed
+- update password email form
+
+## [0.1.0] - 29/11/2025
+### Added
+- Authentication middleware before protected enpoints
+
+### Changed
+- Change beneficiary model for disabilities
+- Change now beneficiaries register with multiple disabilities
+
 ## [0.1.0] - 25/11/2025
 
 ### Added
 - Controller, model and routes for consulting attendances
 
+## [0.1.0] - 24/11/2025
+
+### Added
+- Endpoint to fetch all attendance for a user.
+
+## [0.1.0] - 23/11/2025
+
+### Added
+- Implemented endpoint to update disabilities including route, controller, and model logic
+
 ## [0.1.0] - 20/11/2025
+
+### Added
+- Backend for disabilities in capacitations
 
 ### Fixed
 - Fix workshop controller
+- Fix workshop controller for update
+- Date properly registers on Register beneficiary
+- Fix user having null mother's last name
+- Fix calendar showing only the "owner"
+
 
 ## [0.1.0] - 19/11/2025
 
@@ -182,11 +218,6 @@
 
 ### Changed
 - viewOneWorkshop now returns URL, date and teh user in charge
-
-## [0.1.0] - 24/11/2025
-
-### Added
-- Endpoint to fetch all attendance for a user.
 
 ## [0.1.0] - 08/11/2025
 

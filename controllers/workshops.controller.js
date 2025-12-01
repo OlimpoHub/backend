@@ -82,16 +82,29 @@ exports.addWorkshops = async (request, response) => {
 exports.modifyWorkshops = async (request, response) => {
   try {
     const { idTaller } = request.params;
-    const { 
+    let { 
       nombreTaller, 
       horaEntrada, 
       horaSalida, 
       estatus, 
       descripcion, 
-      fecha, 
-      url,
-      videoCapacitacion
+      Fecha, 
+      URL,
+      videoCapacitacion,
+      idUsuario
     } = request.body;
+    console.log(request.body)
+
+    Fecha = Fecha || Fecha || null;
+    URL = URL || URL || null;
+
+    const fechaSQL = convertirFechaSQL(Fecha);
+
+    if (!fechaSQL) {
+      return response.status(400).json({
+        error: "Formato de fecha inválido. Usa dd/mm/yyyy o yyyy-mm-dd."
+      });
+    }
 
     const result = await Workshops.update(
       idTaller,
@@ -100,10 +113,12 @@ exports.modifyWorkshops = async (request, response) => {
       horaSalida,
       estatus,
       descripcion,
-      fecha,
-      url,
-      videoCapacitacion
+      fechaSQL,
+      URL,
+      videoCapacitacion,
+      idUsuario
     );
+    console.log("USER ID:", idUsuario)
 
     response.status(200).json({
       message: "Taller modificado correctamente",
@@ -115,9 +130,10 @@ exports.modifyWorkshops = async (request, response) => {
           ...(horaSalida && { horaSalida }),
           ...(estatus !== undefined && { estatus }),
           ...(descripcion && { descripcion }),
-          ...(fecha && { fecha }),
-          ...(url && { url }),
-          ...(videoCapacitacion && {videoCapacitacion})
+          ...(Fecha && { Fecha }),
+          ...(URL && { URL }),
+          ...(videoCapacitacion && {videoCapacitacion}),
+          ...(idUsuario && { idUsuario})
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
       }
