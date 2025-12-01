@@ -1,8 +1,20 @@
+## [0.1.0] - 30/11/2025
+
+### Changed
+- update password email form
+
 ## [0.1.0] - 29/11/2025
+### Added
+- Authentication middleware before protected enpoints
 
 ### Changed
 - Change beneficiary model for disabilities
 - Change now beneficiaries register with multiple disabilities
+
+## [0.1.0] - 23/11/2025
+
+### Added
+- Implemented endpoint to update disabilities including route, controller, and model logic
 
 ## [0.1.0] - 20/11/2025
 
