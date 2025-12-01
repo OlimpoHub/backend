@@ -110,7 +110,7 @@ exports.recoverPassword = async (req, res) => {
         }
     });
 
-    const link = `${process.env.APP_URL_SCHEME}/user/verify-token?token=${token}`
+    const link = `${process.env.APP_URL_SCHEME}/user/update-password?token=${token}`
 
     await transporter.sendMail({
         from: `"El arca" <${process.env.MAILSENDER_USER}>`,
