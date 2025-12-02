@@ -6,6 +6,9 @@
 ### Changed
 - update email link
 
+### Fixed
+- Fixed modify beneficiary: select multiple disabilities
+
 ## [0.1.0] - 30/11/2025
 
 ### Changed
