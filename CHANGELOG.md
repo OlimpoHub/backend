@@ -1,3 +1,8 @@
+## [0.1.1] - 2/12/2025
+
+### Fixed
+- Search beneficiaries
+
 ## [0.1.0] - 1/12/2025
 
 ### Changed
