@@ -102,7 +102,7 @@ exports.recoverPassword = async (req, res) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.mailgun.org',
+        host: 'smtp.mailersend.net',
         port: 587,
         auth: {
             user: process.env.MAILSENDER_USER,
