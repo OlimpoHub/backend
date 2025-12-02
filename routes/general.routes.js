@@ -32,5 +32,4 @@ router.use("/discapacity", discapacityRoutes);
 router.use("/disabilities", disabilitiesRoutes);
 router.use("/notifications", notificationsRoutes);
 
-
 module.exports = router;
