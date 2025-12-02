@@ -98,6 +98,7 @@ exports.viewDiscapacities = async (req, res) => {
 // Get a single disability by ID
 exports.viewOneDiscapacity = async (req, res) => {
     try {
+        console.log("si")
         const { idDiscapacidad } = req.params;
 
         // Retrieve disability by ID
