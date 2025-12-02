@@ -2,6 +2,7 @@
 
 ### Fixed
 - Search beneficiaries
+- Get disability's details
 
 ## [0.1.0] - 1/12/2025
 
