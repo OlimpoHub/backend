@@ -25,6 +25,16 @@
 - Change beneficiary model for disabilities
 - Change now beneficiaries register with multiple disabilities
 
+## [0.1.0] - 25/11/2025
+
+### Added
+- Controller, model and routes for consulting attendances
+
+## [0.1.0] - 24/11/2025
+
+### Added
+- Endpoint to fetch all attendance for a user.
+
 ## [0.1.0] - 23/11/2025
 
 ### Added
