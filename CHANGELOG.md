@@ -1,4 +1,11 @@
-## [0.1.0] - 01/12/2025
+## [0.1.0] - 1/12/2025
+
+### Added
+- Access files endpoint
+
+### Changed
+- update email link
+
 ### Fixed
 - Fixed modify beneficiary: select multiple disabilities
 
@@ -14,6 +21,11 @@
 ### Changed
 - Change beneficiary model for disabilities
 - Change now beneficiaries register with multiple disabilities
+
+## [0.1.0] - 23/11/2025
+
+### Added
+- Implemented endpoint to update disabilities including route, controller, and model logic
 
 ## [0.1.0] - 20/11/2025
 
