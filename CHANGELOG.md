@@ -1,3 +1,7 @@
+## [0.1.0] - 01/12/2025
+### Fixed
+- Fixed modify beneficiary: select multiple disabilities
+
 ## [0.1.0] - 30/11/2025
 
 ### Changed
