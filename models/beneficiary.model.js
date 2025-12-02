@@ -212,7 +212,7 @@ module.exports = class Beneficiary {
     }
 
     // Model para BEN-003
-    static async update(idBeneficiario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idDiscapacidad) {
+    static async update(idBeneficiario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, discapacidades) {
         try {
             const query = `UPDATE Beneficiarios
                            SET nombre = ?,
@@ -227,15 +227,51 @@ module.exports = class Beneficiary {
                            foto = ?,
                            estatus  = ?
                            WHERE idBeneficiario = ?`;
-
                            const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idBeneficiario];
-            const query2 = `UPDATE BeneficiarioDiscapacidades
-                            SET idDiscapacidad = ?
-                            WHERE idBeneficiario = ?`;
-                            const params2 = [idDiscapacidad, idBeneficiario]
-                           const result = await database.execute(query, params);
-                           const result2 = await database.execute(query2, params2);
-                           return (result && result2);
+
+            try {
+                const result = await database.query(query, params);
+            } catch (error) {
+                console.error("Error al modificar beneficiario:", error);
+                return {
+                    success: false,
+                    message: "Error al registar modificar, intente más tarde",
+                };
+            }
+            
+            
+            const query2 = `DELETE
+                            FROM BeneficiarioDiscapacidades
+                            WHERE idBeneficiario = ?`
+
+            const query3 = `
+                INSERT INTO BeneficiarioDiscapacidades (idDiscapacidad, idBeneficiario)
+                SELECT ?, idBeneficiario
+                FROM Beneficiarios
+                WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
+            `;
+
+            const result2 = await database.query(query2, idBeneficiario)
+
+            for (const discapacidadId of discapacidades) {
+                const params3 = [
+                    discapacidadId,
+                    nombre,
+                    apellidoPaterno,
+                    apellidoMaterno,
+                    fechaNacimiento
+                ];
+                try {
+                    const result3 = await database.query(query3, params3);
+                } catch (error) {
+                    console.error("Error al modificar beneficiario:", error);
+                    return {
+                        success: false,
+                        message: "Error al modificar discapacidades, intente más tarde",
+                    };
+                }
+            }
+     
         } catch (err) {
             console.error(`Error al actualizar beneficiario con id ${idBeneficiario}:`, err);
             throw err;

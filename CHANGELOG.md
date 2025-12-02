@@ -1,12 +1,21 @@
 ## [0.1.0] - 1/12/2025
 
+### Added
+- Access files endpoint
+
 ### Changed
 - update email link
+
+### Fixed
+- Fixed modify beneficiary: select multiple disabilities
 
 ## [0.1.0] - 30/11/2025
 
 ### Changed
 - update password email form
+
+### Fixed
+- fix column name on discapacity
 
 ## [0.1.0] - 29/11/2025
 ### Added
