@@ -340,11 +340,9 @@ module.exports = class Beneficiary {
     static async searchByName(searchTerm) {
         try {
             const query = `
-                SELECT Ben.*, LD.nombre AS discapacidad
-                FROM Beneficiarios Ben
-                LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
-                LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-                WHERE CONCAT(Ben.nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
+                SELECT *
+                FROM Beneficiarios
+                WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
                 AND estatus = 1
             `;
             const params = [`%${searchTerm}%`];

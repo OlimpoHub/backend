@@ -1,3 +1,12 @@
+## [0.1.1] - 2/12/2025
+
+### Fixed
+- Search beneficiaries
+- Get disability's details
+
+### Added
+- Add upload logic in index and route
+
 ## [0.1.0] - 1/12/2025
 
 ### Added
