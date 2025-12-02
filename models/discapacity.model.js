@@ -13,7 +13,7 @@ module.exports = class Discapacity {
     async save() {
         const query = `
             INSERT INTO ListaDiscapacidades 
-            (idDiscapacidad, nombre, descripcion)
+            (idDiscapacidad, nombre, caracteristicas)
             VALUES (?, ?, ?)
         `;
 

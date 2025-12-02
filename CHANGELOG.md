@@ -15,10 +15,16 @@
 ### Changed
 - update email link
 
+### Fixed
+- Fixed modify beneficiary: select multiple disabilities
+
 ## [0.1.0] - 30/11/2025
 
 ### Changed
 - update password email form
+
+### Fixed
+- fix column name on discapacity
 
 ## [0.1.0] - 29/11/2025
 ### Added
@@ -27,6 +33,16 @@
 ### Changed
 - Change beneficiary model for disabilities
 - Change now beneficiaries register with multiple disabilities
+
+## [0.1.0] - 25/11/2025
+
+### Added
+- Controller, model and routes for consulting attendances
+
+## [0.1.0] - 24/11/2025
+
+### Added
+- Endpoint to fetch all attendance for a user.
 
 ## [0.1.0] - 23/11/2025
 
