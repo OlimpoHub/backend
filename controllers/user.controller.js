@@ -89,7 +89,18 @@ exports.post_refresh = async (req, res) => {
     }
 };
 
-
+/**
+ * recoverPassword
+ * --------------------------------------------------------
+ * Sends a password recovery email containing a JWT link
+ * valid for 15 minutes.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.body.email - User email
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { message: 'Recovery email sent' }
+ */
 exports.recoverPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -102,7 +113,7 @@ exports.recoverPassword = async (req, res) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.mailgun.org',
+        host: 'smtp.mailersend.net',
         port: 587,
         auth: {
             user: process.env.MAILSENDER_USER,
@@ -220,6 +231,18 @@ exports.recoverPassword = async (req, res) => {
   }
 }
 
+/**
+ * verifyToken
+ * --------------------------------------------------------
+ * Validates a password recovery token. If valid, returns
+ * the associated email address.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.query.token - Token to validate
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { valid: boolean, email?: string, message: string }
+ */
 exports.verifyToken = async (req, res) => {
     try {
         const { token } = req.query;
@@ -244,6 +267,18 @@ exports.verifyToken = async (req, res) => {
     }
 }
 
+/**
+ * updatePassword
+ * --------------------------------------------------------
+ * Updates a user's password using their email.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.body.email - User email
+ * @param {string} req.body.password - New password
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { status: boolean, message: string }
+ */
 exports.updatePassword = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -268,6 +303,16 @@ exports.updatePassword = async (req, res) => {
     }
 }
 
+/**
+ * getAllUsers
+ * --------------------------------------------------------
+ * Retrieves all registered users in the system.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} Array of user objects
+ */
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.fetchAllUser();

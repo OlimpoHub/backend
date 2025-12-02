@@ -3,6 +3,7 @@
 ### Fixed
 - Search beneficiaries
 - Get disability's details
+- host of node mailer
 
 ### Added
 - Add upload logic in index and route
