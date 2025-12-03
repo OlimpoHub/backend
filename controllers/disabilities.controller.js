@@ -35,3 +35,15 @@ exports.updateDisabilities = async (request, response) => {
       message: "Failed to update disability." });
   }
 };
+
+exports.fetchDisability = async (req, res) => {
+  const {idDiscapacidad} = req.params;
+  try {
+      const discapacidad = await Disability.fetchDisability(idDiscapacidad);
+
+      res.status(200).json(discapacidad);
+
+  } catch (error) {
+      res.status(500).json({ message: "Error al obtener la discapacidad." });
+  }
+};

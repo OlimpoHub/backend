@@ -1,3 +1,9 @@
+## [0.1.1] - 3/12/2025
+
+### Fixed
+- Update beneficiary
+- Disability's files (disabilities and discapacity)
+
 ## [0.1.1] - 2/12/2025
 
 ### Fixed
