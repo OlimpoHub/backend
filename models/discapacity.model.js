@@ -13,7 +13,7 @@ module.exports = class Discapacity {
     async save() {
         const query = `
             INSERT INTO ListaDiscapacidades 
-            (idDiscapacidad, nombre, descripcion)
+            (idDiscapacidad, nombre, caracteristicas)
             VALUES (?, ?, ?)
         `;
 
@@ -68,13 +68,13 @@ module.exports = class Discapacity {
     // Get a single disability by ID
     static async getOneDiscapacity(id) {
         const query = `
-            SELECT idDiscapacidad, nombre as name, caracteristicas as descripcion
+            SELECT *
             FROM ListaDiscapacidades
             WHERE idDiscapacidad = ?
         `;
 
         // Execute SELECT query
-        const [rows] = await db.execute(query, [id]);
+        const rows = await db.execute(query, [id]);
         return rows.length > 0 ? rows[0] : null;
     }
 

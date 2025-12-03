@@ -65,6 +65,10 @@ module.exports = class User {
        return rows.length > 0 ? rows[0] : null;
     }
 
+    /**
+     * Check if a user exists using their email.
+     * Returns true if the email is already registered, false otherwise.
+     */
     static async existsByEmail(email) {
         const result = await database.query(`
             SELECT COUNT(*) AS count
@@ -77,6 +81,10 @@ module.exports = class User {
         return result[0].count > 0;
     };
 
+    /**
+     * Update a user's password using their email.
+     * Returns true if the password was updated successfully.
+     */
     static async updatePassword(email, password) {
         const result = await database.query(`
             UPDATE Usuarios

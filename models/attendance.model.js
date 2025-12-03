@@ -50,4 +50,23 @@ module.exports = class Attendance {
             throw err;
         }
     }
+
+    static async fetchAttendancesByUser(userId) {
+      const rows = await database.query(
+        `SELECT
+            a.idAsistencia,
+            a.idUsuario,
+            a.idTaller,
+            t.nombreTaller,       -- 👈 NUEVO
+            a.fechaInicio,
+            a.fechaFin
+         FROM Asistencia a
+         JOIN Taller t ON a.idTaller = t.idTaller
+         WHERE a.idUsuario = ?`,
+        [userId]
+      );
+      return rows;
+    }
+
+
 }   
