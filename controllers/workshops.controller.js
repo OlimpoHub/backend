@@ -13,7 +13,6 @@ function convertirFechaSQL(fechaStr) {
   return null;
 }
 
-
 exports.addWorkshops = async (request, response) => {
   try {
     let { 
@@ -27,8 +26,7 @@ exports.addWorkshops = async (request, response) => {
       fecha,
       Fecha,
       url,
-      URL,
-      videoCapacitacion
+      URL
     } = request.body;
 
     fecha = fecha || Fecha || null;
@@ -51,8 +49,7 @@ exports.addWorkshops = async (request, response) => {
       idUsuario || null,
       descripcion || "",
       fechaSQL, 
-      url,
-      videoCapacitacion || null
+      url
     );
 
     const result = await taller.save();
@@ -68,8 +65,7 @@ exports.addWorkshops = async (request, response) => {
         idUsuario,
         descripcion,
         fecha: fechaSQL,
-        url,
-        videoCapacitacion
+        url
       }
     });
 
@@ -90,7 +86,6 @@ exports.modifyWorkshops = async (request, response) => {
       descripcion, 
       Fecha, 
       URL,
-      videoCapacitacion,
       idUsuario
     } = request.body;
     console.log(request.body)
@@ -115,10 +110,8 @@ exports.modifyWorkshops = async (request, response) => {
       descripcion,
       fechaSQL,
       URL,
-      videoCapacitacion,
       idUsuario
     );
-    console.log("USER ID:", idUsuario)
 
     response.status(200).json({
       message: "Taller modificado correctamente",
@@ -132,7 +125,6 @@ exports.modifyWorkshops = async (request, response) => {
           ...(descripcion && { descripcion }),
           ...(Fecha && { Fecha }),
           ...(URL && { URL }),
-          ...(videoCapacitacion && {videoCapacitacion}),
           ...(idUsuario && { idUsuario})
         },
         affectedRows: result[0]?.affectedRows || result.affectedRows
@@ -147,81 +139,69 @@ exports.modifyWorkshops = async (request, response) => {
   }
 }
 
-
-// softdelete a Workshop (US: delete workshop)
+// softdelete a Workshop
 exports.deleteWorkshops = async (request, response) => {
-    try {
-        // get the workshop id from request body
-        const idTaller = request.body.id
+  try {
+      const idTaller = request.body.id
+      const result = await Workshops.delete(idTaller);
 
-        // call the model method to delete the workshop
-        const result = await Workshops.delete(idTaller);
-
-        // send 200 if deleted, 404 if not found
-        response.status(result.success ? 200:404).json(result)
-    } catch (error) {
-        console.error()
-
-        // return 500 internal server error response
-        response.status(500).json({
-            succes: false,
-            message: "Failed to delete a workshop", 
-            error,
-        });
-    }
+      response.status(result.success ? 200:404).json(result)
+  } catch (error) {
+      console.error()
+      response.status(500).json({
+          succes: false,
+          message: "Failed to delete a workshop", 
+          error,
+      });
+  }
 };
 
-
 exports.viewWorkshops = async (request, response) => {
-    try{
-        const workshopList = await Workshops.getWorkshops();
-        response.status(200).json(workshopList);
-    } catch(error) {
-        console.error("Error fetching workshop list: ", error);
-        response.status(500).json({message: "Failed to fetch workshop list"});
-    }
+  try{
+      const workshopList = await Workshops.getWorkshops();
+      response.status(200).json(workshopList);
+  } catch(error) {
+      console.error("Error fetching workshop list: ", error);
+      response.status(500).json({message: "Failed to fetch workshop list"});
+  }
 }
 
-
 exports.viewOneWorkshop = async (request, response) => {
-    try{
-        const id = request.params.idTaller;
-        const workshop = await Workshops.getOneWorkshop(id);
-        response.status(200).json(workshop);
-        console.log(workshop);
-    } catch(error) {
-        console.error("Error fetching workshop: ", error);
-        response.status(500).json({message: "Failed to fetch workshop"});
-    }
+  try{
+      const id = request.params.idTaller;
+      const workshop = await Workshops.getOneWorkshop(id);
+      response.status(200).json(workshop);
+      console.log(workshop);
+  } catch(error) {
+      console.error("Error fetching workshop: ", error);
+      response.status(500).json({message: "Failed to fetch workshop"});
+  }
 }
 
 exports.searchWorkshops = async (request, response) => {
-    try {
-        let { nameWorkshop } = request.query;
-        if (nameWorkshop) {
-            nameWorkshop = nameWorkshop
-                .normalize("NFD")         
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .trim();
-        }
+  try {
+      let { nameWorkshop } = request.query;
+      if (nameWorkshop) {
+          nameWorkshop = nameWorkshop
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .trim();
+      }
 
-        const workshops = await Workshops.findWorkshop(nameWorkshop);
+      const workshops = await Workshops.findWorkshop(nameWorkshop);
 
-        return response.status(200).json(
-            Array.isArray(workshops) ? workshops : []
-        );
+      return response.status(200).json(
+          Array.isArray(workshops) ? workshops : []
+      );
 
-    } catch (error) {
-        return response.status(500).json({
-            error: error.message
-        });
-    }
+  } catch (error) {
+      return response.status(500).json({
+          error: error.message
+      });
+  }
 };
 
-
-
-/* Controller function to get all diferent results by date or entry hour*/
 exports.getWorkshopsCategories = async (request, response) => {
   try{
     const categories = await Workshops.getWorkshopsCategories();
@@ -232,7 +212,6 @@ exports.getWorkshopsCategories = async (request, response) => {
   }
 }
 
-/* Controller function to filter the workshops depending on a type*/
 exports.viewWorkshopsFiltered = async (request, response) => {
   try {
       const filters  = request.body;
@@ -243,5 +222,3 @@ exports.viewWorkshopsFiltered = async (request, response) => {
       response.status(500).json({ message: "Error filtering Workshops." });
   }
 }
-
-

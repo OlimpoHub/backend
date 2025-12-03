@@ -2,7 +2,7 @@ const db = require('../utils/db.js');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Workshops {
-    constructor(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url, videoCapacitacion) {
+    constructor(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url) {
         this.idTaller = idTaller || uuidv4();
         this.nombreTaller = nombreTaller;
         this.horaEntrada = horaEntrada;
@@ -12,15 +12,14 @@ module.exports = class Workshops {
         this.descripcion = descripcion;
         this.fecha = fecha;
         this.url = url;
-        this.videoCapacitacion = videoCapacitacion;
     }
 
     async save() {
         try {
             const query = `
                 INSERT INTO Taller 
-                (idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, Descripcion, Fecha, URL, videoCapacitacion) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, Descripcion, Fecha, URL) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             
             const values = [
@@ -32,8 +31,7 @@ module.exports = class Workshops {
                 this.idUsuario,
                 this.descripcion,
                 this.fecha,
-                this.url,
-                this.videoCapacitacion
+                this.url
             ];
 
             const result = await db.execute(query, values);
@@ -56,8 +54,7 @@ module.exports = class Workshops {
                 'idUsuario',
                 'Descripcion',
                 'Fecha',
-                'URL',
-                'videoCapacitacion'
+                'URL'
             ];
 
             const campos = Object.keys(tallerData).filter(key => camposValidos.includes(key));
@@ -74,7 +71,7 @@ module.exports = class Workshops {
         }
     }
 
-    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario) {
+    static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, idUsuario) {
         try {
             const query = `
                 UPDATE Taller 
@@ -85,12 +82,11 @@ module.exports = class Workshops {
                     Descripcion = ?,
                     Fecha = ?,
                     URL = ?,
-                    videoCapacitacion = ?,
                     idUsuario = ?
                 WHERE idTaller = ?
             `;
             
-            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, videoCapacitacion, idUsuario, idTaller];
+            const params = [nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, idUsuario, idTaller];
             const result = await db.execute(query, params);
             return result;
             
@@ -100,49 +96,40 @@ module.exports = class Workshops {
         }
     }
 
-
-     // performs a soft delete by updating status = 0
     static async delete(id) {
         try {
+            const result = await db.execute(
+                `UPDATE Taller SET estatus = 0 WHERE idTaller = ?`, 
+                [id]
+            );
 
-        // run SQL query to set the workshop status to 0 
-        const result = await db.execute
-        (
-            `UPDATE Taller 
-            SET estatus = 0 
-            WHERE idTaller = ?`, 
-            [id]
-        );
-
-        // check if any row was affected (workshop found)
-        if (result.affectedRows === 0) return { success: false, message: "No workshop found with that ID." };
-
+            if (result.affectedRows === 0) 
+                return { success: false, message: "No workshop found with that ID." };
         
-        return { success: true, message: "Workshop deleted successfully." };
+            return { success: true, message: "Workshop deleted successfully." };
+
         } catch (error) {
-        console.error("Error deleting workshop:", error);
-        
-        // rethrow the error to be handled by the controller
-        throw error;
+            console.error("Error deleting workshop:", error);
+            throw error;
         }
     }
     
     static async getWorkshops(){
         try{
-            const rows = await db.query
-            (`
+            const rows = await db.query(
+            `
                 SELECT t.idTaller, 
                 t.nombreTaller, 
                 t.horaEntrada, 
                 t.horaSalida,
                 t.Descripcion,
                 t.Fecha,
-                t.URL,
-                t.videoCapacitacion
+                t.URL
                 FROM Taller t 
-                WHERE t.estatus = ?`, [1]
-            );
+                WHERE t.estatus = ?
+            `, [1]);
             return rows;
+
         } catch (err) {
             console.error("Error fetching workshop catalog:", err);
             throw err;
@@ -154,7 +141,7 @@ module.exports = class Workshops {
             const rows = await db.query(
                 `SELECT 
 	                t.nombreTaller, t.horaEntrada, t.horaSalida, t.Descripcion,
-                    t.URL, t.Fecha, t.videoCapacitacion, t.idUsuario,
+                    t.URL, t.Fecha, t.idUsuario,
                     u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
                 JOIN Usuarios u
@@ -162,6 +149,7 @@ module.exports = class Workshops {
                 WHERE t.estatus = ? AND t.idTaller = ?
                 `, [1, id]
             );
+
             const beneficiariesRows = await db.query(
                 `SELECT  
 	                b.idbeneficiario, b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
@@ -173,27 +161,16 @@ module.exports = class Workshops {
                 WHERE t.estatus = ? AND b.estatus = ? AND t.idTaller = ?
                 `, [1, 1, id]
             );
+
             return {
                 workshop : rows,
                 beneficiaries : beneficiariesRows
             };
-        }
-        catch(err) {
+
+        } catch(err) {
             console.log("Error fetching one workshop", err);
             throw err;
         }
-        
-    }
-    static async getOneWorkshopBeneficiaries(id){ 
-        try{
-            
-            return rows;
-        }
-        catch(err) {
-            console.log("Error fetching workshop beneficiaries", err);
-            throw err;
-        }
-        
     }
 
     static async findWorkshop(nameWorkshop) {
@@ -206,40 +183,24 @@ module.exports = class Workshops {
                     t.horaSalida,
                     t.Descripcion,
                     t.Fecha,
-                    t.URL,
-                    t.videoCapacitacion
+                    t.URL
                 FROM Taller t
                 WHERE t.estatus = 1 
-                AND LOWER(
-                    REGEXP_REPLACE(
-                        REGEXP_REPLACE(t.nombreTaller, '[áàäâ]', 'a'),
-                    '[éèëê]', 'e')
-                ) LIKE LOWER(?)
-                OR LOWER(
-                    REGEXP_REPLACE(
-                        REGEXP_REPLACE(t.nombreTaller, '[íìïî]', 'i'),
-                    '[óòöô]', 'o')
-                ) LIKE LOWER(?)
-                OR LOWER(
-                    REGEXP_REPLACE(
-                        REGEXP_REPLACE(t.nombreTaller, '[úùüû]', 'u'),
-                    '[ñ]', 'n')
-                ) LIKE LOWER(?);
+                AND LOWER(t.nombreTaller) LIKE LOWER(?)
             `;
             
             const searchTerm = `%${nameWorkshop}%`;
-            const [rows] = await db.execute(query, [searchTerm, searchTerm, searchTerm]);
+            const [rows] = await db.execute(query, [searchTerm]);
             return rows;
+
         } catch (error) {
             console.error("Error findWorkshop:", error);
             throw error;
         }
     }
 
-     /* Model function gets a filter list and returns workshop list filtered.*/
     static async getWorkshopsFiltered(body = {}){
         const filters = body.filter;
-        console.log(filters)
         try{
             let query = `
             SELECT t.idTaller, 
@@ -248,12 +209,12 @@ module.exports = class Workshops {
                 t.horaSalida,
                 t.Descripcion,
                 t.Fecha,
-                t.URL,
-                t.videoCapacitacion
+                t.URL
                 FROM Taller t
                 WHERE t.estatus = 1
-                `;
+            `;
             const  params =[];
+
             if (filters["entryHour"] && filters["entryHour"].length > 0) {
                 query += ` AND t.horaEntrada IN (${filters["entryHour"].map(() => '?').join(', ')})`;
                 params.push(...filters["entryHour"]);
@@ -267,72 +228,57 @@ module.exports = class Workshops {
             if (body.order){
                 query += ` ORDER BY t.nombreTaller ${body.order}`;
             }
+
             const rows = await db.query(query, params);
             return rows;
-        }
-        catch(error){
+
+        } catch(error){
             console.log("Error fetching workshops filtered", error);
             throw error;
         }
     }
 
-    /* Model function gets all posible results in entry hour and date */
     static async getWorkshopsCategories(){
         try{
-            const entryHour = await db.query(
-                `
-                SELECT DISTINCT horaEntrada
-                FROM Taller
-                `
-            );
+            const entryHour = await db.query(`SELECT DISTINCT horaEntrada FROM Taller`);
+            const date = await db.query(`SELECT DISTINCT Fecha FROM Taller`);
 
-            const date = await db.query(
-                `
-                SELECT DISTINCT Fecha
-                FROM Taller
-                `
-            )
             return {
-                    entryHour: entryHour.map(e => e.horaEntrada),
-                    date: date.map(d => d.Fecha)
-                };
+                entryHour: entryHour.map(e => e.horaEntrada),
+                date: date.map(d => d.Fecha)
+            };
+
         } catch(error){
             console.error("Error fetching filter data:", error);
             throw error;
         }
     }
-    
-    // GET: Obtener idTaller por nombreTaller
+
     static async getId(nombreTaller) {
         try {
-            const rows = await db.query
-            (
-                `SELECT idTaller
-                 FROM Taller 
-                 WHERE nombreTaller = ?`,
+            const rows = await db.query(
+                `SELECT idTaller FROM Taller WHERE nombreTaller = ?`,
                 [nombreTaller]
             );
+
             return rows.length > 0 ? rows[0].idTaller : null;
+
         } catch (err) {
             console.error("Error fetching workshop ID by name:", err);
             throw err;
         }
     }
 
-    // GET: Obtener todas las categorías
     static async getName() {
         try {
-            const rows = await db.query
-            (
-                `SELECT nombreTaller
-                 FROM Taller
-                 WHERE estatus = 1`
+            const rows = await db.query(
+                `SELECT nombreTaller FROM Taller WHERE estatus = 1`
             );
             return rows;
+
         } catch (err) {
             console.error("Error fetching all categories", err);
             throw err;
         }
     }
-
-    };
+};

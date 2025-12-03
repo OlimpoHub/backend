@@ -2,6 +2,7 @@
 
 ### Fixed
 - Search beneficiaries
+- Fixed workshops deleting video for trainings
 
 ### Added
 - Add upload logic in index and route
