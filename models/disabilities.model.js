@@ -35,4 +35,15 @@ module.exports = class Disability {
             );
           });
       }
+
+      static async fetchDisability(id) {
+        const query = `
+            SELECT *
+            FROM ListaDiscapacidades
+            WHERE idDiscapacidad = ?
+        `;
+
+        const rows = await database.execute(query, [id]);
+        return rows.length > 0 ? rows[0] : null;
+      }
 }

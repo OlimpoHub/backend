@@ -178,7 +178,6 @@ module.exports = class Beneficiary {
                     ON Ben.idBeneficiario = BD.idBeneficiario
                 LEFT JOIN ListaDiscapacidades LD 
                     ON LD.idDiscapacidad = BD.idDiscapacidad
-                WHERE estatus = 1
                 ORDER BY Ben.nombre
             `);
 
@@ -230,7 +229,7 @@ module.exports = class Beneficiary {
                            const params = [nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroEmergencia, nombreContactoEmergencia, relacionContactoEmergencia, descripcion, fechaIngreso, foto, estatus, idBeneficiario];
 
             try {
-                const result = await database.query(query, params);
+                await database.query(query, params);
             } catch (error) {
                 console.error("Error al modificar beneficiario:", error);
                 return {
@@ -244,25 +243,30 @@ module.exports = class Beneficiary {
                             FROM BeneficiarioDiscapacidades
                             WHERE idBeneficiario = ?`
 
+            try {
+                await database.query(query2, idBeneficiario);
+            } catch (error) {
+                console.error("Error al modificar beneficiario:", error);
+                return {
+                    success: false,
+                    message: "Error al modificar discapacidades, intente más tarde",
+                };
+            }
+
             const query3 = `
                 INSERT INTO BeneficiarioDiscapacidades (idDiscapacidad, idBeneficiario)
-                SELECT ?, idBeneficiario
-                FROM Beneficiarios
-                WHERE nombre = ? AND apellidoPaterno = ? AND apellidoMaterno = ? AND fechaNacimiento = ?;
+                VALUES (?, ?)
             `;
 
-            const result2 = await database.query(query2, idBeneficiario)
+            await database.query(query2, idBeneficiario)
 
             for (const discapacidadId of discapacidades) {
                 const params3 = [
                     discapacidadId,
-                    nombre,
-                    apellidoPaterno,
-                    apellidoMaterno,
-                    fechaNacimiento
+                    idBeneficiario
                 ];
                 try {
-                    const result3 = await database.query(query3, params3);
+                    await database.query(query3, params3);
                 } catch (error) {
                     console.error("Error al modificar beneficiario:", error);
                     return {
@@ -291,7 +295,6 @@ module.exports = class Beneficiary {
         FROM Beneficiarios Ben
         LEFT JOIN BeneficiarioDiscapacidades BD ON Ben.idBeneficiario = BD.idBeneficiario
         LEFT JOIN ListaDiscapacidades LD ON LD.idDiscapacidad = BD.idDiscapacidad
-        WHERE estatus = 1
         `;
 
         const params = [];
@@ -343,7 +346,6 @@ module.exports = class Beneficiary {
                 SELECT *
                 FROM Beneficiarios
                 WHERE CONCAT(nombre, ' ', apellidoPaterno, ' ', apellidoMaterno) LIKE ?
-                AND estatus = 1
             `;
             const params = [`%${searchTerm}%`];
 
