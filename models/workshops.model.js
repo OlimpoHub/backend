@@ -124,7 +124,8 @@ module.exports = class Workshops {
                 t.horaSalida,
                 t.Descripcion,
                 t.Fecha,
-                t.URL
+                t.URL,
+                t.estatus
                 FROM Taller t 
                 WHERE t.estatus = ?
             `, [1]);
