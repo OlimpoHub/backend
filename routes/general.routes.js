@@ -15,7 +15,6 @@ const discapacityRoutes = require("./discapacity.routes");
 const disabilitiesRoutes = require('./disabilities.routes');
 const notificationsRoutes = require('./notifications.routes');
 const attendanceRoutes = require('./attendance.routes');
-const uploadsRoutes = require('./uploads.routes');
 const {authenticateToken} = require("../utils/auth.middleware");
 
 router.use(authenticateToken);
@@ -34,6 +33,5 @@ router.use("/discapacity", discapacityRoutes);
 router.use("/disabilities", disabilitiesRoutes);
 router.use("/notifications", notificationsRoutes);
 router.use("/attendance", attendanceRoutes);
-router.use("/uploads", uploadsRoutes);
 
 module.exports = router;
