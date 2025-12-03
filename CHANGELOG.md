@@ -2,6 +2,7 @@
 
 ### Fixed
 - Search beneficiaries
+- Fixed workshops deleting video for trainings
 - Get disability's details
 - host of node mailer
 
