@@ -211,7 +211,9 @@ exports.recoverPassword = async (req, res) => {
             <p>Hola,</p>
             <p>Hemos recibido una solicitud para restablecer tu contraseña. Da clic en el botón de abajo para crear una nueva.</p>
             <center>
-                <a href="${webLink}" class="button">Restablecer Contraseña</a>
+                <a href="${webLink}" class="button" style="color: white !important;">
+                    Restablecer Contraseña
+                </a>
             </center>
             <p>Si tú no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
             <p>Gracias,<br><strong>El Arca de México I.A.P.</strong></p>
