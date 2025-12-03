@@ -9,6 +9,9 @@
 ### Added
 - Add upload logic in index and route
 
+### Updated
+- Updated link for resetting password
+
 ## [0.1.0] - 1/12/2025
 
 ### Added

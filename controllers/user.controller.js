@@ -121,13 +121,15 @@ exports.recoverPassword = async (req, res) => {
         }
     });
 
-    const link = `${process.env.APP_URL_SCHEME}/user/update-password?token=${token}`
+    // const appLink = `${process.env.APP_URL_SCHEME}://user/verify-token?token=${token}`;
+    const webResetBase = process.env.WEB_RESET_URL;
+    const webLink = `${webResetBase.replace(/\/$/, '')}/reset-password?token=${token}`;
 
     await transporter.sendMail({
         from: `"El arca" <${process.env.MAILSENDER_USER}>`,
         to: `${email}`,
         subject: 'Recuperar Contraseña',
-        text: 'Dale click al siguiente link para recuperar contraseña',
+        text: `Abre la app usando este enlace: ${webLink}`,
         html: `
         <!DOCTYPE html>
         <html lang="es" style="margin:0; padding:0;">
@@ -209,7 +211,7 @@ exports.recoverPassword = async (req, res) => {
             <p>Hola,</p>
             <p>Hemos recibido una solicitud para restablecer tu contraseña. Da clic en el botón de abajo para crear una nueva.</p>
             <center>
-                <a href="${link}" class="button">Restablecer Contraseña</a>
+                <a href="${webLink}" class="button">Restablecer Contraseña</a>
             </center>
             <p>Si tú no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
             <p>Gracias,<br><strong>El Arca de México I.A.P.</strong></p>
