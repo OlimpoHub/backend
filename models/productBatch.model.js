@@ -197,7 +197,7 @@ module.exports = class ProductBatch {
         }
     }
 
-    // Filtrar por precio (rango o valor único)
+    // Filter by price (range or single value)
     static async filterPrice({ minPrecio, maxPrecio }) {
         try {
             let conditions = [];
@@ -231,7 +231,7 @@ module.exports = class ProductBatch {
         }
     }
 
-    // Filtrar por disponibilidad
+    // Filter by availability
     static async filterDisponible({ disponible }) {
         try {
             const rows = await database.query(
@@ -253,7 +253,7 @@ module.exports = class ProductBatch {
         }
     }
 
-    // Filtrar por rango de fechas
+    // Filter by date range
     static async filterDate({ startDate, endDate }) {
         try {
             let conditions = [];
@@ -294,34 +294,34 @@ module.exports = class ProductBatch {
             const conditions = [];
             const values = [];
 
-            // Filtrar por nombre del producto
+            // Filter by product name
             if (filters.nombre && Array.isArray(filters.nombre) && filters.nombre.length) {
                 conditions.push("p.Nombre IN (?)");
                 values.push(filters.nombre);
             }
 
-            // Filtrar por precio de venta
+            // Filter by sale price
             if (filters.precioVenta && Array.isArray(filters.precioVenta) && filters.precioVenta.length) {
                 conditions.push("inv.PrecioVenta IN (?)");
-                values.push(filters.precioVenta.map(Number)); // asegurar números
+                values.push(filters.precioVenta.map(Number)); // ensure numbers
             }
 
-            // Filtrar por cantidad producida
+            // Filter by quantity produced
             if (filters.cantidadProducida && Array.isArray(filters.cantidadProducida) && filters.cantidadProducida.length) {
                 conditions.push("inv.CantidadProducida IN (?)");
                 values.push(filters.cantidadProducida.map(Number));
             }
 
-            // Filtrar por fecha de creación
+            // Filter by production date
             if (filters.fechaRealizacion && Array.isArray(filters.fechaRealizacion) && filters.fechaRealizacion.length) {
                 conditions.push("inv.FechaRealizacion IN (?)");
                 values.push(filters.fechaRealizacion);
             }
 
-            // Construcción del WHERE
+            // Construction of the WHERE clause
             const whereClause = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
 
-            // Ordenamiento por nombre del producto
+            // Ordering by product name
             const dir = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
             const query = `
