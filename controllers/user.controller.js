@@ -7,7 +7,20 @@ const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
 
-// Login user: validate credentials and return access + refresh tokens
+/**
+* post_login
+* --------------------------------------------------------
+* Authenticates a user by validating credentials and, if
+* successful, returns both an access token (short-lived)
+* and a refresh token (long-lived).
+*
+* @param {Object} req - Express request object
+* @param {string} req.body.username - User email/username
+* @param {string} req.body.password - User password
+* @param {Object} res - Express response object
+*
+* @returns {JSON} { user, accessToken, refreshToken }
+*/
 exports.post_login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -53,13 +66,24 @@ exports.post_login = async (req, res) => {
     }
 };
 
-// Generate a new access token using a valid refresh token
+/**
+* post_refresh
+* --------------------------------------------------------
+* Generates a new access token using a valid refresh token.
+* The refresh token is validated via JWT. If valid, a new
+* short-lived access token tied to the user is returned.
+*
+* @param {Object} req - Express request object
+* @param {string} req.body.refreshToken - Refresh token
+* @param {Object} res - Express response object
+*
+* @returns {JSON} { accessToken: string }
+*/
 exports.post_refresh = async (req, res) => {
     try {
         const { refreshToken } = req.body;
         console.log(refreshToken);
         if (!refreshToken) {
-            console.log("xd Fui yo");
             return res.status(401).json({ message: 'Refresh token required' });
         }
 

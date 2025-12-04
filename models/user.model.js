@@ -34,6 +34,14 @@ module.exports = class User {
        this.foto = _foto;
     }
 
+    /**
+     * fetchAllUser
+     * --------------------------------------------------------
+     * Retrieves all users stored in the database. Returns the
+     * full list of records or null if no users exist.
+     * 
+     * @returns {Array|null} List of users or null if empty
+     */
     static async fetchAllUser() {
         const result = await database.query(
             `SELECT *
@@ -43,6 +51,16 @@ module.exports = class User {
         return result.length > 0 ? result : null;
     }
 
+    /**
+     * findByEmail
+     * --------------------------------------------------------
+     * Retrieves a single user using their email. Includes the
+     * user's role name by joining with the Roles table.
+     * 
+     * @param {string} email - User email to search
+     * 
+     * @returns {Object|null} User record or null if not found
+     */
     static async findByEmail(email) {
         const rows = await database.query(
             `SELECT u.*, r.nombreRol AS roleName
@@ -54,6 +72,16 @@ module.exports = class User {
        return rows.length > 0 ? rows[0] : null;
     }
 
+    /**
+     * findById
+     * --------------------------------------------------------
+     * Retrieves a single user using their numeric ID. Includes
+     * the user's role name by joining with the Roles table.
+     * 
+     * @param {number} id - User ID to search
+     * 
+     * @returns {Object|null} User record or null if not found
+     */
     static async findById(id) {
         const rows = await database.query(
             `SELECT u.*, r.nombreRol AS roleName
@@ -66,8 +94,14 @@ module.exports = class User {
     }
 
     /**
-     * Check if a user exists using their email.
-     * Returns true if the email is already registered, false otherwise.
+     * existsByEmail
+     * --------------------------------------------------------
+     * Checks whether a user is already registered under the
+     * given email. Returns true if the email exists, otherwise false.
+     *
+     * @param {string} email - Email to validate
+     * 
+     * @returns {boolean} True if email exists, false otherwise
      */
     static async existsByEmail(email) {
         const result = await database.query(`
@@ -82,8 +116,15 @@ module.exports = class User {
     };
 
     /**
-     * Update a user's password using their email.
-     * Returns true if the password was updated successfully.
+     * updatePassword
+     * --------------------------------------------------------
+     * Updates the password of a user identified by their email.
+     * Returns true if the update was successful.
+     * 
+     * @param {string} email - Email of the user to update
+     * @param {string} password - New hashed password
+     * 
+     * @returns {boolean} True if the password was updated
      */
     static async updatePassword(email, password) {
         const result = await database.query(`
