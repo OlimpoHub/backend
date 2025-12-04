@@ -2,6 +2,11 @@ const db = require('../utils/db.js');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Workshops {
+
+    /**
+    * @constructor
+    * @description Creates a new Workshop instance
+    */
     constructor(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, idUsuario, descripcion, fecha, url) {
         this.idTaller = idTaller || uuidv4();
         this.nombreTaller = nombreTaller;
@@ -14,6 +19,10 @@ module.exports = class Workshops {
         this.url = url;
     }
 
+    /**
+    * @description Saves the current workshop into the database
+    * @returns {Promise<any>}
+    */
     async save() {
         try {
             const query = `
@@ -38,11 +47,16 @@ module.exports = class Workshops {
             return result;
 
         } catch (error) {
-            console.error('Error en save():', error);
+            console.error('Error workshops save():', error);
             throw error;
         }
     }
 
+    /**
+    * @description Adds a workshop dynamically based on provided fields
+    * @param {Object} tallerData
+    * @returns {Promise<any>}
+    */
     static async add(tallerData) {
         try {
             const camposValidos = [
@@ -66,11 +80,15 @@ module.exports = class Workshops {
             return result;
             
         } catch (error) {
-            console.error('Error en add():', error);
+            console.error('Error workshops add():', error);
             throw error;
         }
     }
 
+    /**
+    * @description Updates an existing workshop by ID
+    * @returns {Promise<any>}
+    */
     static async update(idTaller, nombreTaller, horaEntrada, horaSalida, estatus, descripcion, fecha, url, idUsuario) {
         try {
             const query = `
@@ -91,11 +109,16 @@ module.exports = class Workshops {
             return result;
             
         } catch (error) {
-            console.error('Error update():', error);
+            console.error('Error workshops update():', error);
             throw error;
         }
     }
 
+    /**
+    * @description Soft deletes a workshop (sets status = 0)
+    * @param {String} id
+    * @returns {Promise<Object>}
+    */
     static async delete(id) {
         try {
             const result = await db.execute(
@@ -113,9 +136,13 @@ module.exports = class Workshops {
             throw error;
         }
     }
-    
-    static async getWorkshops(){
-        try{
+
+    /**
+    * @description Gets all active workshops
+    * @returns {Promise<any>}
+    */
+    static async getWorkshops() {
+        try {
             const rows = await db.query(
             `
                 SELECT t.idTaller, 
@@ -137,16 +164,20 @@ module.exports = class Workshops {
         }
     }
 
+    /**
+    * @description Gets a single workshop with its beneficiaries
+    * @param {String} id
+    * @returns {Promise<Object>}
+    */
     static async getOneWorkshop(id){ 
-        try{
+        try {
             const rows = await db.query(
                 `SELECT 
 	                t.nombreTaller, t.horaEntrada, t.horaSalida, t.Descripcion,
                     t.URL, t.Fecha, t.idUsuario,
                     u.nombre, u.apellidoPaterno, u.apellidoMaterno
                 FROM Taller t
-                JOIN Usuarios u
-                    ON t.idUsuario = u.idUsuario
+                JOIN Usuarios u ON t.idUsuario = u.idUsuario
                 WHERE t.estatus = ? AND t.idTaller = ?
                 `, [1, id]
             );
@@ -155,10 +186,8 @@ module.exports = class Workshops {
                 `SELECT  
 	                b.idbeneficiario, b.nombre, b.apellidoMaterno, b.apellidoPaterno, b.foto
                 FROM Beneficiarios b
-                JOIN BeneficiarioTaller e
-	                ON e.idBeneficiario = b.idBeneficiario
-                JOIN Taller t	
-	                ON e.idTaller = t.idTaller
+                JOIN BeneficiarioTaller e ON e.idBeneficiario = b.idBeneficiario
+                JOIN Taller t ON e.idTaller = t.idTaller
                 WHERE t.estatus = ? AND b.estatus = ? AND t.idTaller = ?
                 `, [1, 1, id]
             );
@@ -174,6 +203,10 @@ module.exports = class Workshops {
         }
     }
 
+    /**
+    * @description Finds workshops by name (case insensitive)
+    * @returns {Promise<any>}
+    */
     static async findWorkshop(nameWorkshop) {
         try {
             const query = `
@@ -200,9 +233,13 @@ module.exports = class Workshops {
         }
     }
 
-    static async getWorkshopsFiltered(body = {}){
+    /**
+    * @description Gets workshops filtered by entry hour, date, and order
+    * @returns {Promise<any>}
+    */
+    static async getWorkshopsFiltered(body = {}) {
         const filters = body.filter;
-        try{
+        try {
             let query = `
             SELECT t.idTaller, 
                 t.nombreTaller, 
@@ -214,7 +251,7 @@ module.exports = class Workshops {
                 FROM Taller t
                 WHERE t.estatus = 1
             `;
-            const  params =[];
+            const params = [];
 
             if (filters["entryHour"] && filters["entryHour"].length > 0) {
                 query += ` AND t.horaEntrada IN (${filters["entryHour"].map(() => '?').join(', ')})`;
@@ -239,6 +276,10 @@ module.exports = class Workshops {
         }
     }
 
+    /**
+    * @description Gets distinct entry hours and dates for filtering
+    * @returns {Promise<Object>}
+    */
     static async getWorkshopsCategories(){
         try{
             const entryHour = await db.query(`SELECT DISTINCT horaEntrada FROM Taller`);
@@ -255,6 +296,10 @@ module.exports = class Workshops {
         }
     }
 
+    /**
+    * @description Gets workshop ID by name
+    * @returns {Promise<String|null>}
+    */
     static async getId(nombreTaller) {
         try {
             const rows = await db.query(
@@ -270,6 +315,10 @@ module.exports = class Workshops {
         }
     }
 
+    /**
+    * @description Gets all workshop names
+    * @returns {Promise<any>}
+    */
     static async getName() {
         try {
             const rows = await db.query(
