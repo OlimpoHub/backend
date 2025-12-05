@@ -156,15 +156,15 @@ exports.filterPriceP = async (req, res) => {
   }
 };
 
-// GET /product/filter/disponible?disponible=1
-exports.filterDisponibleP = async (req, res) => {
+// GET /product/filter/status?status=1
+exports.filterByStatusP = async (req, res) => {
   try {
-    const { disponible } = req.query;
-    const result = await Product.filterDisponible({ disponible });
+    const { status } = req.query;
+    const result = await Product.filterByStatus({ status });
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Failure in filterDisponibleP:', err);
-    return res.status(500).json({ error: 'Failed to filter by availability' });
+    console.error('Failure in filterByStatusP:', err);
+    return res.status(500).json({ error: 'Failed to filter by status' });
   }
 };
 
