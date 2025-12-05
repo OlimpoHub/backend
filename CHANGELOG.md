@@ -1,3 +1,8 @@
+## [0.1.1] -4/12/2025
+
+### Fixed
+- Fixed comments in workshops
+
 ## [0.1.1] - 3/12/2025
 
 ### Fixed
