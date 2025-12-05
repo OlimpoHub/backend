@@ -12,3 +12,38 @@ exports.fetchAll = async (req, res) => {
     }
 
 }
+
+// Update disability (US CAP-003)
+exports.updateDisabilities = async (request, response) => {
+  try {
+    const idDiscapacidad = request.body.id;
+    const update_disabilities = new Disability(
+        request.body.disability_name,
+        request.body.disability_description,
+  );
+
+    await update_disabilities.updateById(idDiscapacidad);
+
+    response.status(200).json({
+        status: true ,
+        message: "Success to update disability."});
+
+  } catch (error) {
+    console.error("Error updating disability:", error);
+    response.status(500).json({
+      status: false,
+      message: "Failed to update disability." });
+  }
+};
+
+exports.fetchDisability = async (req, res) => {
+  const {idDiscapacidad} = req.params;
+  try {
+      const discapacidad = await Disability.fetchDisability(idDiscapacidad);
+
+      res.status(200).json(discapacidad);
+
+  } catch (error) {
+      res.status(500).json({ message: "Error al obtener la discapacidad." });
+  }
+};

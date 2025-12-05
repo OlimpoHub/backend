@@ -3,7 +3,21 @@ dotenv.config({ path: './.env' });
 
 const jwt = require("jsonwebtoken");
 
-// Middleware to authenticate the access token sent in the request headers
+/**
+ * authenticateToken
+ * --------------------------------------------------------
+ * Middleware that validates the access token sent in the
+ * Authorization header. If the JWT is valid, the decoded
+ * user data is attached to the request and execution
+ * continues. Otherwise, the request is rejected.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} req.headers.authorization - Header containing "Bearer <token>"
+ * @param {Object} res - Express response object
+ * @param {Function} next - Moves execution to the next middleware/handler
+ * 
+ * @returns {void} Sends a 401 response if token is missing or invalid
+ */
 exports.authenticateToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];

@@ -3,23 +3,52 @@ const router = express.Router();
 
 const workshopsController = require('../controllers/workshops.controller');
 
+/**
+* GET /workshops/search
+* @description Searches workshops by name
+*/
 router.get('/search', workshopsController.searchWorkshops);
 
+/**
+* POST /workshops/add
+* @description Adds a new workshop
+*/
 router.post('/add', workshopsController.addWorkshops);
+
+/**
+* GET /workshops
+* @description Gets the workshop list
+*/
 router.get('/', workshopsController.viewWorkshops);
+
+/**
+* GET /workshops/:idTaller
+* @description Gets a single workshop with attendees
+*/
 router.get('/:idTaller', workshopsController.viewOneWorkshop);
 
+/**
+* POST /workshops/modify/:idTaller
+* @description Updates a workshop by ID
+*/
 router.post('/modify/:idTaller', workshopsController.modifyWorkshops);
 
-// Define a Post endpoint to delete a Workshop (US: Delete Workshop)
+/**
+* POST /workshops/delete
+* @description Soft deletes a workshop
+*/
 router.post("/delete", workshopsController.deleteWorkshops);
 
-
-/* Get categories of workshops in horaEntrada*/
+/**
+* GET /workshops/filter/data
+* @description Gets category data for filters
+*/
 router.get("/filter/data", workshopsController.getWorkshopsCategories);
 
-/* POST - Filters Workshops */
+/**
+* POST /workshops/filter
+* @description Filters workshops by entry hour, date and order
+*/
 router.post('/filter', workshopsController.viewWorkshopsFiltered);
-
 
 module.exports = router;

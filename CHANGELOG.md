@@ -1,3 +1,70 @@
+## [0.1.1] -4/12/2025
+
+### Fixed
+- Fixed comments in workshops
+
+## [0.1.1] - 3/12/2025
+
+### Fixed
+- Update beneficiary
+- Disability's files (disabilities and discapacity)
+
+## [0.1.1] - 2/12/2025
+
+### Fixed
+- Search beneficiaries
+- Fixed workshops deleting video for trainings
+- Get disability's details
+- host of node mailer
+
+### Added
+- Add upload logic in index and route
+
+### Updated
+- Updated link for resetting password
+
+## [0.1.0] - 1/12/2025
+
+### Added
+- Access files endpoint
+
+### Changed
+- update email link
+
+### Fixed
+- Fixed modify beneficiary: select multiple disabilities
+
+## [0.1.0] - 30/11/2025
+
+### Changed
+- update password email form
+
+### Fixed
+- fix column name on discapacity
+
+## [0.1.0] - 29/11/2025
+### Added
+- Authentication middleware before protected enpoints
+
+### Changed
+- Change beneficiary model for disabilities
+- Change now beneficiaries register with multiple disabilities
+
+## [0.1.0] - 25/11/2025
+
+### Added
+- Controller, model and routes for consulting attendances
+
+## [0.1.0] - 24/11/2025
+
+### Added
+- Endpoint to fetch all attendance for a user.
+
+## [0.1.0] - 23/11/2025
+
+### Added
+- Implemented endpoint to update disabilities including route, controller, and model logic
+
 ## [0.1.0] - 20/11/2025
 
 ### Added
