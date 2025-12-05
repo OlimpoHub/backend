@@ -20,7 +20,7 @@ router.get('/search', productController.searchP);
 
 // GET: Filter products by price/availability/
 router.get('/price', productController.filterPriceP);       
-router.get('/disponible', productController.filterDisponibleP);   
+router.get('/status', productController.filterByStatusP);
 router.get('/category', productController.filterCategoriaP);    
 router.get('/workshop', productController.filterTallerP);   
 

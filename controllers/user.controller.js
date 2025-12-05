@@ -7,7 +7,20 @@ const argon2 = require('argon2');
 
 dotenv.config({ path: '../.env'});
 
-// Login user: validate credentials and return access + refresh tokens
+/**
+* post_login
+* --------------------------------------------------------
+* Authenticates a user by validating credentials and, if
+* successful, returns both an access token (short-lived)
+* and a refresh token (long-lived).
+*
+* @param {Object} req - Express request object
+* @param {string} req.body.username - User email/username
+* @param {string} req.body.password - User password
+* @param {Object} res - Express response object
+*
+* @returns {JSON} { user, accessToken, refreshToken }
+*/
 exports.post_login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -53,13 +66,24 @@ exports.post_login = async (req, res) => {
     }
 };
 
-// Generate a new access token using a valid refresh token
+/**
+* post_refresh
+* --------------------------------------------------------
+* Generates a new access token using a valid refresh token.
+* The refresh token is validated via JWT. If valid, a new
+* short-lived access token tied to the user is returned.
+*
+* @param {Object} req - Express request object
+* @param {string} req.body.refreshToken - Refresh token
+* @param {Object} res - Express response object
+*
+* @returns {JSON} { accessToken: string }
+*/
 exports.post_refresh = async (req, res) => {
     try {
         const { refreshToken } = req.body;
         console.log(refreshToken);
         if (!refreshToken) {
-            console.log("xd Fui yo");
             return res.status(401).json({ message: 'Refresh token required' });
         }
 
@@ -89,7 +113,18 @@ exports.post_refresh = async (req, res) => {
     }
 };
 
-
+/**
+ * recoverPassword
+ * --------------------------------------------------------
+ * Sends a password recovery email containing a JWT link
+ * valid for 15 minutes.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.body.email - User email
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { message: 'Recovery email sent' }
+ */
 exports.recoverPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -102,21 +137,23 @@ exports.recoverPassword = async (req, res) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.mailgun.org',
+        host: 'smtp.mailersend.net',
         port: 587,
         auth: {
-            user: process.env.MAILGUN_USER,
-            pass: process.env.MAILGUN_PASSWORD
+            user: process.env.MAILSENDER_USER,
+            pass: process.env.MAILSENDER_PASSWORD
         }
     });
 
-    const link = `${process.env.BASE_URL}/user/verify-token?token=${token}`
+    // const appLink = `${process.env.APP_URL_SCHEME}://user/verify-token?token=${token}`;
+    const webResetBase = process.env.WEB_RESET_URL;
+    const webLink = `${webResetBase.replace(/\/$/, '')}/reset-password?token=${token}`;
 
     await transporter.sendMail({
-        from: `"El arca" <${process.env.MAILGUN_USER}>`,
+        from: `"El arca" <${process.env.MAILSENDER_USER}>`,
         to: `${email}`,
         subject: 'Recuperar Contraseña',
-        text: 'Dale click al siguiente link para recuperar contraseña',
+        text: `Abre la app usando este enlace: ${webLink}`,
         html: `
         <!DOCTYPE html>
         <html lang="es" style="margin:0; padding:0;">
@@ -198,7 +235,9 @@ exports.recoverPassword = async (req, res) => {
             <p>Hola,</p>
             <p>Hemos recibido una solicitud para restablecer tu contraseña. Da clic en el botón de abajo para crear una nueva.</p>
             <center>
-                <a href="${link}" class="button">Restablecer Contraseña</a>
+                <a href="${webLink}" class="button" style="color: white !important;">
+                    Restablecer Contraseña
+                </a>
             </center>
             <p>Si tú no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
             <p>Gracias,<br><strong>El Arca de México I.A.P.</strong></p>
@@ -220,6 +259,18 @@ exports.recoverPassword = async (req, res) => {
   }
 }
 
+/**
+ * verifyToken
+ * --------------------------------------------------------
+ * Validates a password recovery token. If valid, returns
+ * the associated email address.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.query.token - Token to validate
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { valid: boolean, email?: string, message: string }
+ */
 exports.verifyToken = async (req, res) => {
     try {
         const { token } = req.query;
@@ -244,6 +295,18 @@ exports.verifyToken = async (req, res) => {
     }
 }
 
+/**
+ * updatePassword
+ * --------------------------------------------------------
+ * Updates a user's password using their email.
+ * 
+ * @param {Object} req - Express request object
+ * @param {string} req.body.email - User email
+ * @param {string} req.body.password - New password
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} { status: boolean, message: string }
+ */
 exports.updatePassword = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -268,6 +331,16 @@ exports.updatePassword = async (req, res) => {
     }
 }
 
+/**
+ * getAllUsers
+ * --------------------------------------------------------
+ * Retrieves all registered users in the system.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * 
+ * @returns {JSON} Array of user objects
+ */
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.fetchAllUser();

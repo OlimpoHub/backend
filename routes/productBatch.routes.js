@@ -5,19 +5,19 @@ const productBatchController = require("../controllers/productBatch.controller")
 
 /**
  * GET /productBatch
- * @description Obtiene todos los lotes de productos con sus detalles
- * @returns {Array} Lista de lotes con:
- *  - Nombre: nombre del producto
- *  - imagen: URL de la imagen del producto
- *  - PrecioUnitario: precio base del producto
- *  - idProducto: identificador único del producto
- *  - Descripcion: descripción del producto
- *  - Disponible: si el producto está disponible (1) o no (0)
- *  - idInventario: identificador único del lote
- *  - CantidadProducida: cantidad del lote
- *  - PrecioVenta: precio de venta del lote
- *  - FechaCaducidad: fecha de caducidad (YYYY-MM-DD)
- *  - FechaRealizacion: fecha de producción (YYYY-MM-DD)
+ * @description Retrieves all product batches with their details
+ * @returns {Array} List of batches containing:
+ * - Nombre: product name
+ * - imagen: product image URL
+ * - PrecioUnitario: product base price
+ * - idProducto: unique product identifier
+ * - Descripcion: product description
+ * - Disponible: whether the product is available (1) or not (0)
+ * - idInventario: unique batch identifier
+ * - CantidadProducida: batch quantity
+ * - PrecioVenta: batch sale price
+ * - FechaCaducidad: expiration date (YYYY-MM-DD)
+ * - FechaRealizacion: production date (YYYY-MM-DD)
  */
 router.get("/", productBatchController.getAllPb);
 
@@ -37,7 +37,7 @@ router.get("/order", productBatchController.getOrderedPb);
  * GET /productBatch/filter?disponible=1&startDate=2025-01-01&endDate=2025-12-31
  * @description Filter product batches by availability and/or date range
  */
-// Filtros separados
+// Separate filters
 router.get("/filter/price", productBatchController.filterPricePb);
 router.get("/filter/disponible", productBatchController.filterDisponiblePb);
 router.get("/filter/date", productBatchController.filterDatePb);
@@ -46,43 +46,43 @@ router.post("/filter", productBatchController.filterPb);
 
 /**
  * GET /productBatch/:idProductBatch
- * @description Obtiene los detalles de un lote específico
- * @param {string} idProductBatch - ID del producto a consultar
- * @returns {Object|Array} Detalles del lote o lotes del producto
+ * @description Retrieves details of a specific batch
+ * @param {string} idProductBatch - ID of the product to query
+ * @returns {Object|Array} Details of the batch or product batches
  */
 router.get("/:idProductBatch", productBatchController.getOnePb);
 
 /**
  * POST /productBatch
- * @description Crea un nuevo lote de producto
- * @param {Object} request.body - Datos del nuevo lote
- *  - idProducto: ID del producto (requerido)
- *  - PrecioVenta: precio de venta del lote (requerido)
- *  - CantidadProducida: cantidad producida (requerido)
- *  - FechaCaducidad: fecha de caducidad (opcional, YYYY-MM-DD)
- *  - FechaRealizacion: fecha de realización (opcional, YYYY-MM-DD)
- * @returns {Object} Lote creado con su idInventario generado
+ * @description Creates a new product batch
+ * @param {Object} request.body - Data for the new batch
+ * - idProducto: Product ID (required)
+ * - PrecioVenta: Batch sale price (required)
+ * - CantidadProducida: Quantity produced (required)
+ * - FechaCaducidad: Expiration date (optional, YYYY-MM-DD)
+ * - FechaRealizacion: Production date (optional, YYYY-MM-DD)
+ * @returns {Object} Created batch with its generated idInventario
  */
 router.post("/", productBatchController.addPb)
 
 /**
  * PUT /productBatch/:idProductBatch
- * @description Actualiza un lote existente
- * @param {string} idProductBatch - ID del inventario a actualizar
- * @param {Object} request.body - Campos a actualizar
- *  - PrecioVenta: nuevo precio de venta (opcional)
- *  - CantidadProducida: nueva cantidad (opcional)
- *  - FechaCaducidad: nueva fecha de caducidad (opcional)
- *  - FechaRealizacion: nueva fecha de realización (opcional)
- * @returns {Object} Lote actualizado o 404 si no existe
+ * @description Updates an existing batch
+ * @param {string} idProductBatch - ID of the inventory (batch) to update
+ * @param {Object} request.body - Fields to update
+ * - PrecioVenta: new sale price (optional)
+ * - CantidadProducida: new quantity (optional)
+ * - FechaCaducidad: new expiration date (optional)
+ * - FechaRealizacion: new production date (optional)
+ * @returns {Object} Updated batch or 404 if not found
  */
 router.put("/:idProductBatch", productBatchController.updatePb)
 
 /**
  * DELETE /productBatch/:idProductBatch
- * @description Elimina un lote del inventario
- * @param {string} idProductBatch - ID del inventario a eliminar
- * @returns {undefined} 204 si se eliminó, 404 si no existe
+ * @description Deletes a batch from inventory
+ * @param {string} idProductBatch - ID of the inventory (batch) to delete
+ * @returns {undefined} 204 if deleted, 404 if not found
  */
 router.delete("/:idProductBatch", productBatchController.removePb)
 

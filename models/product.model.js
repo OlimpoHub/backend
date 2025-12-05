@@ -240,24 +240,25 @@ module.exports = class Products {
     }
   }
 
-  // Filtrar por disponibilidad — p.Disponible 
-  static async filterDisponible({ disponible }) {
-    try {
-      const rows = await database.query(
-        `SELECT
-            p.idProducto, p.idTaller, p.Nombre, p.PrecioUnitario,
-            p.idCategoria, p.Descripcion, p.imagen, p.Disponible
-         FROM Productos p
-         WHERE p.Disponible = ?
-         ORDER BY p.Nombre ASC`,
-        [disponible]
-      );
-      return rows;
-    } catch (err) {
-      console.error('Error filtering products by availability', err);
-      throw err;
+    // Filter by status — p.Disponible
+    static async filterByStatus({ status }) {
+      try {
+        const rows = await database.query(
+          `SELECT
+              p.idProducto, p.idTaller, p.Nombre, p.PrecioUnitario,
+              p.idCategoria, p.Descripcion, p.imagen, p.Disponible
+           FROM Productos p
+           WHERE p.Disponible = ?
+           ORDER BY p.Nombre ASC`,
+          [status]
+        );
+        return rows;
+      } catch (err) {
+        console.error('Error filtering products by status', err);
+        throw err;
+      }
     }
-  }
+
 
   // Filtrar por categoría — p.idCategoria
   static async filterByCategory({ idCategoria }) {
